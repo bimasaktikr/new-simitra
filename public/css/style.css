@@ -1,0 +1,13 @@
+body {
+    font-family: 'Inter';
+}
+.content {
+    margin-top: 70px;
+    transition: margin-left 0.3s ease;
+}
+.sidebar-open .content {
+    margin-left: 16rem; /* Adjusted for sidebar open */
+}
+.sidebar-closed .content {
+    margin-left: 0; /* Adjusted for sidebar closed */
+}
