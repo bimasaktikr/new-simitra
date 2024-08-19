@@ -10,8 +10,15 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $this->call(SurveysSeeder::class);
-        $this->call(UsersSeeder::class);
-        
+        $this->call([
+            EmployeesSeeder::class,
+            FaqsSeeder::class,
+            MitrasSeeder::class,
+            PaymentTypesSeeder::class,
+            SurveysSeeder::class,
+            TeamsSeeder::class,
+            TransactionsSeeder::class,
+            UsersSeeder::class,
+        ]);
     }
 }

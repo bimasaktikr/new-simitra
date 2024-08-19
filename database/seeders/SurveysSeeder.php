@@ -11,22 +11,54 @@ class SurveysSeeder extends Seeder
     {
         DB::table('surveys')->insert([
             [
-                'name' => 'Survei 1',
-                'kode' => 'S001',
-                'ketua_tim' => 'Tim A',
-                'tanggal_mulai' => '2024-01-01',
-                'tipe_pembayaran' => 'bulanan',
-                'harga' => '1500000',
-                'tanggal_berakhir' => '2024-01-31',
+                'survey_id' => 1,
+                'name' => 'Survey A',
+                'code' => 'SA',
+                'payment_type_id' => 1,
+                'start_date' => '2024-01-01',
+                'end_date' => '2024-12-31',
+                'payment' => 1000000,
+                'team_id' => 1
             ],
             [
-                'name' => 'Survei 2',
-                'kode' => 'S002',
-                'ketua_tim' => 'Tim B',
-                'tanggal_mulai' => '2024-02-01',
-                'tipe_pembayaran' => 'per dokumen',
-                'harga' => '50000',
-                'tanggal_berakhir' => '2024-02-28',
+                'survey_id' => 2,
+                'name' => 'Survey B',
+                'code' => 'SB',
+                'payment_type_id' => 2,
+                'start_date' => '2024-02-01',
+                'end_date' => '2024-11-30',
+                'payment' => 20000,
+                'team_id' => 2
+            ],
+            [
+                'survey_id' => 3,
+                'name' => 'Survey C',
+                'code' => 'SC',
+                'payment_type_id' => 2,
+                'start_date' => '2024-03-01',
+                'end_date' => '2024-10-31',
+                'payment' => 50000,
+                'team_id' => 3
+            ],
+            [
+                'survey_id' => 4,
+                'name' => 'Survey D',
+                'code' => 'SD',
+                'payment_type_id' => 1,
+                'start_date' => '2024-04-01',
+                'end_date' => '2024-09-30',
+                'payment' => 2500,
+                'team_id' => 4
+            ],
+            [
+                'survey_id' => 5,
+                'name' => 'Survey E',
+                'code' => 'SE',
+                'payment_type_id' => 1,
+                'start_date' => '2024-05-01',
+                'end_date' => '2024-08-31',
+                'payment' => 3000,
+                'team_id' => 5
             ],
         ]);
     }
