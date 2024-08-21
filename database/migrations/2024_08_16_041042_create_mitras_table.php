@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
 {
     Schema::create('mitras', function (Blueprint $table) {
-        $table->id('mitra_id');
+        $table->id('id');
         $table->unsignedBigInteger('user_id');
         $table->string('name', 200);
         $table->string('pendidikan', 50);
@@ -20,7 +20,7 @@ return new class extends Migration
         $table->integer('umur');
         $table->timestamps();
 
-        $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
+        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
     });
 }
 

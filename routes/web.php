@@ -9,40 +9,63 @@ use App\Http\Controllers\MitraController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\MitraTeladanController;
+use Illuminate\Support\Facades\Auth;
 
-Route::get('/', [LoginController::class, 'login'])->name('login');
-use App\Http\Controllers\MitraTeladan;
-Route::post('actionlogin', [LoginController::class, 'actionlogin'])->name('actionlogin');
+// Route Utama
+Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('login');
+});
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
-Route::get('/bantuan', [DashboardController::class, 'bantuan'])->name('bantuan')->middleware('auth');
-Route::post('actionlogout', [LoginController::class, 'actionlogout'])->name('actionlogout')->middleware('auth');
+// Route Dashboard dengan Middleware Otentikasi dan Verifikasi Email
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard')
+    ->middleware(['auth', 'verified']);
 
-Route::get('/survei', [SurveyController::class, 'index'])->name('survei')->middleware('auth');
-Route::get('/survei/add', [SurveyController::class, 'add'])->name('addsurvei')->middleware('auth');
-Route::post('/survei/add', [SurveyController::class, 'store'])->name('survei.store');
-Route::get('/survei/{id}', [SurveyController::class, 'show'])->name('surveidetail')->middleware('auth');
-Route::get('/survei/penilaian', [PenilaianController::class, 'index'])->name('penilaian')->middleware('auth');
-Route::get('/survei/{id}/edit', [SurveyController::class, 'edit'])->name('editsurvei');
-Route::put('/survei/{id}', [SurveyController::class, 'update'])->name('editsurvei.update');
+// Grouping Route dengan Middleware Auth
+Route::middleware('auth')->group(function () {
 
+    // Routing dari Breeze untuk Profil Pengguna
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware('auth');
-Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
+    // Route Bantuan
+    Route::get('/bantuan', [DashboardController::class, 'bantuan'])->name('bantuan');
 
-Route::get('/mitra', [MitraController::class, 'index'])->name('mitra')->middleware('auth');
-Route::get('/mitra/add', [MitraController::class, 'add'])->name('addmitra')->middleware('auth');
-Route::post('/mitra/add', [MitraController::class, 'store'])->name('mitra.store');
-Route::get('/mitra/edit', [MitraController::class, 'edit'])->name('editmitra')->middleware('auth');
-Route::post('/mitra/edit', [MitraController::class, 'store'])->name('editmitra.store');
-Route::get('/mitra/{id}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
+    // Route Survei
+    Route::get('/survei', [SurveyController::class, 'index'])->name('survei');
+    Route::get('/survei/add', [SurveyController::class, 'add'])->name('addsurvei');
+    Route::post('/survei/add', [SurveyController::class, 'store'])->name('survei.store');
+    Route::get('/survei/{id}', [SurveyController::class, 'show'])->name('surveidetail');
+    Route::get('/survei/penilaian', [PenilaianController::class, 'index'])->name('penilaian');
+    Route::get('/survei/{id}/edit', [SurveyController::class, 'edit'])->name('editsurvei');
+    Route::put('/survei/{id}', [SurveyController::class, 'update'])->name('editsurvei.update');
 
-Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai')->middleware('auth');
-Route::get('/pegawai/add', [PegawaiController::class, 'add'])->name('addpegawai')->middleware('auth');
-Route::post('/pegawai/add', [PegawaiController::class, 'store'])->name('pegawai.store');
-Route::get('/pegawai/edit', [PegawaiController::class, 'edit'])->name('editpegawai')->middleware('auth');
-Route::post('/pegawai/edit', [PegawaiController::class, 'store'])->name('editpegawai.store');
-Route::get('/pegawai/{id}', [PegawaiController::class, 'show'])->name('pegawaidetail')->middleware('auth');
+    // Route Mitra
+    Route::get('/mitra', [MitraController::class, 'index'])->name('mitra');
+    Route::get('/mitra/add', [MitraController::class, 'add'])->name('addmitra');
+    Route::post('/mitra/add', [MitraController::class, 'store'])->name('mitra.store');
+    Route::get('/mitra/edit', [MitraController::class, 'edit'])->name('editmitra');
+    Route::post('/mitra/edit', [MitraController::class, 'store'])->name('editmitra.store');
+    Route::get('/mitra/{id}', [MitraController::class, 'show'])->name('mitradetail');
 
-//Route::get('/mitrateladan', [MitraController::class, 'index'])->name('mitra')->middleware('auth');
-Route::get('/mitrateladan', [MitraTeladan::class, 'index'])->name('mitrateladan')->middleware('auth');
+    // Route Pegawai
+    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai');
+    Route::get('/pegawai/add', [PegawaiController::class, 'add'])->name('addpegawai');
+    Route::post('/pegawai/add', [PegawaiController::class, 'store'])->name('pegawai.store');
+    Route::get('/pegawai/edit', [PegawaiController::class, 'edit'])->name('editpegawai');
+    Route::post('/pegawai/edit', [PegawaiController::class, 'store'])->name('editpegawai.store');
+    Route::get('/pegawai/{id}', [PegawaiController::class, 'show'])->name('pegawaidetail');
+
+    // Route Mitra Teladan
+    Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan');
+
+    // Route Logout
+    Route::post('actionlogout', [LoginController::class, 'actionlogout'])->name('actionlogout');
+});
+
+// Route Otentikasi
+require __DIR__.'/auth.php';

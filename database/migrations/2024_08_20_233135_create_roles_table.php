@@ -9,21 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('payment_types', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id('id');
-            $table->string('payment_type', 50);
+            $table->string('role',50);
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_types');
+        Schema::dropIfExists('roles');
     }
 };

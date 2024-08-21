@@ -13,9 +13,9 @@ class PaymentTypesSeeder extends Seeder
     public function run(): void
     {
         DB::table('payment_types')->insert([
-            ['payment_type_id' => 1, 
+            ['id' => 1, 
             'payment_type' => 'Bulanan'],
-            ['payment_type_id' => 2, 
+            ['id' => 2, 
             'payment_type' => 'Per Dokumen'],
         ]);
     }

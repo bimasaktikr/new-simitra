@@ -14,7 +14,7 @@ class TransactionsSeeder extends Seeder
     {
         DB::table('transactions')->insert([
             [
-                'transaction_id' => 1,
+                'id' => 1,
                 'mitra_id' => 212112328,
                 'survey_id' => 1,
                 'target' => 'Target A',
@@ -22,7 +22,7 @@ class TransactionsSeeder extends Seeder
                 'nilai' => 4
             ],
             [
-                'transaction_id' => 2,
+                'id' => 2,
                 'mitra_id' => 212112287,
                 'survey_id' => 2,
                 'target' => 'Target B',
@@ -30,7 +30,7 @@ class TransactionsSeeder extends Seeder
                 'nilai' => 4.33
             ],
             [
-                'transaction_id' => 3,
+                'id' => 3,
                 'mitra_id' => 212112328,
                 'survey_id' => 3,
                 'target' => 'Target C',
@@ -38,7 +38,7 @@ class TransactionsSeeder extends Seeder
                 'nilai' => 4.67
             ],
             [
-                'transaction_id' => 4,
+                'id' => 4,
                 'mitra_id' => 212112328,
                 'survey_id' => 4,
                 'target' => 'Target D',
@@ -46,7 +46,7 @@ class TransactionsSeeder extends Seeder
                 'nilai' => 5
             ],
             [
-                'transaction_id' => 5,
+                'id' => 5,
                 'mitra_id' => 212112287,
                 'survey_id' => 5,
                 'target' => 'Target E',

@@ -13,14 +13,14 @@ class MitrasSeeder extends Seeder
     public function run(): void
     {
         DB::table('mitras')->insert([
-            ['mitra_id' => 212112328, 
+            ['id' => 212112328, 
             'user_id' => 3, 
             'name' => 'Rissa Erviana', 
             'pendidikan' => 'S1', 
             'jenis_kelamin' => 'Perempuan', 
             'umur' => 21],
 
-            ['mitra_id' => 212112287, 
+            ['id' => 212112287, 
             'user_id' => 4, 
             'name' => 'Pretty Melati Pardede', 
             'pendidikan' => 'S1', 
