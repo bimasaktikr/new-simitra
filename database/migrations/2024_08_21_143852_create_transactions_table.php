@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('nilai');
             $table->timestamps();
 
-            $table->foreign('mitra_id')->references('id')->on('mitras')->onDelete('set null');
-            $table->foreign('survey_id')->references('id')->on('surveys')->onDelete('set null');
+            $table->foreign('mitra_id')->references('id')->on('mitras')->onDelete('cascade');
+            $table->foreign('survey_id')->references('id')->on('surveys')->onDelete('cascade');
         });
     }
 

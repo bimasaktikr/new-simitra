@@ -17,10 +17,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
-        'role',
+        'role_id',
     ];
 
     /**
@@ -46,13 +45,18 @@ class User extends Authenticatable
         ];
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+    
     public function mitra()
     {
-        return $this->hasOne(Mitra::class, 'user_id');
+        return $this->hasOne(Mitra::class, 'user_id', 'id');
     }
 
     public function employee()
     {
-        return $this->hasOne(Employee::class, 'user_id');
+        return $this->hasOne(Employee::class, 'user_id', 'id');
     }
 }

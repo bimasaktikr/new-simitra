@@ -21,6 +21,11 @@ class Survey extends Model
         'team_id',
     ];
 
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class, 'survey_id', 'id');
+    }
+
     public function team()
     {
         return $this->belongsTo(Team::class, 'team_id');
@@ -28,6 +33,6 @@ class Survey extends Model
 
     public function payment()
     {
-        return $this->belongsTo(PaymnetType::class, 'payment_type_id');
+        return $this->belongsTo(PaymentType::class, 'payment_type_id');
     }
 }

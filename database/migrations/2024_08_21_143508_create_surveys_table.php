@@ -24,8 +24,8 @@ class CreateSurveysTable extends Migration
         $table->unsignedBigInteger('team_id');
         $table->timestamps();
 
-        $table->foreign('payment_type_id')->references('id')->on('payment_types')->onDelete('set null');
-        $table->foreign('team_id')->references('id')->on('teams')->onDelete('set null');
+        $table->foreign('payment_type_id')->references('id')->on('payment_types')->onDelete('cascade');
+        $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
     });
 }
 

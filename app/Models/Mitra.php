@@ -18,6 +18,11 @@ class Mitra extends Model
         'jenis_kelamin',
         'umur',
     ];
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class, 'mitra_id', 'id');
+    }
     
     public function user()
     {

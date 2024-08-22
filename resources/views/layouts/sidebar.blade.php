@@ -1,67 +1,17 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-    <div class="flex justify-between h-16 z-10">
-        <div class="flex items-center">
-            <!-- Hamburger Menu -->
-            <button @click="open = !open" id="hamburger" type="button" class="p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-                <span class="sr-only">Open sidebar</span>
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z" clip-rule="evenodd"></path>
-                </svg>
-            </button>
-            <!-- Logo -->
-            <a href="{{ route('dashboard') }}" class="flex ms-2 md:me-24">
-                <img src="/img/SIMITRA.png" class="h-8 me-3" alt="Logo SIMITRA" />
-                <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">SIMITRA</span>
-            </a>
-        </div>
-
-        <!-- Settings Dropdown -->
-        <div class="hidden sm:flex sm:items-center sm:ms-6">
-            <x-dropdown align="right" width="48">
-                <x-slot name="trigger">
-                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                        <div>{{ Auth::user()->name }}</div>
-                        <div class="ms-1">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                    </button>
-                </x-slot>
-
-                <x-slot name="content">
-                    <x-dropdown-link :href="route('profile.edit')">
-                        {{ __('Profile') }}
-                    </x-dropdown-link>
-
-                    <!-- Authentication -->
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                            this.closest('form').submit();">
-                            {{ __('Log Out') }}
-                        </x-dropdown-link>
-                    </form>
-                </x-slot>
-            </x-dropdown>
-        </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div x-show="open" x-cloak class="fixed inset-y-0 left-0 w-64 bg-gray-800 shadow-lg z-30">
-        <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-            <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
-                <ul class="space-y-2 font-medium">
-                    <li>
-                        <a href="{{ route('dashboard') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white {{ request()->is('dashboard/*') || request()->is('dashboard*') ? 'bg-blue-500 text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }} group">
-                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12L11.204 3.045a1.125 1.125 0 011.592 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
-                            </svg>
-                            <span class="ms-3">Beranda</span>
-                        </a>
-                    </li>
-                    <li>
+<aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+            <ul class="space-y-2 font-medium">
+                <li>
+                <a href="{{ route('dashboard') }}" 
+                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white 
+                   {{ request()->is('dashboard/*') || request()->is('dashboard*') ? 'bg-blue-500 text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }} group">
+                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>
+                    <span class="ms-3">Beranda</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{route('mitrateladan')}}" 
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white 
                         {{ request()->is('mitrateladan/*') || request()->is('mitrateladan') ? 'bg-blue-500 text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }} group">
@@ -111,8 +61,6 @@
                     <span class="ms-3">Bantuan</span>
                     </a>
                 </li>
-                </ul>
-            </div>
-        </aside>
-    </div>
-</nav>
+            </ul>
+        </div>
+    </aside>
