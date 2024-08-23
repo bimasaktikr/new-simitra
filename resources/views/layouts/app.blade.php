@@ -23,23 +23,9 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
 </head>
-<body class="sidebar-open dark:bg-gray-900">
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+<body class="font-sans antialiased" x-data="{ open: false }">
+    <div class="bg-gray-100 dark:bg-gray-900 mb:5">
         @include('layouts.navigation')
-
-        <!-- Page Heading -->
-        @isset($header)
-            <header class="container mx-auto p-4">
-                <div class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
-
-        <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
     </div>
 </body>
 </html>
