@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id('transaction_id');
+            $table->id('id');
             $table->unsignedBigInteger('mitra_id');
             $table->unsignedBigInteger('survey_id');
             $table->string('target', 200);
@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('nilai');
             $table->timestamps();
 
-            $table->foreign('mitra_id')->references('mitra_id')->on('mitras')->onDelete('cascade');
-            $table->foreign('survey_id')->references('survey_id')->on('surveys')->onDelete('cascade');
+            $table->foreign('mitra_id')->references('id_sobat')->on('mitras')->onDelete('cascade');
+            $table->foreign('survey_id')->references('id')->on('surveys')->onDelete('cascade');
         });
     }
 

@@ -36,18 +36,11 @@ class SurveyController extends Controller
         // ];
     }
 
-    // public function index()
-    // {
-    //     return view('survey', [
-    //         'user' => $this->user,
-    //         'surveys' => $this->surveys
-    //     ]); // Mengirim data ke view
-    // }
-
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil semua data survei dari tabel
-        $surveys = Survey::all();
+        $perPage = $request->input('per_page', 10);
+
+        $surveys = Survey::paginate($perPage);
         
         // Mengirim data survei ke view
         return view('survey', [

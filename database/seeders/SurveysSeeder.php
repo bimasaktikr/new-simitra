@@ -11,7 +11,7 @@ class SurveysSeeder extends Seeder
     {
         DB::table('surveys')->insert([
             [
-                'survey_id' => 1,
+                'id' => 1,
                 'name' => 'Survey A',
                 'code' => 'SA',
                 'payment_type_id' => 1,
@@ -21,7 +21,7 @@ class SurveysSeeder extends Seeder
                 'team_id' => 1
             ],
             [
-                'survey_id' => 2,
+                'id' => 2,
                 'name' => 'Survey B',
                 'code' => 'SB',
                 'payment_type_id' => 2,
@@ -31,7 +31,7 @@ class SurveysSeeder extends Seeder
                 'team_id' => 2
             ],
             [
-                'survey_id' => 3,
+                'id' => 3,
                 'name' => 'Survey C',
                 'code' => 'SC',
                 'payment_type_id' => 2,
@@ -41,7 +41,7 @@ class SurveysSeeder extends Seeder
                 'team_id' => 3
             ],
             [
-                'survey_id' => 4,
+                'id' => 4,
                 'name' => 'Survey D',
                 'code' => 'SD',
                 'payment_type_id' => 1,
@@ -51,7 +51,7 @@ class SurveysSeeder extends Seeder
                 'team_id' => 4
             ],
             [
-                'survey_id' => 5,
+                'id' => 5,
                 'name' => 'Survey E',
                 'code' => 'SE',
                 'payment_type_id' => 1,

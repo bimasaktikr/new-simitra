@@ -11,7 +11,6 @@ use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\MitraTeladanController;
 
 Route::get('/', [LoginController::class, 'login'])->name('login');
-use App\Http\Controllers\MitraTeladan;
 Route::post('actionlogin', [LoginController::class, 'actionlogin'])->name('actionlogin');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
@@ -44,5 +43,4 @@ Route::get('/pegawai/edit', [PegawaiController::class, 'edit'])->name('editpegaw
 Route::post('/pegawai/edit', [PegawaiController::class, 'store'])->name('editpegawai.store');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show'])->name('pegawaidetail')->middleware('auth');
 
-//Route::get('/mitrateladan', [MitraController::class, 'index'])->name('mitra')->middleware('auth');
-Route::get('/mitrateladan', [MitraTeladan::class, 'index'])->name('mitrateladan')->middleware('auth');
+Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');

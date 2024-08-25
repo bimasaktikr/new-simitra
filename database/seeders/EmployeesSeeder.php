@@ -13,17 +13,23 @@ class EmployeesSeeder extends Seeder
     public function run(): void
     {
         DB::table('employees')->insert([
-            ['employee_id' => 1, 
-            'user_id' => 1, 
+            ['id' => 1, 
             'name' => 'Azmira Candra Vidiasari', 
-            'nip' => '212111941', 
+            'nip' => '212111941',
+            'email' => 'user1@example.com', 
             'team_id' => 1],
 
-            ['employee_id' => 2, 
-            'user_id' => 2, 
+            ['id' => 2, 
             'name' => 'Bintana Tajmala', 
             'nip' => '212111957', 
+            'email' => 'user2@example.com', 
             'team_id' => 2],
+
+            ['id' => 3,  
+            'name' => 'Elvina Gamayanti', 
+            'nip' => '212111957', 
+            'email' => 'admin@example.com', 
+            'team_id' => NULL],
         ]);
     }
 }

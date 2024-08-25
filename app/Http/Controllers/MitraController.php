@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Mitra;
 
 class MitraController extends Controller
 {
@@ -15,51 +16,55 @@ class MitraController extends Controller
         $this->user = Auth::user(); // Mendapatkan data pengguna yang login
 
         // Data dummy untuk detail survei
-        $this->mitras = [
-            [
-                'name' => 'Bagus Sunandar',
-                'id_sobat' => '35717272',
-                'jk' => 'Laki-laki',
-                'email' => 'bagus@gmail.com',
-                'tanggal_lahir' => '1990-01-07',
-            ],
-            [
-                'name' => 'Bagas Sunandar',
-                'id_sobat' => '35717272',
-                'jk' => 'Laki-laki',
-                'email' => 'bagas@gmail.com',
-                'tanggal_lahir' => '1993-02-11',
-            ],
-            [
-                'name' => 'Bugus Sunandar',
-                'id_sobat' => '35717272',
-                'jk' => 'Laki-laki',
-                'email' => 'bugus@gmail.com',
-                'tanggal_lahir' => '1995-12-01',
-            ],
-            [
-                'name' => 'Bigas Sunandar',
-                'id_sobat' => '35717272',
-                'jk' => 'Perempuan',
-                'email' => 'bigas@gmail.com',
-                'tanggal_lahir' => '2003-07-10',
-            ],
-            [
-                'name' => 'Bogas Sunandar',
-                'id_sobat' => '35717272',
-                'jk' => 'Laki-laki',
-                'email' => 'bogas@gmail.com',
-                'tanggal_lahir' => '2005-04-27',
-            ],
-        ];
+        // $this->mitras = [
+        //     [
+        //         'name' => 'Bagus Sunandar',
+        //         'id_sobat' => '35717272',
+        //         'jk' => 'Laki-laki',
+        //         'email' => 'bagus@gmail.com',
+        //         'tanggal_lahir' => '1990-01-07',
+        //     ],
+        //     [
+        //         'name' => 'Bagas Sunandar',
+        //         'id_sobat' => '35717272',
+        //         'jk' => 'Laki-laki',
+        //         'email' => 'bagas@gmail.com',
+        //         'tanggal_lahir' => '1993-02-11',
+        //     ],
+        //     [
+        //         'name' => 'Bugus Sunandar',
+        //         'id_sobat' => '35717272',
+        //         'jk' => 'Laki-laki',
+        //         'email' => 'bugus@gmail.com',
+        //         'tanggal_lahir' => '1995-12-01',
+        //     ],
+        //     [
+        //         'name' => 'Bigas Sunandar',
+        //         'id_sobat' => '35717272',
+        //         'jk' => 'Perempuan',
+        //         'email' => 'bigas@gmail.com',
+        //         'tanggal_lahir' => '2003-07-10',
+        //     ],
+        //     [
+        //         'name' => 'Bogas Sunandar',
+        //         'id_sobat' => '35717272',
+        //         'jk' => 'Laki-laki',
+        //         'email' => 'bogas@gmail.com',
+        //         'tanggal_lahir' => '2005-04-27',
+        //     ],
+        // ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = $request->input('per_page', 10);
+
+        $mitras = Mitra::paginate($perPage);
+        
+        // Mengirim data survei ke view
         return view('mitra', [
             'user' => $this->user,
-            'mitras' => $this->mitras
-        ]); // Mengirim data ke view// Mengirim data ke view
+            'mitras' => $mitras]);
     }
 
     public function add()

@@ -14,27 +14,27 @@ class TeamsSeeder extends Seeder
     {
         DB::table('teams')->insert([
             [
-                'team_id' => 1,
+                'id' => 1,
                 'name' => 'Team A',
                 'code' => 'TA'
             ],
             [
-                'team_id' => 2,
+                'id' => 2,
                 'name' => 'Team B',
                 'code' => 'TB'
             ],
             [
-                'team_id' => 3,
+                'id' => 3,
                 'name' => 'Team C',
                 'code' => 'TC'
             ],
             [
-                'team_id' => 4,
+                'id' => 4,
                 'name' => 'Team D',
                 'code' => 'TD'
             ],
             [
-                'team_id' => 5,
+                'id' => 5,
                 'name' => 'Team E',
                 'code' => 'TE'
             ],

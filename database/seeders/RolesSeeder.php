@@ -5,18 +5,22 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class PaymentTypesSeeder extends Seeder
+class RolesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('payment_types')->insert([
+        DB::table('roles')->insert([
             ['id' => 1, 
-            'payment_type' => 'Bulanan'],
+            'role' => 'Admin',],
             ['id' => 2, 
-            'payment_type' => 'Per Dokumen'],
+            'role' => 'Ketua Tim',],
+            ['id' => 3, 
+            'role' => 'Pegawai',],
+            ['id' => 4, 
+            'role' => 'Mitra',],
         ]);
     }
 }

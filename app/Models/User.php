@@ -17,9 +17,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -43,5 +43,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'email');
+    }
+    
+    public function mitra()
+    {
+        return $this->hasOne(Mitra::class, 'email');
+    }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'email');
     }
 }

@@ -13,11 +13,26 @@ class Survey extends Model
 
     protected $fillable = [
         'name',
-        'kode',
-        'ketua_tim',
-        'tanggal_mulai',
-        'tanggal_berakhir',
-        'tipe_pembayaran',
-        'harga',
+        'code',
+        'payment_type_id',
+        'start_date',
+        'end_date',
+        'payment',
+        'team_id',
     ];
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class, 'survey_id', 'id');
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class, 'team_id');
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(PaymentType::class, 'payment_type_id');
+    }
 }

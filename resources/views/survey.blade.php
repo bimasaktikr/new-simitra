@@ -46,12 +46,12 @@
                     <tbody>
                         @foreach($surveys as $index => $survey)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <td class="px-6 py-4">{{ $index + 1 }}</td>
+                            <td class="px-6 py-4">{{ $surveys->firstItem() + $index }}</td>
                             <td class="px-6 py-4">{{ $survey->name }}</td>
-                            <td class="px-6 py-4">{{ $survey->kode }}</td>
+                            <td class="px-6 py-4">{{ $survey->code }}</td>
                             <td class="px-6 py-4">{{ $survey->ketua_tim }}</td>
-                            <td class="px-6 py-4">{{ $survey->tanggal_mulai }}</td>
-                            <td class="px-6 py-4">{{ $survey->tanggal_berakhir }}</td>
+                            <td class="px-6 py-4">{{ $survey->start_date }}</td>
+                            <td class="px-6 py-4">{{ $survey->end_date }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex space-x-2">
                                     <button onclick="window.location='{{ route('surveidetail', ['id' => $index + 1]) }}'" class="px-3 py-1 text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800">Lihat</button>
@@ -68,27 +68,23 @@
             </div>
         </div>
 
-        <div class="flex justify-between mt-4 items-center">
-            <div>
-                <label for="per_page" class="text-sm text-gray-700 dark:text-gray-300">Records per halaman:</label>
-                <select id="per_page" name="per_page" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                </select>
-            </div>
+        <form action="{{ route('survei') }}" method="GET">
+            <div class="flex justify-between mt-4 items-center">
+                <div>
+                    <label for="per_page" class="text-sm text-gray-700 dark:text-gray-300">Records per halaman:</label>
+                    <select id="per_page" name="per_page" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" onchange="this.form.submit()">
+                        <option value="10" {{ request()->get('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                        <option value="15" {{ request()->get('per_page') == 15 ? 'selected' : '' }}>15</option>
+                        <option value="20" {{ request()->get('per_page') == 20 ? 'selected' : '' }}>20</option>
+                    </select>
+                </div>
 
-            <div>
-                <nav class="flex justify-end">
-                    <ul class="inline-flex items-center -space-x-px">
-                        <li><a href="#" class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200">Previous</a></li>
-                        <li><a href="#" class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200">1</a></li>
-                        <li><a href="#" class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200">2</a></li>
-                        <li><a href="#" class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200">Next</a></li>
-                    </ul>
-                </nav>
+                <div>
+                    {{ $surveys->appends(['per_page' => request()->get('per_page', 10)])->links('components.pagination') }}
+                </div>
             </div>
-        </div>
+        </form>
+
     </div>
 </div>
 @endsection

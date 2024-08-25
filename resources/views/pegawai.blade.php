@@ -37,7 +37,7 @@
                     <tbody>
                         @foreach($employees as $index => $employee)
                         <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-                            <td class="px-6 py-4">{{ $index + 1 }}</td>
+                            <td class="px-6 py-4">{{ $employees->firstItem() + $index }}</td>
                             <td class="px-6 py-4">{{ $employee['name'] }}</td>
                             <td class="px-6 py-4">{{ $employee['nip'] }}</td>
                             <td class="px-6 py-4">{{ $employee['email'] }}</td>
@@ -57,27 +57,22 @@
             </div>
         </div>
 
-        <div class="flex justify-between mt-4 items-center">
-            <div>
-                <label for="per_page" class="text-sm text-gray-700 dark:text-gray-300">Records per halaman:</label>
-                <select id="per_page" name="per_page" class="p-2 border rounded-lg border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                </select>
-            </div>
+        <form action="{{ route('pegawai') }}" method="GET">
+            <div class="flex justify-between mt-4 items-center">
+                <div>
+                    <label for="per_page" class="text-sm text-gray-700 dark:text-gray-300">Records per halaman:</label>
+                    <select id="per_page" name="per_page" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" onchange="this.form.submit()">
+                        <option value="10" {{ request()->get('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                        <option value="15" {{ request()->get('per_page') == 15 ? 'selected' : '' }}>15</option>
+                        <option value="20" {{ request()->get('per_page') == 20 ? 'selected' : '' }}>20</option>
+                    </select>
+                </div>
 
-            <div>
-                <nav class="flex justify-end">
-                    <ul class="inline-flex items-center -space-x-px">
-                        <li><a href="#" class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300">Previous</a></li>
-                        <li><a href="#" class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300">1</a></li>
-                        <li><a href="#" class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300">2</a></li>
-                        <li><a href="#" class="px-3 py-2 text-sm text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300">Next</a></li>
-                    </ul>
-                </nav>
+                <div>
+                    {{ $employees->appends(['per_page' => request()->get('per_page', 10)])->links('components.pagination') }}
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 @endsection
