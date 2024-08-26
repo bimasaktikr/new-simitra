@@ -96,5 +96,14 @@ class PegawaiController extends Controller
             'employee' => $employee
         ]);
     }
+
+    public function destroy($id)
+    {
+        $employee = Employee::findOrFail($id);
+
+        $employee->delete();
+
+        return redirect()->route('pegawai')->with('success', 'Pegawai berhasil dihapus.');
+    }
 }
 

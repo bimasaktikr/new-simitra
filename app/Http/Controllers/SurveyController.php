@@ -145,4 +145,13 @@ class SurveyController extends Controller
 
         return redirect()->route('survei')->with('success', 'Survei berhasil diperbarui.');
     }
+
+    public function destroy($id)
+    {
+        $survey = Survey::findOrFail($id);
+
+        $survey->delete();
+
+        return redirect()->route('survei')->with('success', 'Survey berhasil dihapus.');
+    }
 }

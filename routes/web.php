@@ -25,7 +25,7 @@ Route::get('/survei/{id}', [SurveyController::class, 'show'])->name('surveidetai
 Route::get('/survei/penilaian', [PenilaianController::class, 'index'])->name('penilaian')->middleware('auth');
 Route::get('/survei/{id}/edit', [SurveyController::class, 'edit'])->name('editsurvei');
 Route::put('/survei/{id}', [SurveyController::class, 'update'])->name('editsurvei.update');
-
+Route::delete('/surveys/{id}', [SurveyController::class, 'destroy'])->name('surveys.destroy');
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware('auth');
 Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
@@ -36,6 +36,7 @@ Route::post('/mitra/add', [MitraController::class, 'store'])->name('mitra.store'
 Route::get('/mitra/edit', [MitraController::class, 'edit'])->name('editmitra')->middleware('auth');
 Route::post('/mitra/edit', [MitraController::class, 'store'])->name('editmitra.store');
 Route::get('/mitra/{id}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
+Route::delete('/mitra/{id}', [MitraController::class, 'destroy'])->name('mitra.destroy');
 
 Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai')->middleware('auth');
 Route::get('/pegawai/add', [PegawaiController::class, 'add'])->name('addpegawai')->middleware('auth');
@@ -43,5 +44,6 @@ Route::post('/pegawai/add', [PegawaiController::class, 'store'])->name('pegawai.
 Route::get('/pegawai/edit', [PegawaiController::class, 'edit'])->name('editpegawai')->middleware('auth');
 Route::post('/pegawai/edit', [PegawaiController::class, 'store'])->name('editpegawai.store');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show'])->name('pegawaidetail')->middleware('auth');
+Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');

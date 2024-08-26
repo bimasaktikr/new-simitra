@@ -23,3 +23,15 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   });
+
+  function toggleModal(modalID, formAction = null) {
+    const modal = document.getElementById(modalID);
+    if (formAction) {
+        document.getElementById('deleteForm').action = formAction;
+    }
+    modal.classList.toggle('hidden');
+}
+
+document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+    document.getElementById('deleteForm').submit();
+});

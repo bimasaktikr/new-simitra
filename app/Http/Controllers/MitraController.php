@@ -52,5 +52,14 @@ class MitraController extends Controller
         ]);
     }
 
+    public function destroy($id)
+    {
+        $mitra = Mitra::findOrFail($id);
+
+        $mitra->delete();
+
+        return redirect()->route('mitra')->with('success', 'Mitra berhasil dihapus.');
+    }
+
 }
 
