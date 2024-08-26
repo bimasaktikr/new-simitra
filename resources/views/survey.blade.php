@@ -37,7 +37,7 @@
                             <th scope="col" class="px-6 py-3">No</th>
                             <th scope="col" class="px-6 py-3">Nama Survei</th>
                             <th scope="col" class="px-6 py-3">Kode</th>
-                            <th scope="col" class="px-6 py-3">Ketua Tim</th>
+                            <th scope="col" class="px-6 py-3">Tim</th>
                             <th scope="col" class="px-6 py-3">Tanggal Mulai</th>
                             <th scope="col" class="px-6 py-3">Tanggal Berakhir</th>
                             <th scope="col" class="px-6 py-3">Aksi</th>
@@ -49,7 +49,7 @@
                             <td class="px-6 py-4">{{ $surveys->firstItem() + $index }}</td>
                             <td class="px-6 py-4">{{ $survey->name }}</td>
                             <td class="px-6 py-4">{{ $survey->code }}</td>
-                            <td class="px-6 py-4">{{ $survey->ketua_tim }}</td>
+                            <td class="px-6 py-4">{{ $survey->team_name }}</td>
                             <td class="px-6 py-4">{{ $survey->start_date }}</td>
                             <td class="px-6 py-4">{{ $survey->end_date }}</td>
                             <td class="px-6 py-4">

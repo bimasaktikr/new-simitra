@@ -15,12 +15,19 @@
 
         <div class="mb-4">
             <label for="kode" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kode Survei</label>
-            <input type="text" name="kode" id="kode" value="{{ old('kode', $survey->kode) }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <input type="text" name="kode" id="kode" value="{{ old('code', $survey->code) }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
         </div>
 
         <div class="mb-4">
-            <label for="ketua_tim" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ketua Tim</label>
-            <input type="text" name="ketua_tim" id="ketua_tim" value="{{ old('ketua_tim', $survey->ketua_tim) }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <label for="tim" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tim</label>
+            <!-- <input type="text" name="ketua_tim" id="ketua_tim" value="{{ old('team_name', $survey->team_name) }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required> -->
+            <select name="tim" id="tim" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            @foreach($teams as $team)
+                <option value="{{ $team->id }}" {{ old('name', $survey->team_id) == $team->id ? 'selected' : '' }}>
+                    {{ $team->name }}
+                </option>
+            @endforeach    
+            </select>
         </div>
 
         <div class="mb-4">
@@ -36,14 +43,17 @@
         <div class="mb-4">
             <label for="tipe_pembayaran" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Pembayaran</label>
             <select name="tipe_pembayaran" id="tipe_pembayaran" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
-                <option value="bulanan" {{ old('tipe_pembayaran', $survey->tipe_pembayaran) == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
-                <option value="per_dokumen" {{ old('tipe_pembayaran', $survey->tipe_pembayaran) == 'per_dokumen' ? 'selected' : '' }}>Per Dokumen</option>
+            @foreach($paymentTypes as $paymentType)
+                <option value="{{ $paymentType->id }}" {{ old('payment_type', $survey->payment_type_id) == $paymentType->id ? 'selected' : '' }}>
+                    {{ $paymentType->payment_type }}
+                </option>
+            @endforeach    
             </select>
         </div>
 
         <div class="mb-4">
             <label for="harga" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Harga</label>
-            <input type="number" name="harga" id="harga" value="{{ old('harga', $survey->harga) }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <input type="number" name="harga" id="harga" value="{{ old('payment', $survey->payment) }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
         </div>
 
         <div class="mb-4">

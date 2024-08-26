@@ -19,7 +19,8 @@ Route::post('actionlogout', [LoginController::class, 'actionlogout'])->name('act
 
 Route::get('/survei', [SurveyController::class, 'index'])->name('survei')->middleware('auth');
 Route::get('/survei/add', [SurveyController::class, 'add'])->name('addsurvei')->middleware('auth');
-Route::post('/survei/add', [SurveyController::class, 'store'])->name('survei.store');
+// Route::post('/survei/add', [SurveyController::class, 'store'])->name('survei.store');
+Route::post('/survei/store', [SurveyController::class, 'store'])->name('survei.store');
 Route::get('/survei/{id}', [SurveyController::class, 'show'])->name('surveidetail')->middleware('auth');
 Route::get('/survei/penilaian', [PenilaianController::class, 'index'])->name('penilaian')->middleware('auth');
 Route::get('/survei/{id}/edit', [SurveyController::class, 'edit'])->name('editsurvei');

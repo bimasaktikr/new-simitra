@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Session;
 
 class LoginController extends Controller
@@ -18,19 +19,45 @@ class LoginController extends Controller
     }
 
     public function actionlogin(Request $request)
-    {
-        $data = [
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-        ];
+{
+    $credentials = [
+        'email' => $request->input('email'),
+        'password' => $request->input('password'),
+    ];
 
-        if (Auth::Attempt($data)) {
-            return redirect('/dashboard');
-        }else{
-            Session::flash('error', 'Email atau Password Salah');
-            return redirect('/');
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+
+        $mitra = DB::table('mitras')->where('email', $user->email)->first();
+        $employee = DB::table('employees')->where('email', $user->email)->first();
+
+        // Simpan data ke dalam session berdasarkan role
+        if ($user->role_id == '4' && $mitra) {
+            Session::put('user_data', $mitra);
+        } elseif ($user->role_id != '4' && $employee) {
+            Session::put('user_data', $employee);
         }
+
+        return redirect('/dashboard');
+    } else {
+        Session::flash('error', 'Email atau Password Salah');
+        return redirect('/');
     }
+}
+
+
+        // $data = [
+        //     'email' => $request->input('email'),
+        //     'password' => $request->input('password'),
+        // ];
+
+        // if (Auth::Attempt($data)) {
+        //     return redirect('/dashboard');
+        // }else{
+        //     Session::flash('error', 'Email atau Password Salah');
+        //     return redirect('/');
+        // }
+    // }
 
     public function actionlogout()
     {

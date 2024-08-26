@@ -18,8 +18,14 @@
         </div>
 
         <div class="mb-4">
-            <label for="ketua_tim" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ketua Tim</label>
-            <input type="text" name="ketua_tim" id="ketua_tim" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <label for="tim" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tim</label>
+            <select name="tim" id="tim" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            @foreach($teams as $team)
+                <option value="{{ $team->id }}">
+                    {{ $team->name }}
+                </option>
+            @endforeach
+            </select>
         </div>
 
         <div class="mb-4">
@@ -35,8 +41,11 @@
         <div class="mb-4">
             <label for="tipe_pembayaran" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Pembayaran</label>
             <select name="tipe_pembayaran" id="tipe_pembayaran" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
-                <option value="bulanan">Bulanan</option>
-                <option value="per_dokumen">Per Dokumen</option>
+            @foreach($paymentTypes as $paymentType)
+                <option value="{{ $paymentType->id }}">
+                    {{ $paymentType->payment_type }}
+                </option>
+            @endforeach
             </select>
         </div>
 
