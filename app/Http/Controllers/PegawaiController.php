@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log; 
+use App\Models\Team;
+use App\Models\User;
 use App\Models\Employee;
 
 class PegawaiController extends Controller
@@ -14,55 +19,6 @@ class PegawaiController extends Controller
     public function __construct()
     {
         $this->user = Auth::user(); // Mendapatkan data pengguna yang login
-
-    //     // Data dummy untuk detail survei
-    //     $this->employees = [
-    //         [
-    //             'name' => 'Putri Lestari',
-    //             'nip' => '123123123',
-    //             'jk' => 'Perempuan',
-    //             'email' => 'putriles@gmail.com',
-    //             'tanggal_lahir' => '2000-01-11',
-    //             'fungsi' => 'produksi',
-    //             'peran' => 'anggota',
-    //         ],
-    //         [
-    //             'name' => 'Rissa Erviana',
-    //             'nip' => '123123124',
-    //             'jk' => 'Perempuan',
-    //             'email' => 'rissaer@gmail.com',
-    //             'tanggal_lahir' => '1998-02-25',
-    //             'fungsi' => 'ipds',
-    //             'peran' => 'anggota',
-    //         ],
-    //         [
-    //             'name' => 'Elvina Gamayanti',
-    //             'nip' => '123123125',
-    //             'jk' => 'Perempuan',
-    //             'email' => 'pina@gmail.com',
-    //             'tanggal_lahir' => '2004-07-22',
-    //             'fungsi' => 'sosial',
-    //             'peran' => 'anggota',
-    //         ],
-    //         [
-    //             'name' => 'Nur Zaman',
-    //             'nip' => '123123126',
-    //             'jk' => 'Perempuan',
-    //             'email' => 'nurzmn@gmail.com',
-    //             'tanggal_lahir' => '1967-01-17',
-    //             'fungsi' => 'nerwilis',
-    //             'peran' => 'ketua',
-    //         ],
-    //         [
-    //             'name' => 'Bintang Purnama',
-    //             'nip' => '123123127',
-    //             'jk' => 'Perempuan',
-    //             'email' => 'bintgpur@gmail.com',
-    //             'tanggal_lahir' => '1977-11-04',
-    //             'fungsi' => 'distribusi',
-    //             'peran' => 'anggota',
-    //         ]
-    //     ];
     }
 
     public function index(Request $request)
@@ -79,7 +35,12 @@ class PegawaiController extends Controller
 
     public function add()
     {
-        return view('addpegawai', ['user' => $this->user]); // Mengirim data ke view
+        $teams = Team::all();
+
+        return view('addpegawai', [
+            'user' => $this->user,
+            'teams' => $teams
+        ]);
     }
 
     public function edit()
@@ -108,41 +69,43 @@ class PegawaiController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'id_sobat' => 'required|string|max:255|unique:mitras',
+            'nip' => 'required|string|max:255|unique:employees',
             'jk' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'pendidikan' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
+            'fungsi' => 'required|exists:teams,id',
+            'peran' => 'required|string|max:255'
         ]);
 
         try {
             DB::beginTransaction();
 
-            // Buat user baru
+            $role_id = $request->peran === 'Ketua tim' ? 2 : 3;
+
             $user = User::create([
                 'email' => $request->email,
-                'password' => bcrypt($request->id_sobat), 
-                'role_id' => 4,
+                'password' => bcrypt($request->nip), 
+                'role_id' => $role_id,
             ]);
 
-            // Simpan data mitra
-            $mitra = Mitra::create([
+            $employee = Employee::create([
                 'name' => $request->nama,
-                'id_sobat' => $request->id_sobat,
+                'nip' => $request->nip,
                 'jenis_kelamin' => $request->jk,
-                'email' => $user->email,  // Pastikan email dimasukkan
-                'pendidikan' => $request->pendidikan,
+                'email' => $user->email, 
                 'tanggal_lahir' => $request->tanggal_lahir,
+                'team_id' => $request->fungsi,
+                'peran' => $request->peran,
             ]);
 
             DB::commit();
-            return redirect()->route('mitra')->with('success', 'Mitra berhasil ditambahkan.');
+            return redirect()->route('pegawai')->with('success', 'Pegawai berhasil ditambahkan.');
 
         } catch (\Exception $e) {
             DB::rollBack();
             // Log error
-            \Log::error('Error saat menambahkan mitra: ' . $e->getMessage());
-            return back()->with('error', 'Terjadi kesalahan saat menambahkan mitra. Silakan coba lagi.');
+            \Log::error('Error saat menambahkan pegawai: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat menambahkan pegawai. Silakan coba lagi.');
         }
     }
 

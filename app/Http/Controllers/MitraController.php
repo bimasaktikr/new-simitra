@@ -102,6 +102,5 @@ class MitraController extends Controller
 
         return redirect()->route('mitra')->with('success', 'Mitra berhasil dihapus.');
     }
-
 }
 
