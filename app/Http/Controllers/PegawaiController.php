@@ -89,12 +89,61 @@ class PegawaiController extends Controller
 
     public function show($id)
     {
-        $employee = $this->employees[$id - 1] ?? null;
+        $employee = Employee::select('employees.*', 'teams.name as team_name', 'teams.code as team_code')
+                    ->join('teams', 'employees.team_id', '=', 'teams.id')
+                    ->where('employees.id', $id)
+                    ->first();
+
+        if (!$employee) {
+            return redirect()->route('pegawai')->with('error', 'Pegawai tidak ditemukan');
+        }
 
         return view('pegawaidetail', [
             'user' => $this->user,
             'employee' => $employee
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'id_sobat' => 'required|string|max:255|unique:mitras',
+            'jk' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'pendidikan' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Buat user baru
+            $user = User::create([
+                'email' => $request->email,
+                'password' => bcrypt($request->id_sobat), 
+                'role_id' => 4,
+            ]);
+
+            // Simpan data mitra
+            $mitra = Mitra::create([
+                'name' => $request->nama,
+                'id_sobat' => $request->id_sobat,
+                'jenis_kelamin' => $request->jk,
+                'email' => $user->email,  // Pastikan email dimasukkan
+                'pendidikan' => $request->pendidikan,
+                'tanggal_lahir' => $request->tanggal_lahir,
+            ]);
+
+            DB::commit();
+            return redirect()->route('mitra')->with('success', 'Mitra berhasil ditambahkan.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Log error
+            \Log::error('Error saat menambahkan mitra: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat menambahkan mitra. Silakan coba lagi.');
+        }
     }
 
     public function destroy($id)

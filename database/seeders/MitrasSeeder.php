@@ -18,14 +18,14 @@ class MitrasSeeder extends Seeder
             'email' => 'user3@example.com', 
             'pendidikan' => 'S1', 
             'jenis_kelamin' => 'Perempuan', 
-            'umur' => 21],
+            'tanggal_lahir' => '2003-02-02'],
 
             ['id_sobat' => 212112287, 
             'name' => 'Pretty Melati Pardede', 
             'email' => 'user4@example.com', 
             'pendidikan' => 'S1', 
             'jenis_kelamin' => 'Perempuan', 
-            'umur' => 21],
+            'tanggal_lahir' => '2003-01-01'],
         ]);
     }
 }

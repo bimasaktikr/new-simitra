@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id('id');
             $table->string('name', 200);
             $table->string('nip', 200);
+            $table->string('jenis_kelamin', 200);
             $table->string('email', 200)->unique();
+            $table->date('tanggal_lahir');
             $table->unsignedBigInteger('team_id')->nullable();
+            $table->string('peran', 200);
             $table->timestamps();
 
             $table->foreign('email')->references('email')->on('users')->onDelete('cascade');

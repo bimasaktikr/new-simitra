@@ -12,11 +12,12 @@ class Mitra extends Model
     protected $table = 'mitras';
 
     protected $fillable = [
-        'user_id',
+        'id_sobat',
         'name',
+        'email',
         'pendidikan',
         'jenis_kelamin',
-        'umur',
+        'tanggal_lahir',
     ];
 
     public function transaction()

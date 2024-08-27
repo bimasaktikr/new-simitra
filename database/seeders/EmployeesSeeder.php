@@ -16,20 +16,29 @@ class EmployeesSeeder extends Seeder
             ['id' => 1, 
             'name' => 'Azmira Candra Vidiasari', 
             'nip' => '212111941',
-            'email' => 'user1@example.com', 
-            'team_id' => 1],
+            'jenis_kelamin' => 'Perempuan',
+            'email' => 'user1@example.com',
+            'tanggal_lahir' => '2002-01-01',
+            'team_id' => 1,
+            'peran' => 'Ketua tim'],
 
             ['id' => 2, 
             'name' => 'Bintana Tajmala', 
             'nip' => '212111957', 
+            'jenis_kelamin' => 'Perempuan',
             'email' => 'user2@example.com', 
-            'team_id' => 2],
+            'tanggal_lahir' => '2002-01-01',
+            'team_id' => 3,
+            'peran' => 'Anggota'],
 
             ['id' => 3,  
             'name' => 'Elvina Gamayanti', 
             'nip' => '212111957', 
+            'jenis_kelamin' => 'Perempuan',
             'email' => 'admin@example.com', 
-            'team_id' => NULL],
+            'tanggal_lahir' => '2002-01-01',
+            'team_id' => 2,
+            'peran' => 'Anggota'],
         ]);
     }
 }
