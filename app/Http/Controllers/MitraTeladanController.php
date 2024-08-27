@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Mitra;
 
 class MitraTeladanController extends Controller{ 
 
@@ -64,19 +65,22 @@ class MitraTeladanController extends Controller{
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = $request->input('per_page', 10);
+
+        $mitras = Mitra::paginate($perPage);
         return view('mitrateladan', [
             'user' => $this->user,
-            'mitras' => $this->mitras
+            'mitras' => $mitras
         ]); // Mengirim data ke view// Mengirim data ke view
     }
 
     
 
-    public function show($id)
+    public function show($id_sobat)
     {
-        $mitra = $this->mitras[$id - 1] ?? null;
+        $mitra = Mitra::where('id_sobat', $id_sobat)->firstOrFail();
 
         if (!$mitra) {
             return redirect()->route('mitra')->withErrors('Mitra tidak ditemukan.');

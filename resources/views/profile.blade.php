@@ -21,13 +21,57 @@
 
             <div class="mb-4">
                 <p class="font-semibold text-gray-800 dark:text-gray-200">Nama Lengkap</p>
-                <p class="text-gray-600 dark:text-gray-400">{{ $user->name }}</p>
+                <p class="text-gray-600 dark:text-gray-400">{{ $userData->name }}</p>
             </div>
             <div class="mb-4">
                 <p class="font-semibold text-gray-800 dark:text-gray-200">Email</p>
-                <p class="text-gray-600 dark:text-gray-400">{{ $user->email }}</p>
+                <p class="text-gray-600 dark:text-gray-400">{{ $userData->email }}</p>
             </div>
+
+            <!-- Conditional display based on role -->
+            @if($role_id == 4)
+                <!-- Display mitra specific fields -->
+                <div class="mb-4">
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">ID Sobat</p>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->id_sobat }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">Pendidikan</p>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->pendidikan }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">Jenis Kelamin</p>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->jenis_kelamin }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">Tanggal Lahir</p>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->tanggal_lahir }}</p>
+                </div>
+            @else
+                <!-- Display employee specific fields -->
+                <div class="mb-4">
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">NIP</p>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->nip }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">Jenis Kelamin</p>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->jenis_kelamin }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">Tanggal Lahir</p>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->tanggal_lahir }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">Fungsi</p>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->team_name }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">Peran</p>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->peran }}</p>
+                </div>
+            @endif
         </div>
+        
 
         <!-- Ubah Password Tab -->
         <div class="hidden p-4 bg-white dark:bg-gray-900 rounded-lg md:p-8" id="services" role="tabpanel" aria-labelledby="services-tab">
