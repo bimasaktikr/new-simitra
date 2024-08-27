@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Employee;
+use Carbon\Carbon;
 
 class PegawaiController extends Controller
 {
@@ -43,9 +44,47 @@ class PegawaiController extends Controller
         ]);
     }
 
-    public function edit()
+    public function edit($id)
     {
-        return view('editpegawai', ['user' => $this->user]); // Mengirim data ke view
+        $employee = Employee::findOrFail($id);
+        $employee->tanggal_lahir = Carbon::parse($employee->tanggal_lahir);
+
+        $teams = Team::all();
+
+        return view('editpegawai', [
+            'user' => $this->user,
+            'employee' => $employee,
+            'teams' => $teams,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validasi data
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nip' => 'required|string|max:255|unique:employees',
+            'jk' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'tanggal_lahir' => 'required|date',
+            'fungsi' => 'required|exists:teams,id',
+            'peran' => 'required|string|max:255'
+        ]);
+
+        $survey = Survey::findOrFail($id);
+
+        // Memperbarui data survei
+        $survey->update([
+            'name' => $request->input('nama'),
+            'nip' => $request->input('nip'),
+            'jenis_kelamin' => $request->input('jk'),
+            'email' => $request->input('email'),
+            'tanggal_lahir' => $request->input('tanggal_lahir'),
+            'team_id' => $request->input('fungsi'),
+            'peran' => $request->input('peran'), // Update payment_type_id
+        ]);
+
+        return redirect()->route('pegawai')->with('success', 'Pegawai berhasil diperbarui.');
     }
 
     public function show($id)
