@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log; 
 use App\Models\User;
 use App\Models\Mitra;
+use Carbon\Carbon;
 
 class MitraController extends Controller
 {
@@ -37,9 +38,43 @@ class MitraController extends Controller
         return view('addmitra', ['user' => $this->user]); // Mengirim data ke view
     }
     
-    public function edit()
+    public function edit($id_sobat)
     {
-        return view('editmitra', ['user' => $this->user]); // Mengirim data ke view
+        $mitra = Mitra::findOrFail($id_sobat);
+        $mitra->tanggal_lahir = Carbon::parse($mitra->tanggal_lahir);
+
+        return view('editmitra', [
+            'user' => $this->user,
+            'mitra' => $mitra
+        ]);
+        // return view('editmitra', ['user' => $this->user]); // Mengirim data ke view
+    }
+
+    public function update(Request $request, $id_sobat)
+    {
+        // Validasi data
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'id_sobat' => 'required|string|max:255|unique:mitras',
+            'jk' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'pendidikan' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+        ]);
+
+        $mitra = Survey::findOrFail($id_sobat);
+
+        // Memperbarui data mitra
+        $mitra->update([
+            'name' => $request->input('nama'),
+            'id_sobat' => $request->input('id_sobat'),
+            'jenis_kelamin' => $request->input('jk'),
+            'email' => $request->input('email'),
+            'pendidikan' => $request->input('pendidikan'),
+            'tanggal_lahir' => $request->input('tanggal_lahir'), 
+        ]);
+
+        return redirect()->route('mitra')->with('success', 'Mitra berhasil diperbarui.');
     }
 
     public function show($id_sobat)

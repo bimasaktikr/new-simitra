@@ -34,7 +34,7 @@ Route::get('/mitra', [MitraController::class, 'index'])->name('mitra')->middlewa
 Route::get('/mitra/add', [MitraController::class, 'add'])->name('addmitra')->middleware('auth');
 Route::post('/mitra/add', [MitraController::class, 'store'])->name('mitra.store');
 Route::get('/mitra/edit/{id_sobat}', [MitraController::class, 'edit'])->name('editmitra')->middleware('auth');
-Route::post('/mitra/edit/{id_sobat}', [MitraController::class, 'update'])->name('editmitra.store');
+Route::put('/mitra/edit/{id_sobat}', [MitraController::class, 'update'])->name('editmitra.update');
 Route::get('/mitra/{id_sobat}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
 Route::delete('/mitra/{id_sobat}', [MitraController::class, 'destroy'])->name('mitra.destroy');
 Route::get('/mitra/search', [MitraController::class, 'search'])->name('mitra.search');
@@ -42,8 +42,8 @@ Route::get('/mitra/search', [MitraController::class, 'search'])->name('mitra.sea
 Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai')->middleware('auth');
 Route::get('/pegawai/add', [PegawaiController::class, 'add'])->name('addpegawai')->middleware('auth');
 Route::post('/pegawai/add', [PegawaiController::class, 'store'])->name('pegawai.store');
-Route::get('/pegawai/edit', [PegawaiController::class, 'edit'])->name('editpegawai')->middleware('auth');
-Route::post('/pegawai/edit', [PegawaiController::class, 'store'])->name('editpegawai.store');
+Route::get('/pegawai/edit/{id}', [PegawaiController::class, 'edit'])->name('editpegawai')->middleware('auth');
+Route::put('/pegawai/edit/{id}', [PegawaiController::class, 'update'])->name('editpegawai.update');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show'])->name('pegawaidetail')->middleware('auth');
 Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
 Route::get('/pegawai/search', [PegawaiController::class, 'search'])->name('pegawai.search');
