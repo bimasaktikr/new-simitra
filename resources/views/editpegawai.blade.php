@@ -50,7 +50,7 @@
         <div class="mb-4">
             <label for="peran" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Peran</label>
             <select name="peran" id="peran" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
-                <option value="Ketua_tim" {{ $employee->peran == 'Ketua_tim' ? 'selected' : '' }}>Ketua tim</option>
+                <option value="Ketua-tim" {{ $employee->peran == 'Ketua tim' ? 'selected' : '' }}>Ketua tim</option>
                 <option value="Anggota" {{ $employee->peran == 'Anggota' ? 'selected' : '' }}>Anggota</option>
             </select>
         </div>
