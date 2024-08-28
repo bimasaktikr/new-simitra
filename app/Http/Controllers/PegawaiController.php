@@ -71,10 +71,10 @@ class PegawaiController extends Controller
             'peran' => 'required|string|max:255'
         ]);
 
-        $survey = Survey::findOrFail($id);
+        $employee = Employee::findOrFail($id);
 
-        // Memperbarui data survei
-        $survey->update([
+        // Memperbarui data employee
+        $employee->update([
             'name' => $request->input('nama'),
             'nip' => $request->input('nip'),
             'jenis_kelamin' => $request->input('jk'),
