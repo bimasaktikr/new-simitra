@@ -19,13 +19,13 @@ Route::post('actionlogout', [LoginController::class, 'actionlogout'])->name('act
 
 Route::get('/survei', [SurveyController::class, 'index'])->name('survei')->middleware('auth');
 Route::get('/survei/add', [SurveyController::class, 'add'])->name('addsurvei')->middleware('auth');
-// Route::post('/survei/add', [SurveyController::class, 'store'])->name('survei.store');
 Route::post('/survei/store', [SurveyController::class, 'store'])->name('survei.store');
 Route::get('/survei/{id}', [SurveyController::class, 'show'])->name('surveidetail')->middleware('auth');
 Route::get('/survei/penilaian', [PenilaianController::class, 'index'])->name('penilaian')->middleware('auth');
 Route::get('/survei/{id}/edit', [SurveyController::class, 'edit'])->name('editsurvei');
 Route::put('/survei/{id}', [SurveyController::class, 'update'])->name('editsurvei.update');
 Route::delete('/surveys/{id}', [SurveyController::class, 'destroy'])->name('surveys.destroy');
+Route::get('/surveys/search', [SurveyController::class, 'search'])->name('surveys.search');
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware('auth');
 Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
@@ -37,6 +37,7 @@ Route::get('/mitra/edit/{id_sobat}', [MitraController::class, 'edit'])->name('ed
 Route::post('/mitra/edit/{id_sobat}', [MitraController::class, 'update'])->name('editmitra.store');
 Route::get('/mitra/{id_sobat}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
 Route::delete('/mitra/{id_sobat}', [MitraController::class, 'destroy'])->name('mitra.destroy');
+Route::get('/mitra/search', [MitraController::class, 'search'])->name('mitra.search');
 
 Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai')->middleware('auth');
 Route::get('/pegawai/add', [PegawaiController::class, 'add'])->name('addpegawai')->middleware('auth');
@@ -45,5 +46,6 @@ Route::get('/pegawai/edit', [PegawaiController::class, 'edit'])->name('editpegaw
 Route::post('/pegawai/edit', [PegawaiController::class, 'store'])->name('editpegawai.store');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show'])->name('pegawaidetail')->middleware('auth');
 Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+Route::get('/pegawai/search', [PegawaiController::class, 'search'])->name('pegawai.search');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');

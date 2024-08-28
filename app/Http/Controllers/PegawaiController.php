@@ -109,6 +109,24 @@ class PegawaiController extends Controller
         }
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $perPage = $request->input('per_page', 10);
+
+        $employees = Employee::query();
+
+        if ($query) {
+            $employees->where('name', 'LIKE', "%{$query}%")
+                    ->orWhere('nip', 'LIKE', "%{$query}%");
+        }
+
+        $employees = $employees->paginate($perPage);
+
+        return view('pegawaitable', compact('employees'));
+    }
+
+
     public function destroy($id)
     {
         $employee = Employee::findOrFail($id);

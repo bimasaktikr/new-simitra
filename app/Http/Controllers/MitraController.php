@@ -94,6 +94,22 @@ class MitraController extends Controller
         }
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $perPage = $request->input('per_page', 10);
+
+        $mitras = Mitra::query();
+
+        if ($query) {
+            $mitras = $mitras->where('name', 'LIKE', "%{$query}%")
+                            ->orWhere('id_sobat', 'LIKE', "%{$query}%");
+        }
+        $mitras = $mitras->paginate($perPage);
+
+        return view('mitratable', compact('mitras'))->render();
+    }
+
     public function destroy($id_sobat)
     {
         $mitra = Mitra::where('id_sobat', $id_sobat)->firstOrFail();

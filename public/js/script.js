@@ -35,3 +35,26 @@ document.addEventListener('DOMContentLoaded', function () {
 document.getElementById('confirmDeleteButton').addEventListener('click', function() {
     document.getElementById('deleteForm').submit();
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  setupLiveSearch('search-survey', 'survey-table', '/surveys/search');
+  setupLiveSearch('search-mitra', 'mitra-table', '/mitra/search');
+  setupLiveSearch('search-employee', 'employee-table', '/pegawai/search');
+});
+
+function setupLiveSearch(searchInputId, resultContainerId, searchUrl) {
+  document.getElementById(searchInputId).addEventListener('input', function () {
+      let query = this.value;
+
+      fetch(`${searchUrl}?query=${encodeURIComponent(query)}`, {
+          headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+          }
+      })
+      .then(response => response.text())
+      .then(data => {
+          document.getElementById(resultContainerId).innerHTML = data;
+      })
+      .catch(error => console.error('Error:', error));
+  });
+}

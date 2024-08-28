@@ -84,6 +84,27 @@ class SurveyController extends Controller
         return redirect()->route('survei')->with('success', 'Survei berhasil ditambahkan.');
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $perPage = $request->input('per_page', 10);
+
+        if ($query) {
+            $surveys = Survey::select('surveys.*', 'teams.name as team_name')
+                        ->join('teams', 'surveys.team_id', '=', 'teams.id')
+                        ->where('surveys.name', 'LIKE', "%{$query}%")
+                        ->orWhere('surveys.code', 'LIKE', "%{$query}%")
+                        ->orWhere('teams.name', 'LIKE', "%{$query}%")
+                        ->paginate($perPage);
+        } else {
+            $surveys = Survey::select('surveys.*', 'teams.name as team_name')
+                        ->join('teams', 'surveys.team_id', '=', 'teams.id')
+                        ->paginate($perPage);
+        }
+
+        return view('surveytable', compact('surveys'))->render();
+    }
+
     public function show($id)
     {
         $survey = Survey::select('surveys.*', 'teams.name as team_name', 'teams.code as team_code', 'payment_types.payment_type as payment_type_name')
