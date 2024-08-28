@@ -10,6 +10,7 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\MitraTeladanController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PaymentTypeController;
 
 Route::get('/', [LoginController::class, 'login'])->name('login');
 Route::post('actionlogin', [LoginController::class, 'actionlogin'])->name('actionlogin');
@@ -54,5 +55,13 @@ Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('edituser')
 Route::put('/user/{id}', [UserController::class, 'update'])->name('edituser.update');
 Route::delete('/user/{email}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::get('/user/search', [UserController::class, 'search'])->name('users.search');
+
+Route::get('/payment-type', [PaymentTypeController::class, 'index'])->name('paymenttype')->middleware('auth');
+Route::get('/payment-type/add', [PaymentTypeController::class, 'add'])->name('addpaymenttype')->middleware('auth');
+Route::post('/payment-type/add', [PaymentTypeController::class, 'store'])->name('paymenttype.store');
+Route::get('/payment-type/{id}/edit', [PaymentTypeController::class, 'edit'])->name('editpaymenttype');
+Route::put('/payment-type/{id}', [PaymentTypeController::class, 'update'])->name('paymenttype.update');
+Route::delete('/payment-type/{email}', [PaymentTypeController::class, 'destroy'])->name('paymenttypes.destroy');
+Route::get('/payment-type/search', [PaymentTypeController::class, 'search'])->name('paymenttypes.search');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');
