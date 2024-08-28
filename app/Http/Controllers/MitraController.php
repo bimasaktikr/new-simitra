@@ -52,28 +52,33 @@ class MitraController extends Controller
 
     public function update(Request $request, $id_sobat)
     {
-        // Validasi data
+        Log::info('ID Sobat: ' . $id_sobat);
+        Log::info('Request Data: ', $request->all());
+
+        $mitra = Mitra::where('id_sobat', $id_sobat)->firstOrFail();
+
+        Log::info('Mitra Sebelum Update: ', $mitra->toArray());
+
         $request->validate([
             'nama' => 'required|string|max:255',
-            'id_sobat' => 'required|string|max:255|unique:mitras',
+            'id_sobat' => 'required|string|max:255|unique:mitras,id_sobat,' . $mitra->id_sobat . ',id_sobat',
             'jk' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $mitra->email . ',email',
             'pendidikan' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
         ]);
 
-        $mitra = Survey::findOrFail($id_sobat);
-
-        // Memperbarui data mitra
         $mitra->update([
             'name' => $request->input('nama'),
             'id_sobat' => $request->input('id_sobat'),
             'jenis_kelamin' => $request->input('jk'),
             'email' => $request->input('email'),
             'pendidikan' => $request->input('pendidikan'),
-            'tanggal_lahir' => $request->input('tanggal_lahir'), 
+            'tanggal_lahir' => $request->input('tanggal_lahir'),
         ]);
 
+        Log::info('Mitra Setelah Update: ', $mitra->toArray());
+        
         return redirect()->route('mitra')->with('success', 'Mitra berhasil diperbarui.');
     }
 
@@ -137,12 +142,13 @@ class MitraController extends Controller
         $mitras = Mitra::query();
 
         if ($query) {
-            $mitras = $mitras->where('name', 'LIKE', "%{$query}%")
-                            ->orWhere('id_sobat', 'LIKE', "%{$query}%");
+            $mitras->where('name', 'LIKE', "%{$query}%")
+                ->orWhere('id_sobat', 'LIKE', "%{$query}%");
         }
+
         $mitras = $mitras->paginate($perPage);
 
-        return view('mitratable', compact('mitras'))->render();
+        return view('mitratable', compact('mitras'));
     }
 
     public function destroy($id_sobat)

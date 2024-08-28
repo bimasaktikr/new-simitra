@@ -4,7 +4,7 @@
 <div class="container mx-auto p-4">
     <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Edit Mitra</h1>
 
-    <form action="{{ route('editmitra.update', $mitra->id_sobat) }}" method="PUT" enctype="multipart/form-data" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+    <form action="{{ route('editmitra.update', $mitra->id_sobat) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -20,7 +20,10 @@
 
         <div class="mb-4">
             <label for="jk" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Kelamin</label>
-            <input type="text" name="jk" id="jk" value="{{ old('jk', $mitra->jenis_kelamin) }}" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm dark:bg-gray-700 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400" required>
+            <select name="jk" id="jk" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm dark:bg-gray-700 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400" required>
+                <option value="Laki-laki" {{ $mitra->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                <option value="Perempuan" {{ $mitra->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+            </select>
         </div>
 
         <div class="mb-4">

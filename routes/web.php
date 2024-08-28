@@ -9,6 +9,7 @@ use App\Http\Controllers\MitraController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\MitraTeladanController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', [LoginController::class, 'login'])->name('login');
 Route::post('actionlogin', [LoginController::class, 'actionlogin'])->name('actionlogin');
@@ -47,5 +48,12 @@ Route::put('/pegawai/edit/{id}', [PegawaiController::class, 'update'])->name('ed
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show'])->name('pegawaidetail')->middleware('auth');
 Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
 Route::get('/pegawai/search', [PegawaiController::class, 'search'])->name('pegawai.search');
+
+Route::get('/user', [UserController::class, 'index'])->name('user')->middleware('auth');
+Route::get('/user/{id}', [UserController::class, 'show'])->name('userdetail')->middleware('auth');
+Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('edituser');
+Route::put('/user/{id}', [UserController::class, 'update'])->name('edituser.update');
+Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+Route::get('/user/search', [UserController::class, 'search'])->name('users.search');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');

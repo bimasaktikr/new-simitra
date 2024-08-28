@@ -20,7 +20,10 @@
 
         <div class="mb-4">
             <label for="jk" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Kelamin</label>
-            <input type="text" name="jk" id="jk" value="{{ old('jk', $employee->jenis_kelamin) }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500" required>
+            <select name="jk" id="jk" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm dark:bg-gray-700 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400" required>
+                <option value="Laki-laki" {{ $employee->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                <option value="Perempuan" {{ $employee->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+            </select>        
         </div>
 
         <div class="mb-4">
@@ -47,8 +50,8 @@
         <div class="mb-4">
             <label for="peran" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Peran</label>
             <select name="peran" id="peran" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
-                <option value="ketua_tim" {{ $employee->peran == 'ketua_tim' ? 'selected' : '' }}>Ketua tim</option>
-                <option value="anggota" {{ $employee->peran == 'anggota' ? 'selected' : '' }}>Anggota</option>
+                <option value="Ketua_tim" {{ $employee->peran == 'Ketua_tim' ? 'selected' : '' }}>Ketua tim</option>
+                <option value="Anggota" {{ $employee->peran == 'Anggota' ? 'selected' : '' }}>Anggota</option>
             </select>
         </div>
 

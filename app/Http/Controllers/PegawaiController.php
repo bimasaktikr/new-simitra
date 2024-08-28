@@ -165,7 +165,6 @@ class PegawaiController extends Controller
         return view('pegawaitable', compact('employees'));
     }
 
-
     public function destroy($id)
     {
         $employee = Employee::findOrFail($id);

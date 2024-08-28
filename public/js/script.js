@@ -39,7 +39,8 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
 document.addEventListener('DOMContentLoaded', function() {
   setupLiveSearch('search-survey', 'survey-table', '/surveys/search');
   setupLiveSearch('search-mitra', 'mitra-table', '/mitra/search');
-  setupLiveSearch('search-employee', 'employee-table', '/pegawai/search');
+  setupLiveSearch('search-mitra', 'mitra-table', '/mitra/search');
+  setupLiveSearch('search-user', 'user-table', '/user/search');
 });
 
 function setupLiveSearch(searchInputId, resultContainerId, searchUrl) {
@@ -58,3 +59,4 @@ function setupLiveSearch(searchInputId, resultContainerId, searchUrl) {
       .catch(error => console.error('Error:', error));
   });
 }
+
