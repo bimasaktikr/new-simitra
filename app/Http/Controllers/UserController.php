@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Mitra; 
+use App\Models\Employee; 
 
 class UserController extends Controller
 {
@@ -21,9 +23,21 @@ class UserController extends Controller
     {
         $perPage = $request->input('per_page', 10);
 
-        $users = User::select('users.*', 'roles.role as role')
-                     ->join('roles', 'users.role_id', '=', 'roles.id')
-                     ->paginate($perPage);
+        $users = User::select('users.*', 'roles.role as role', DB::raw('
+                    CASE
+                        WHEN mitras.email IS NOT NULL THEN mitras.name
+                        WHEN employees.email IS NOT NULL THEN employees.name
+                        ELSE NULL
+                    END as name
+                '))
+                ->join('roles', 'users.role_id', '=', 'roles.id')
+                ->leftJoin('mitras', 'users.email', '=', 'mitras.email')
+                ->leftJoin('employees', 'users.email', '=', 'employees.email')
+                ->paginate($perPage);
+
+        // $users = User::select('users.*', 'roles.role as role')
+        //              ->join('roles', 'users.role_id', '=', 'roles.id')
+        //              ->paginate($perPage);
 
         // Mengirim data survei ke view
         return view('user', [
@@ -47,44 +61,31 @@ class UserController extends Controller
             $users = User::select('users.*', 'roles.role as role')
                      ->join('roles', 'users.role_id', '=', 'roles.id')
                      ->paginate($perPage);
+        }
 
         return view('usertable', compact('users'))->render();
     }
 
-    public function show($id)
-    {
-        $survey = Survey::select('surveys.*', 'teams.name as team_name', 'teams.code as team_code', 'payment_types.payment_type as payment_type_name')
-                    ->join('teams', 'surveys.team_id', '=', 'teams.id')
-                    ->join('payment_types', 'surveys.payment_type_id', '=', 'payment_types.id') // Join payment_types
-                    ->where('surveys.id', $id)
-                    ->first();
-
-        if (!$survey) {
-            return redirect()->route('survei')->with('error', 'Survei tidak ditemukan');
-        }
-
-        return view('surveydetail', [
-            'user' => $this->user,
-            'survey' => $survey
-        ]);
-    }
-
     public function edit($id)
     {
-        $survey = Survey::findOrFail($id);
-        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai);
-        $survey->tanggal_berakhir = Carbon::parse($survey->tanggal_berakhir);
+        // Mengambil data user berdasarkan ID
+        $user = User::findOrFail($id);
 
-        $teams = Team::all();
-        $paymentTypes = PaymentType::all();
+        // Mengambil data roles untuk dropdown
+        $roles = Role::all();
 
-        return view('editsurvey', [
-            'user' => $this->user,
-            'survey' => $survey,
-            'teams' => $teams,
-            'paymentTypes' => $paymentTypes
+        // Mencari nama dari mitra atau employee berdasarkan email
+        $nama = Mitra::where('email', $user->email)->value('name') 
+                ?? Employee::where('email', $user->email)->value('name');
+
+        // Mengirimkan data ke view
+        return view('edituser', [
+            'user' => $user,
+            'roles' => $roles,
+            'name' => $nama
         ]);
     }
+
 
     public function update(Request $request, $id)
     {

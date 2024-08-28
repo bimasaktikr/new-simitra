@@ -50,10 +50,9 @@ Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('peg
 Route::get('/pegawai/search', [PegawaiController::class, 'search'])->name('pegawai.search');
 
 Route::get('/user', [UserController::class, 'index'])->name('user')->middleware('auth');
-Route::get('/user/{id}', [UserController::class, 'show'])->name('userdetail')->middleware('auth');
 Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('edituser');
 Route::put('/user/{id}', [UserController::class, 'update'])->name('edituser.update');
-Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+Route::delete('/user/{email}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::get('/user/search', [UserController::class, 'search'])->name('users.search');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');
