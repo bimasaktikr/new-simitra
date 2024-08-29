@@ -11,6 +11,9 @@ use Carbon\Carbon;
 class SurveyController extends Controller
 {
     protected $user;
+    protected $survey;
+    protected $team;
+    protected $paymentType;
 
     public function __construct()
     {
@@ -25,7 +28,6 @@ class SurveyController extends Controller
                      ->join('teams', 'surveys.team_id', '=', 'teams.id')
                      ->paginate($perPage);
 
-        // Mengirim data survei ke view
         return view('survey', [
             'user' => $this->user,
             'surveys' => $surveys

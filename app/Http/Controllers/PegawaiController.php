@@ -16,6 +16,7 @@ class PegawaiController extends Controller
 {
     protected $user;
     protected $employee;
+    protected $team;
 
     public function __construct()
     {

@@ -113,14 +113,4 @@ class UserController extends Controller
 
         return redirect()->route('survei')->with('success', 'Survei berhasil diperbarui.');
     }
-
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-
-        $user->delete();
-
-        return redirect()->route('user')->with('success', 'User berhasil dihapus.');
-    }
-
 }

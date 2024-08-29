@@ -15,7 +15,9 @@
 
         <div class="mb-4">
             <label for="id_sobat" class="block text-sm font-medium text-gray-700 dark:text-gray-300">ID Sobat</label>
-            <input type="text" name="id_sobat" id="id_sobat" value="{{ old('id_sobat', $mitra->id_sobat) }}"  class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm dark:bg-gray-700 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400" required>
+            <input type="text" name="id_sobat" id="id_sobat" value="{{ old('id_sobat', $mitra->id_sobat) }}"
+                class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm dark:bg-gray-700 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 bg-gray-200 text-gray-500 cursor-not-allowed"
+                readonly required>
         </div>
 
         <div class="mb-4">
@@ -28,7 +30,9 @@
 
         <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-            <input type="text" name="email" id="email" value="{{ old('email', $mitra->email) }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500" required>
+            <input type="text" name="email" id="email" value="{{ old('email', $mitra->email) }}"
+                class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm dark:bg-gray-700 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 bg-gray-200 text-gray-500 cursor-not-allowed"
+                readonly required>
         </div>
 
         <div class="mb-4">

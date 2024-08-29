@@ -10,7 +10,8 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\MitraTeladanController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\PaymentTypeController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', [LoginController::class, 'login'])->name('login');
 Route::post('actionlogin', [LoginController::class, 'actionlogin'])->name('actionlogin');
@@ -39,7 +40,7 @@ Route::get('/mitra/edit/{id_sobat}', [MitraController::class, 'edit'])->name('ed
 Route::put('/mitra/edit/{id_sobat}', [MitraController::class, 'update'])->name('editmitra.update');
 Route::get('/mitra/{id_sobat}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
 Route::delete('/mitra/{id_sobat}', [MitraController::class, 'destroy'])->name('mitra.destroy');
-Route::get('/mitra/search', [MitraController::class, 'search'])->name('mitra.search');
+Route::get('/mitras/search', [MitraController::class, 'search'])->name('mitra.search');
 
 Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai')->middleware('auth');
 Route::get('/pegawai/add', [PegawaiController::class, 'add'])->name('addpegawai')->middleware('auth');
@@ -48,7 +49,7 @@ Route::get('/pegawai/edit/{id}', [PegawaiController::class, 'edit'])->name('edit
 Route::put('/pegawai/edit/{id}', [PegawaiController::class, 'update'])->name('editpegawai.update');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show'])->name('pegawaidetail')->middleware('auth');
 Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
-Route::get('/pegawai/search', [PegawaiController::class, 'search'])->name('pegawai.search');
+Route::get('/employee/search', [PegawaiController::class, 'search'])->name('pegawai.search');
 
 Route::get('/user', [UserController::class, 'index'])->name('user')->middleware('auth');
 Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('edituser');
@@ -56,12 +57,12 @@ Route::put('/user/{id}', [UserController::class, 'update'])->name('edituser.upda
 Route::delete('/user/{email}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::get('/user/search', [UserController::class, 'search'])->name('users.search');
 
-Route::get('/payment-type', [PaymentTypeController::class, 'index'])->name('paymenttype')->middleware('auth');
-Route::get('/payment-type/add', [PaymentTypeController::class, 'add'])->name('addpaymenttype')->middleware('auth');
-Route::post('/payment-type/add', [PaymentTypeController::class, 'store'])->name('paymenttype.store');
-Route::get('/payment-type/{id}/edit', [PaymentTypeController::class, 'edit'])->name('editpaymenttype');
-Route::put('/payment-type/{id}', [PaymentTypeController::class, 'update'])->name('paymenttype.update');
-Route::delete('/payment-type/{email}', [PaymentTypeController::class, 'destroy'])->name('paymenttypes.destroy');
-Route::get('/payment-type/search', [PaymentTypeController::class, 'search'])->name('paymenttypes.search');
+Route::get('/team', [TeamController::class, 'index'])->name('team')->middleware('auth');
+// Route::get('/mitra/{id_sobat}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
+Route::get('/teams/search', [TeamController::class, 'search'])->name('team.search');
+
+Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction')->middleware('auth');
+// Route::get('/mitra/{id_sobat}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
+Route::get('/transactions/search', [TransactionController::class, 'search'])->name('transaction.search');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');

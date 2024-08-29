@@ -38,12 +38,17 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
 
 document.addEventListener('DOMContentLoaded', function() {
   setupLiveSearch('search-survey', 'survey-table', '/surveys/search');
-  setupLiveSearch('search-mitra', 'mitra-table', '/mitra/search');
-  setupLiveSearch('search-mitra', 'mitra-table', '/mitra/search');
-  setupLiveSearch('search-user', 'user-table', '/user/search');
+  setupLiveSearch('search-mitra', 'mitra-table', '/mitras/search');
+  setupLiveSearch('search-employee', 'employee-table', '/employee/search');
+  setupLiveSearch('search-user', 'user-table', '/users/search');
+  setupLiveSearch('search-team', 'team-table', '/teams/search');
 });
 
 function setupLiveSearch(searchInputId, resultContainerId, searchUrl) {
+  if($('#'+searchInputId).length <= 0){
+    return;
+  }
+
   document.getElementById(searchInputId).addEventListener('input', function () {
       let query = this.value;
 
