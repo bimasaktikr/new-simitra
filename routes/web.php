@@ -24,7 +24,6 @@ Route::get('/survei', [SurveyController::class, 'index'])->name('survei')->middl
 Route::get('/survei/add', [SurveyController::class, 'add'])->name('addsurvei')->middleware('auth');
 Route::post('/survei/store', [SurveyController::class, 'store'])->name('survei.store');
 Route::get('/survei/{id}', [SurveyController::class, 'show'])->name('surveidetail')->middleware('auth');
-Route::get('/survei/penilaian', [PenilaianController::class, 'index'])->name('penilaian')->middleware('auth');
 Route::get('/survei/{id}/edit', [SurveyController::class, 'edit'])->name('editsurvei');
 Route::put('/survei/{id}', [SurveyController::class, 'update'])->name('editsurvei.update');
 Route::post('/survei/{id}/sync', [SurveyController::class, 'sync'])->name('survei.sync')->middleware('auth');
@@ -56,7 +55,7 @@ Route::get('/user', [UserController::class, 'index'])->name('user')->middleware(
 Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('edituser');
 Route::put('/user/{id}', [UserController::class, 'update'])->name('edituser.update');
 Route::delete('/user/{email}', [UserController::class, 'destroy'])->name('users.destroy');
-Route::get('/user/search', [UserController::class, 'search'])->name('users.search');
+Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
 
 Route::get('/team', [TeamController::class, 'index'])->name('team')->middleware('auth');
 // Route::get('/mitra/{id_sobat}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
@@ -65,5 +64,8 @@ Route::get('/teams/search', [TeamController::class, 'search'])->name('team.searc
 Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction')->middleware('auth');
 // Route::get('/mitra/{id_sobat}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
 Route::get('/transactions/search', [TransactionController::class, 'search'])->name('transaction.search');
+
+Route::get('/penilaian/{transaction_id}/create', [PenilaianController::class, 'create'])->name('penilaian.create')->middleware('auth');
+Route::post('/penilaian', [PenilaianController::class, 'store'])->name('penilaian.store')->middleware('auth');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');

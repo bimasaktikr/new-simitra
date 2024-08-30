@@ -2,14 +2,17 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-6 bg-white dark:bg-gray-900">
-    <div class="mb-6">
-        <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Penilaian Survei</h1>
-        <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
-            <p class="text-sm text-gray-700 dark:text-gray-400">Mitra:</p>
-        </div>
+    <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">Penilaian Survei</h1>
+
+    <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md mb-6">
+        <p class="pb-2 text-gray-900 dark:text-gray-100"><strong>Mitra:</strong> {{ $mitra->name }}</p>
+        <p class="pb-2 text-gray-900 dark:text-gray-100"><strong>Survei:</strong> {{ $survey->name }}</p>
     </div>
 
-    <form action="#" method="POST">
+    <form action="{{ route('penilaian.store') }}" method="POST">
+        @csrf
+        <input type="hidden" name="transaction_id" value="{{ $transaction_id }}">
+        
         <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
                 <thead class="text-xs text-gray-700 dark:text-gray-400 uppercase bg-gray-50 dark:bg-gray-700">
@@ -23,7 +26,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Variabel 1: Kualitas Data -->
                     <tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
                         <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Kualitas Data</td>
                         @for($i = 1; $i <= 5; $i++)
@@ -32,7 +34,6 @@
                             </td>
                         @endfor
                     </tr>
-                    <!-- Variabel 2: Ketepatan Waktu -->
                     <tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
                         <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Ketepatan Waktu</td>
                         @for($i = 1; $i <= 5; $i++)
@@ -41,7 +42,6 @@
                             </td>
                         @endfor
                     </tr>
-                    <!-- Variabel 3: Pemahaman Pengetahuan Kerja -->
                     <tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
                         <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Pemahaman Pengetahuan Kerja</td>
                         @for($i = 1; $i <= 5; $i++)

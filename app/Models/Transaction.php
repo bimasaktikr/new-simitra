@@ -28,4 +28,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(Mitra::class, 'mitra_id');
     }
+
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class, 'transaction_id', 'id');
+    }
 }

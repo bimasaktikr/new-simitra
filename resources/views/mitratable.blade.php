@@ -11,7 +11,7 @@
     <tbody>
         @if($mitras->isEmpty())
             <tr>
-                <td colspan="5" class="px-6 py-4 text-center">Survei tidak ditemukan.</td>
+                <td colspan="5" class="px-6 py-4 text-center">Mitra tidak ditemukan.</td>
             </tr>
         @else
             @foreach($mitras as $index => $mitra)

@@ -35,11 +35,6 @@ class UserController extends Controller
                 ->leftJoin('employees', 'users.email', '=', 'employees.email')
                 ->paginate($perPage);
 
-        // $users = User::select('users.*', 'roles.role as role')
-        //              ->join('roles', 'users.role_id', '=', 'roles.id')
-        //              ->paginate($perPage);
-
-        // Mengirim data survei ke view
         return view('user', [
             'user' => $this->user,
             'users' => $users
@@ -63,7 +58,7 @@ class UserController extends Controller
                      ->paginate($perPage);
         }
 
-        return view('usertable', compact('users'))->render();
+        return view('usertable', compact('users'));
     }
 
     public function edit($id)

@@ -4,7 +4,7 @@
 <div class="container mx-auto p-4">
     <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Edit Pegawai</h1>
 
-    <form action="{{ route('editpegawai.update', $employee->id) }}" method="PUT" enctype="multipart/form-data" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+    <form action="{{ route('editpegawai.update', $employee->id) }}" method="POST" enctype="multipart/form-data" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
         @csrf
         @method('PUT')
 

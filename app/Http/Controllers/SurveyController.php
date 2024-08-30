@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Survey;
 use App\Models\Team; 
 use App\Models\Transaction;
@@ -109,11 +110,19 @@ class SurveyController extends Controller
 
     public function show($id)
     {
+        $survey = Survey::where('id', $id)->firstOrFail();
+
         $survey = Survey::select('surveys.*', 'teams.name as team_name', 'teams.code as team_code', 'payment_types.payment_type as payment_type_name')
                     ->join('teams', 'surveys.team_id', '=', 'teams.id')
-                    ->join('payment_types', 'surveys.payment_type_id', '=', 'payment_types.id') // Join payment_types
+                    ->join('payment_types', 'surveys.payment_type_id', '=', 'payment_types.id') 
                     ->where('surveys.id', $id)
                     ->first();
+
+        $perPage = request()->get('per_page', 10);
+        $transactions = Transaction::select('transactions.*', 'mitras.name as mitra_name', 'mitras.id_sobat as mitra_id', DB::raw('IFNULL(transactions.nilai, "Belum dinilai") as nilai'))
+                    ->join('mitras', 'transactions.mitra_id', '=', 'mitras.id_sobat')
+                    ->where('transactions.survey_id', $survey->id)
+                    ->paginate($perPage);
 
         if (!$survey) {
             return redirect()->route('survei')->with('error', 'Survei tidak ditemukan');
@@ -121,7 +130,8 @@ class SurveyController extends Controller
 
         return view('surveydetail', [
             'user' => $this->user,
-            'survey' => $survey
+            'survey' => $survey,
+            'transactions' => $transactions
         ]);
     }
 
@@ -144,7 +154,6 @@ class SurveyController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi data
         $request->validate([
             'nama' => 'required|string|max:255',
             'kode' => 'required|string|max:255',
@@ -157,7 +166,6 @@ class SurveyController extends Controller
 
         $survey = Survey::findOrFail($id);
 
-        // Memperbarui data survei
         $survey->update([
             'name' => $request->input('nama'),
             'code' => $request->input('kode'),
