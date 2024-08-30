@@ -5,6 +5,7 @@
             <th scope="col" class="px-6 py-3">Nama</th>
             <th scope="col" class="px-6 py-3">Email</th>
             <th scope="col" class="px-6 py-3">Role</th>
+            <th scope="col" class="px-6 py-3">Status</th>
             <th scope="col" class="px-6 py-3">Aksi</th>
         </tr>
     </thead>
@@ -20,6 +21,7 @@
                     <td class="px-6 py-4">{{ $user->name }}</td>
                     <td class="px-6 py-4">{{ $user->email }}</td>
                     <td class="px-6 py-4">{{ $user->role }}</td>
+                    <td class="px-6 py-4">{{ $user->status }}</td>
                     <td class="px-6 py-4">
                         <div class="flex space-x-2">
                             <button onclick="window.location='{{ route('edituser', $user->id) }}'" class="px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800">Edit</button>

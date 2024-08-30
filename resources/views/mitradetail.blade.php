@@ -50,39 +50,42 @@
         <thead class="text-xs text-gray-700 dark:text-gray-400 uppercase bg-gray-50 dark:bg-gray-800">
           <tr>
             <th scope="col" class="px-6 py-3">No</th>
+            <th scope="col" class="px-6 py-3">Survei</th>
             <th scope="col" class="px-6 py-3">Kode</th>
-            <th scope="col" class="px-6 py-3">Nama Survei</th>
-            <th scope="col" class="px-6 py-3">Aksi</th>
+            <th scope="col" class="px-6 py-3">Harga</th>
+            <th scope="col" class="px-6 py-3">Nilai</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-600">
-            <td class="px-6 py-4">1</td>
-            <td class="px-6 py-4">212111957</td>
-            <td class="px-6 py-4">Bintana Tajmala</td>
-            <td class="px-6 py-4">
-              <button class="ml-2 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-500">Nilai</button>
-            </td>
-          </tr>
-          <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-600">
-            <td class="px-6 py-4">2</td>
-            <td class="px-6 py-4">212111941</td>
-            <td class="px-6 py-4">Azmira Candra</td>
-            <td class="px-6 py-4">
-              <button class="ml-2 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-500">Nilai</button>
-            </td>
-          </tr>
-          <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-600">
-            <td class="px-6 py-4">3</td>
-            <td class="px-6 py-4">212112287</td>
-            <td class="px-6 py-4">Pretty Melati Pardede</td>
-            <td class="px-6 py-4">
-              <button class="ml-2 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-500">Nilai</button>
-            </td>
-          </tr>
-        </tbody>
+              @foreach($transactions as $index => $transaction)
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <td class="px-6 py-4">{{ $transactions->firstItem() + $index }}</td>
+                      <td class="px-6 py-4">{{ $transaction->survey_name }}</td>
+                      <td class="px-6 py-4">{{ $transaction->survey_code }}</td>
+                      <td class="px-6 py-4">{{ number_format($transaction->payment, 2) }}</td>
+                      <td class="px-6 py-4">{{ $transaction->nilai }}</td>
+                  </tr>
+              @endforeach
+      </tbody>
       </table>
     </div>
+    
+    <form action="{{ route('mitra', $mitra->id_sobat) }}" method="GET">
+        <div class="flex justify-between mt-4 items-center">
+            <div>
+                <label for="per_page" class="text-sm text-gray-700 dark:text-gray-300">Records per halaman:</label>
+                <select id="per_page" name="per_page" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" onchange="this.form.submit()">
+                    <option value="10" {{ request()->get('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                    <option value="15" {{ request()->get('per_page') == 15 ? 'selected' : '' }}>15</option>
+                    <option value="20" {{ request()->get('per_page') == 20 ? 'selected' : '' }}>20</option>
+                </select>
+            </div>
+
+            <div>
+                {{ $transactions->appends(['per_page' => request()->get('per_page', 10)])->links('components.pagination') }}
+            </div>
+        </div>
+    </form>
   </div>
   <div class="flex justify-between mt-6">
     <button type="button" onclick="window.history.back()" class="px-6 py-2 text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-600">

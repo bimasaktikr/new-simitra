@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log; 
 use App\Models\User;
 use App\Models\Mitra;
+use App\Models\Transaction;
 use Carbon\Carbon;
 
 class MitraController extends Controller
@@ -27,7 +28,6 @@ class MitraController extends Controller
 
         $mitras = Mitra::paginate($perPage);
         
-        // Mengirim data survei ke view
         return view('mitra', [
             'user' => $this->user,
             'mitras' => $mitras]);
@@ -35,7 +35,7 @@ class MitraController extends Controller
 
     public function add()
     {
-        return view('addmitra', ['user' => $this->user]); // Mengirim data ke view
+        return view('addmitra', ['user' => $this->user]);  
     }
     
     public function edit($id_sobat)
@@ -47,17 +47,11 @@ class MitraController extends Controller
             'user' => $this->user,
             'mitra' => $mitra
         ]);
-        // return view('editmitra', ['user' => $this->user]); // Mengirim data ke view
     }
 
     public function update(Request $request, $id_sobat)
     {
-        Log::info('ID Sobat: ' . $id_sobat);
-        Log::info('Request Data: ', $request->all());
-
         $mitra = Mitra::where('id_sobat', $id_sobat)->firstOrFail();
-
-        Log::info('Mitra Sebelum Update: ', $mitra->toArray());
 
         $request->validate([
             'nama' => 'required|string|max:255',
@@ -76,8 +70,6 @@ class MitraController extends Controller
             'pendidikan' => $request->input('pendidikan'),
             'tanggal_lahir' => $request->input('tanggal_lahir'),
         ]);
-
-        Log::info('Mitra Setelah Update: ', $mitra->toArray());
         
         return redirect()->route('mitra')->with('success', 'Mitra berhasil diperbarui.');
     }
@@ -86,9 +78,16 @@ class MitraController extends Controller
     {
         $mitra = Mitra::where('id_sobat', $id_sobat)->firstOrFail();
 
+        $perPage = request()->get('per_page', 10);
+        $transactions = Transaction::select('transactions.*', 'surveys.name as survey_name', 'surveys.code as survey_code', 'transactions.payment', DB::raw('IFNULL(transactions.nilai, "Belum dinilai") as nilai'))
+            ->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
+            ->where('transactions.mitra_id', $mitra->id_sobat)
+            ->paginate($perPage);
+
         return view('mitradetail', [
             'user' => $this->user,
-            'mitra' => $mitra
+            'mitra' => $mitra,
+            'transactions' => $transactions
         ]);
     }
 
@@ -106,19 +105,17 @@ class MitraController extends Controller
         try {
             DB::beginTransaction();
 
-            // Buat user baru
             $user = User::create([
                 'email' => $request->email,
                 'password' => bcrypt($request->id_sobat), 
                 'role_id' => 4,
             ]);
 
-            // Simpan data mitra
             $mitra = Mitra::create([
                 'name' => $request->nama,
                 'id_sobat' => $request->id_sobat,
                 'jenis_kelamin' => $request->jk,
-                'email' => $user->email,  // Pastikan email dimasukkan
+                'email' => $user->email, 
                 'pendidikan' => $request->pendidikan,
                 'tanggal_lahir' => $request->tanggal_lahir,
             ]);

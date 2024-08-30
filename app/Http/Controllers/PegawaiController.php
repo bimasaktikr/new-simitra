@@ -61,7 +61,6 @@ class PegawaiController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi data
         $request->validate([
             'nama' => 'required|string|max:255',
             'nip' => 'required|string|max:255|unique:employees',
@@ -74,7 +73,6 @@ class PegawaiController extends Controller
 
         $employee = Employee::findOrFail($id);
 
-        // Memperbarui data employee
         $employee->update([
             'name' => $request->input('nama'),
             'nip' => $request->input('nip'),
@@ -82,7 +80,7 @@ class PegawaiController extends Controller
             'email' => $request->input('email'),
             'tanggal_lahir' => $request->input('tanggal_lahir'),
             'team_id' => $request->input('fungsi'),
-            'peran' => $request->input('peran'), // Update payment_type_id
+            'peran' => $request->input('peran'),
         ]);
 
         return redirect()->route('pegawai')->with('success', 'Pegawai berhasil diperbarui.');
@@ -143,7 +141,6 @@ class PegawaiController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // Log error
             \Log::error('Error saat menambahkan pegawai: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan saat menambahkan pegawai. Silakan coba lagi.');
         }

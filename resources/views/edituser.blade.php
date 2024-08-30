@@ -31,6 +31,14 @@
             </select>
         </div>
 
+        <div class="mb-4">
+            <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+            <select name="status" id="status" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+                <option value="Aktif" {{ $user->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                <option value="Tidak aktif" {{ $user->status == 'Tidak aktif' ? 'selected' : '' }}>Tidak aktif</option>   
+            </select>
+        </div>
+
         <div class="flex justify-between mt-6">
             <button type="button" onclick="window.history.back()" class="px-6 py-2 text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-600">
                 Back
