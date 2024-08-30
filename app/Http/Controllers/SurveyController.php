@@ -217,18 +217,7 @@ class SurveyController extends Controller
                 'payment' => $survey->payment,
             ]);
         }
-
-
-        // Ambil daftar mitra yang sudah tergabung pada survei ini
-        $mitras = Mitra::join('transactions', 'mitras.id_sobat', '=', 'transactions.mitra_id')
-                    ->where('transactions.survey_id', $survey->id)
-                    ->select('mitras.*')
-                    ->get();
-
-        return redirect()->route('surveydetail', ['id' => $id])->with([
-            'success' => 'Data berhasil disinkronisasi.',
-            'mitras' => $mitras
-        ]);
+        return redirect()->route('surveydetail', ['id' => $id])->with('success', 'Data berhasil disinkronisasi.');
     }
 
     public function destroy($id)
