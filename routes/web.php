@@ -27,6 +27,7 @@ Route::get('/survei/{id}', [SurveyController::class, 'show'])->name('surveidetai
 Route::get('/survei/penilaian', [PenilaianController::class, 'index'])->name('penilaian')->middleware('auth');
 Route::get('/survei/{id}/edit', [SurveyController::class, 'edit'])->name('editsurvei');
 Route::put('/survei/{id}', [SurveyController::class, 'update'])->name('editsurvei.update');
+Route::post('/survei/{id}/sync', [SurveyController::class, 'sync'])->name('survei.sync')->middleware('auth');
 Route::delete('/surveys/{id}', [SurveyController::class, 'destroy'])->name('surveys.destroy');
 Route::get('/surveys/search', [SurveyController::class, 'search'])->name('surveys.search');
 

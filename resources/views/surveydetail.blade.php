@@ -40,46 +40,24 @@
   <div class="px-4 sm:px-0 m-5">
     <h3 class="text-base font-bold leading-8 text-gray-900 dark:text-gray-100">Daftar Mitra</h3>
   </div>
-  <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
-        <thead class="text-xs text-gray-700 dark:text-gray-400 uppercase bg-gray-50 dark:bg-gray-800">
-          <tr>
-            <th scope="col" class="px-6 py-3">No</th>
-            <th scope="col" class="px-6 py-3">ID</th>
-            <th scope="col" class="px-6 py-3">Nama</th>
-            <th scope="col" class="px-6 py-3">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-600">
-            <td class="px-6 py-4">1</td>
-            <td class="px-6 py-4">212111957</td>
-            <td class="px-6 py-4">Bintana Tajmala</td>
-            <td class="px-6 py-4">
-              <button onclick="window.location='{{ route('penilaian') }}'" class="ml-2 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-500">Nilai</button>
-            </td>
-          </tr>
-          <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-600">
-            <td class="px-6 py-4">2</td>
-            <td class="px-6 py-4">212111941</td>
-            <td class="px-6 py-4">Azmira Candra</td>
-            <td class="px-6 py-4">
-              <button onclick="window.location='{{ route('penilaian') }}'" class="ml-2 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-500">Nilai</button>
-            </td>
-          </tr>
-          <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-600">
-            <td class="px-6 py-4">3</td>
-            <td class="px-6 py-4">212112287</td>
-            <td class="px-6 py-4">Pretty Melati Pardede</td>
-            <td class="px-6 py-4">
-              <button onclick="window.location='{{ route('penilaian') }}'" class="ml-2 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-500">Nilai</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="mt-6">
+    <div class="flex justify-between mb-4">
+      <div class="flex space-x-4">
+          <form action="{{ route('survei.sync', $survey->id) }}" method="POST">
+                @csrf
+                <button type="submit" class="inline-flex items-center px-4 py-2 text-white bg-orange-500 border border-transparent rounded-lg shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:bg-orange-600 dark:hover:bg-orange-700">
+                    Sinkronisasi Data Mitra
+                </button>
+          </form>
+      </div>
     </div>
+    @if(session('mitras'))
+    <div id="mitra-table" class="bg-gray-100 p-4 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+      @include('mitratable')
+    </div>
+    @endif
   </div>
+
   <div class="flex justify-between mt-6">
     <button type="button" onclick="window.history.back()" class="px-6 py-2 text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-600">
       Back

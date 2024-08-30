@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Survey;
 use App\Models\Team; 
+use App\Models\Transaction;
+use App\Models\Mitra; 
 use App\Models\PaymentType;
 use Carbon\Carbon;
 
@@ -53,11 +55,10 @@ class SurveyController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'kode' => 'required|string|max:255',
-            'ketua_tim' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date',
             'tanggal_berakhir' => 'required|date',
-            'team_id' => 'required|exists:teams,id',
-            'payment_type_id' => 'required|exists:payment_types,id', // Validasi payment_type_id
+            'tim' => 'required|exists:teams,id',
+            'tipe_pembayaran' => 'required|exists:payment_types,id', // Validasi payment_type_id
             'harga' => 'required|numeric',
             'file' => 'nullable|file|mimes:csv,xls,xlsx',
         ]);
@@ -73,13 +74,12 @@ class SurveyController extends Controller
         // Simpan survei baru
         Survey::create([
             'name' => $request->input('nama'),
-            'kode' => $request->input('kode'),
-            'ketua_tim' => $request->input('ketua_tim'),
-            'tanggal_mulai' => $request->input('tanggal_mulai'),
-            'tanggal_berakhir' => $request->input('tanggal_berakhir'),
-            'team_id' => $request->input('team_id'),
-            'payment_type_id' => $request->input('payment_type_id'), // Simpan payment_type_id
-            'harga' => $request->input('harga'),
+            'code' => $request->input('kode'),
+            'start_date' => $request->input('tanggal_mulai'),
+            'end_date' => $request->input('tanggal_berakhir'),
+            'team_id' => $request->input('tim'),
+            'payment_type_id' => $request->input('tipe_pembayaran'), // Simpan payment_type_id
+            'payment' => $request->input('harga'),
             'file' => $filePath, // Simpan path file
         ]);
 
@@ -146,27 +146,81 @@ class SurveyController extends Controller
     {
         // Validasi data
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
             'kode' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date',
             'tanggal_berakhir' => 'required|date',
-            'team_id' => 'required|exists:teams,id', // Validasi team_id
-            'payment_type_id' => 'required|exists:payment_types,id', // Validasi payment_type_id
+            'tim' => 'required|exists:teams,id', // Validasi team_id
+            'tipe_pembayaran' => 'required|exists:payment_types,id', // Validasi payment_type_id
+            'file' => 'nullable|file|mimes:csv,xls,xlsx'
         ]);
 
         $survey = Survey::findOrFail($id);
 
         // Memperbarui data survei
         $survey->update([
-            'name' => $request->input('name'),
-            'kode' => $request->input('kode'),
-            'tanggal_mulai' => $request->input('tanggal_mulai'),
-            'tanggal_berakhir' => $request->input('tanggal_berakhir'),
-            'team_id' => $request->input('team_id'),
-            'payment_type_id' => $request->input('payment_type_id'), // Update payment_type_id
+            'name' => $request->input('nama'),
+            'code' => $request->input('kode'),
+            'start_date' => $request->input('tanggal_mulai'),
+            'end_date' => $request->input('tanggal_berakhir'),
+            'team_id' => $request->input('tim'),
+            'payment_type_id' => $request->input('tipe_pembayaran'), // Update payment_type_id
+            'file' => $filePath
         ]);
 
         return redirect()->route('survei')->with('success', 'Survei berhasil diperbarui.');
+    }
+
+    public function sync($id)
+    {
+        // Ambil survei berdasarkan ID
+        $survey = Survey::findOrFail($id);
+
+        // Cek apakah survei memiliki file
+        if (!$survey->file) {
+            return redirect()->route('surveydetail', ['id' => $id])->with('error', 'Tidak ada file yang diunggah untuk survei ini.');
+        }
+
+        // Baca file Excel
+        $filePath = storage_path('app/public/' . $survey->file);
+        $data = Excel::toArray([], $filePath);
+
+        if (empty($data) || empty($data[0])) {
+            return redirect()->route('surveydetail', ['id' => $id])->with('error', 'File Excel tidak valid atau kosong.');
+        }
+
+        // Iterasi setiap baris dalam file Excel
+        foreach ($data[0] as $row) {
+            $id_mitra = $row[1]; // Asumsi id_mitra ada di kolom pertama
+
+            // Cek apakah mitra sudah ada berdasarkan id_mitra
+            $mitra = Mitra::firstOrCreate(['id_sobat' => $id_mitra], [
+                'name' => $row[0],
+                'email' => $row[3],
+                'jenis_kelamin' => $row[2], 
+                'pendidikan' => $row[4],
+                'tanggal_lahir' => $row[5]
+            ]);
+
+            // Tambahkan transaksi
+            Transaction::create([
+                'survey_id' => $survey->id,
+                'mitra_id' => $mitra->id_sobat,
+                'payment' => $survey->payment,
+            ]);
+        }
+
+
+        // Ambil daftar mitra yang sudah tergabung pada survei ini
+        $mitras = Mitra::join('transactions', 'mitras.id_sobat', '=', 'transactions.mitra_id')
+                    ->where('transactions.survey_id', $survey->id)
+                    ->select('mitras.*')
+                    ->get();
+
+        return redirect()->route('surveydetail', ['id' => $id])->with([
+            'success' => 'Data berhasil disinkronisasi.',
+            'mitras' => $mitras
+        ]);
     }
 
     public function destroy($id)
