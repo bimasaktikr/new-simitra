@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
   setupLiveSearch('search-mitra', 'mitra-table', '/mitras/search');
   setupLiveSearch('search-employee', 'employee-table', '/employee/search');
   setupLiveSearch('search-user', 'user-table', '/users/search');
-  setupLiveSearch('search-team', 'team-table', '/teams/search');
 });
 
 function setupLiveSearch(searchInputId, resultContainerId, searchUrl) {

@@ -30,7 +30,7 @@
                         <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Kualitas Data</td>
                         @for($i = 1; $i <= 5; $i++)
                             <td class="px-6 py-4 text-center">
-                                <input type="radio" name="kualitas_data" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400">
+                                <input type="radio" name="kualitas_data" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400 required">
                             </td>
                         @endfor
                     </tr>
@@ -38,7 +38,7 @@
                         <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Ketepatan Waktu</td>
                         @for($i = 1; $i <= 5; $i++)
                             <td class="px-6 py-4 text-center">
-                                <input type="radio" name="ketepatan_waktu" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400">
+                                <input type="radio" name="ketepatan_waktu" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400 required">
                             </td>
                         @endfor
                     </tr>
@@ -46,7 +46,7 @@
                         <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Pemahaman Pengetahuan Kerja</td>
                         @for($i = 1; $i <= 5; $i++)
                             <td class="px-6 py-4 text-center">
-                                <input type="radio" name="pemahaman_pengetahuan_kerja" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400">
+                                <input type="radio" name="pemahaman_pengetahuan_kerja" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400 required">
                             </td>
                         @endfor
                     </tr>

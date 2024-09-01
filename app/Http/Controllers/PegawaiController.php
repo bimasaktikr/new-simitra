@@ -63,9 +63,7 @@ class PegawaiController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'nip' => 'required|string|max:255|unique:employees',
             'jk' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
             'tanggal_lahir' => 'required|date',
             'fungsi' => 'required|exists:teams,id',
             'peran' => 'required|string|max:255'
@@ -75,9 +73,7 @@ class PegawaiController extends Controller
 
         $employee->update([
             'name' => $request->input('nama'),
-            'nip' => $request->input('nip'),
             'jenis_kelamin' => $request->input('jk'),
-            'email' => $request->input('email'),
             'tanggal_lahir' => $request->input('tanggal_lahir'),
             'team_id' => $request->input('fungsi'),
             'peran' => $request->input('peran'),
@@ -124,6 +120,7 @@ class PegawaiController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->nip), 
                 'role_id' => $role_id,
+                'status' => 'Aktif',
             ]);
 
             $employee = Employee::create([

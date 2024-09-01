@@ -7,7 +7,6 @@
             <th scope="col" class="px-6 py-3">Kode Survei</th>
             <th scope="col" class="px-6 py-3">Target</th>
             <th scope="col" class="px-6 py-3">Pembayaran</th>
-            <th scope="col" class="px-6 py-3">Aksi</th>
         </tr>
     </thead>
     <tbody>
@@ -24,11 +23,6 @@
                     <td class="px-6 py-4">{{ $transaction->survey_code }}</td>
                     <td class="px-6 py-4">{{ $transaction->target }}</td>
                     <td class="px-6 py-4">{{ $transaction->payment }}</td>
-                    <td class="px-6 py-4">
-                        <div class="flex space-x-2">
-                            <button onclick="" class="px-3 py-1 text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800">Lihat</button>
-                        </div>
-                    </td>
                 </tr>
             @endforeach
         @endif

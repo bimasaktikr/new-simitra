@@ -46,34 +46,47 @@ class UserController extends Controller
         $query = $request->input('query');
         $perPage = $request->input('per_page', 10);
 
-        if ($query) {
-            $users = User::select('users.*', 'roles.role as role')
-                        ->join('roles', 'users.role_id', '=', 'roles.id')
-                        ->where('users.email', 'LIKE', "%{$query}%")
-                        ->orWhere('users.role', 'LIKE', "%{$query}%")
-                        ->paginate($perPage);
-        } else {
-            $users = User::select('users.*', 'roles.role as role')
-                     ->join('roles', 'users.role_id', '=', 'roles.id')
-                     ->paginate($perPage);
-        }
+        $users = User::select('users.*')
+                    ->leftJoin('mitras', 'users.email', '=', 'mitras.email')
+                    ->leftJoin('employees', 'users.email', '=', 'employees.email')
+                    ->when($query, function($q) use ($query) {
+                        $q->where('users.email', 'LIKE', "%{$query}%")
+                        ->orWhere('mitras.name', 'LIKE', "%{$query}%")
+                        ->orWhere('employees.name', 'LIKE', "%{$query}%");
+                    })
+                    ->paginate($perPage);
 
         return view('usertable', compact('users'));
     }
 
+
+    // public function search(Request $request)
+    // {
+    //     $query = $request->input('query');
+    //     $perPage = $request->input('per_page', 10);
+
+    //     if ($query) {
+    //         $users = User::select('users.*')
+    //                     ->where('users.email', 'LIKE', "%{$query}%")
+    //                     ->orWhere('users.role', 'LIKE', "%{$query}%")
+    //                     ->paginate($perPage);
+    //     } else {
+    //         $users = User::select('users.*')
+    //                  ->paginate($perPage);
+    //     }
+
+    //     return view('usertable', compact('users'));
+    // }
+
     public function edit($id)
     {
-        // Mengambil data user berdasarkan ID
         $user = User::findOrFail($id);
 
-        // Mengambil data roles untuk dropdown
         $roles = Role::all();
 
-        // Mencari nama dari mitra atau employee berdasarkan email
         $nama = Mitra::where('email', $user->email)->value('name') 
                 ?? Employee::where('email', $user->email)->value('name');
 
-        // Mengirimkan data ke view
         return view('edituser', [
             'user' => $user,
             'roles' => $roles,
@@ -81,31 +94,42 @@ class UserController extends Controller
         ]);
     }
 
-
     public function update(Request $request, $id)
     {
-        // Validasi data
         $request->validate([
-            'name' => 'required|string|max:255',
-            'kode' => 'required|string|max:255',
-            'tanggal_mulai' => 'required|date',
-            'tanggal_berakhir' => 'required|date',
-            'team_id' => 'required|exists:teams,id', // Validasi team_id
-            'payment_type_id' => 'required|exists:payment_types,id', // Validasi payment_type_id
+            'nama' => 'required|string|max:255',
+            'role' => 'required|exists:roles,id',
+            'status' => 'required|string|max:255', 
         ]);
+        try {
+            DB::beginTransaction();
+            $user = User::findOrFail($id);
 
-        $survey = Survey::findOrFail($id);
+            $user->update([
+                'role_id' => $request->input('role'),
+                'status' => $request->input('status'),
+            ]);
 
-        // Memperbarui data survei
-        $survey->update([
-            'name' => $request->input('name'),
-            'kode' => $request->input('kode'),
-            'tanggal_mulai' => $request->input('tanggal_mulai'),
-            'tanggal_berakhir' => $request->input('tanggal_berakhir'),
-            'team_id' => $request->input('team_id'),
-            'payment_type_id' => $request->input('payment_type_id'), // Update payment_type_id
-        ]);
+            $mitra = Mitra::where('email', $user->email)->first();
+            $employee = Employee::where('email', $user->email)->first();
 
-        return redirect()->route('survei')->with('success', 'Survei berhasil diperbarui.');
+            if ($mitra) {
+                $mitra->update([
+                    'name' => $request->input('nama'),
+                ]);
+            } elseif ($employee) {
+                $employee->update([
+                    'name' => $request->input('nama'),
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('user')->with('success', 'Pengguna berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Gagal memperbarui pengguna: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memperbarui pengguna. Silakan coba lagi.');
+        }
     }
 }

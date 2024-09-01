@@ -109,6 +109,7 @@ class MitraController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->id_sobat), 
                 'role_id' => 4,
+                'status' => 'Aktif',
             ]);
 
             $mitra = Mitra::create([
