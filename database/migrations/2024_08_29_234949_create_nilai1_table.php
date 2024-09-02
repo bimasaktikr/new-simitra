@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('aspek1');
             $table->integer('aspek2');
             $table->integer('aspek3');
+            $table->decimal('rerata', 3, 2);
             $table->timestamps();
 
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');

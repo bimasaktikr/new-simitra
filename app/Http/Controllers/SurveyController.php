@@ -26,16 +26,41 @@ class SurveyController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
+        $status = $request->input('status', 'semua');
+
+        $today = Carbon::today();
 
         $surveys = Survey::select('surveys.*', 'teams.name as team_name', 'teams.code as team_code')
-                     ->join('teams', 'surveys.team_id', '=', 'teams.id')
-                     ->paginate($perPage);
+                    ->join('teams', 'surveys.team_id', '=', 'teams.id')
+                    ->when($status === 'sedang berlangsung', function ($query) use ($today) {
+                        $query->where('surveys.end_date', '>=', $today);
+                    })
+                    ->when($status === 'sudah berakhir', function ($query) use ($today) {
+                        $query->where('surveys.end_date', '<', $today);
+                    })
+                    ->paginate($perPage);
 
         return view('survey', [
             'user' => $this->user,
-            'surveys' => $surveys
+            'surveys' => $surveys,
+            'status' => $status
         ]);
     }
+
+
+    // public function index(Request $request)
+    // {
+    //     $perPage = $request->input('per_page', 10);
+
+    //     $surveys = Survey::select('surveys.*', 'teams.name as team_name', 'teams.code as team_code')
+    //                  ->join('teams', 'surveys.team_id', '=', 'teams.id')
+    //                  ->paginate($perPage);
+
+    //     return view('survey', [
+    //         'user' => $this->user,
+    //         'surveys' => $surveys
+    //     ]);
+    // }
 
     public function add()
     {
@@ -119,8 +144,19 @@ class SurveyController extends Controller
                     ->first();
 
         $perPage = request()->get('per_page', 10);
-        $transactions = Transaction::select('transactions.*', 'mitras.name as mitra_name', 'mitras.id_sobat as mitra_id', DB::raw('IFNULL(transactions.nilai, "Belum dinilai") as nilai'))
+        // $transactions = Transaction::select('transactions.*', 'mitras.name as mitra_name', 'mitras.id_sobat as mitra_id', DB::raw('IFNULL(transactions.nilai, "Belum dinilai") as nilai'))
+        //             ->join('mitras', 'transactions.mitra_id', '=', 'mitras.id_sobat')
+        //             ->where('transactions.survey_id', $survey->id)
+        //             ->paginate($perPage);
+
+                    $transactions = Transaction::select(
+                        'transactions.*', 
+                        'mitras.name as mitra_name', 
+                        'mitras.id_sobat as mitra_id', 
+                        DB::raw('IFNULL(nilai1.rerata, "Belum dinilai") as nilai')
+                    )
                     ->join('mitras', 'transactions.mitra_id', '=', 'mitras.id_sobat')
+                    ->leftJoin('nilai1', 'transactions.id', '=', 'nilai1.transaction_id') // Join ke tabel nilai1
                     ->where('transactions.survey_id', $survey->id)
                     ->paginate($perPage);
 

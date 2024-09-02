@@ -22,6 +22,7 @@ class CreateSurveysTable extends Migration
         $table->date('end_date');
         $table->integer('payment');
         $table->unsignedBigInteger('team_id');
+        $table->string('file',255)->nullable();
         $table->timestamps();
 
         $table->foreign('payment_type_id')->references('id')->on('payment_types')->onDelete('cascade');

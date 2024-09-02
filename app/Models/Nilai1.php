@@ -16,9 +16,10 @@ class Nilai extends Model
         'aspek1',
         'aspek2',
         'aspek3',
+        'rerata',
     ];
 
-    public function transaction()
+    public function transactions()
     {
         return $this->belongsTo(Transaction::class, 'transaction_id');
     }

@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Mitra;
+use App\Models\Survey;
+use App\Models\Nilai;
+use Carbon\Carbon;
 
 class MitraTeladanController extends Controller{ 
 
@@ -13,88 +17,119 @@ class MitraTeladanController extends Controller{
 
     public function __construct()
     {
-        $this->user = Auth::user(); // Mendapatkan data pengguna yang login
-
-        // Data dummy untuk detail survei
-        $this->mitras = [
-            [
-                'name' => 'Bagus Sunandar',
-                'id_sobat' => '35717272',
-                'jk' => 'Laki-laki',
-                'email' => 'bagus@gmail.com',
-                'tanggal_lahir' => '1990-01-07',
-                'rating' => '5.0',
-                'banyak_survey'=> '13'
-            ],
-            [
-                'name' => 'Bagas Sunandar',
-                'id_sobat' => '35717272',
-                'jk' => 'Laki-laki',
-                'email' => 'bagas@gmail.com',
-                'tanggal_lahir' => '1993-02-11',
-                'rating' => '4.93',
-                'banyak_survey'=> '14'
-            ],
-            [
-                'name' => 'Bugus Sunandar',
-                'id_sobat' => '35717272',
-                'jk' => 'Laki-laki',
-                'email' => 'bugus@gmail.com',
-                'tanggal_lahir' => '1995-12-01',
-                'rating' => '4.86',
-                'banyak_survey'=> '13'
-            ],
-            [
-                'name' => 'Bigas Sunandar',
-                'id_sobat' => '35717272',
-                'jk' => 'Perempuan',
-                'email' => 'bigas@gmail.com',
-                'tanggal_lahir' => '2003-07-10',
-                'rating' => '4.7',
-                'banyak_survey'=> '13'
-            ],
-            [
-                'name' => 'Bogas Sunandar',
-                'id_sobat' => '35717272',
-                'jk' => 'Laki-laki',
-                'email' => 'bogas@gmail.com',
-                'tanggal_lahir' => '2005-04-27',
-                'rating' => '4.66',
-                'banyak_survey'=> '12'
-            ],
-        ];
+        $this->user = Auth::user();
     }
 
+    // public function index(Request $request)
+    // {
+    //     $perPage = $request->input('per_page', 10);
+
+    //     $currentQuarterStart = Carbon::now()->firstOfQuarter();
+    //     $currentQuarterEnd = Carbon::now()->lastOfQuarter();
+
+    //     // Ambil data mitra dengan nilai rata-rata survei tertinggi per tim pada triwulan berjalan
+    //     $mitraLeaderboards = Survey::where(function($query) use ($currentQuarterStart, $currentQuarterEnd) {
+    //             // Filter survei yang aktif dalam triwulan berjalan
+    //             $query->whereBetween('start_date', [$currentQuarterStart, $currentQuarterEnd])
+    //                 ->orWhereBetween('end_date', [$currentQuarterStart, $currentQuarterEnd]);
+    //         })
+    //         ->with(['mitra', 'team', 'nilai']) // Load relasi yang dibutuhkan
+    //         ->get()
+    //         ->groupBy('team_id') // Kelompokkan survei berdasarkan tim
+    //         ->map(function ($surveysPerTeam) {
+    //             return $surveysPerTeam->groupBy('mitra_id')->map(function ($surveysPerMitra) {
+    //                 // Hitung rata-rata nilai untuk setiap mitra di tim tersebut
+    //                 $avgScore = $surveysPerMitra->flatMap(function ($survey) {
+    //                     return $survey->nilai; // Ambil semua nilai terkait survei
+    //                 })->avg('rata_rata'); // Hitung rata-rata nilai
+
+    //                 return [
+    //                     'mitra' => $surveysPerMitra->first()->mitra,
+    //                     'avgScore' => $avgScore,
+    //                     'surveyCount' => $surveysPerMitra->count(),
+    //                 ];
+    //             })
+    //             ->sort(function ($a, $b) {
+    //                 // Urutkan berdasarkan nilai rata-rata tertinggi, jika sama, berdasarkan jumlah survei terbanyak
+    //                 return $b['avgScore'] <=> $a['avgScore'] ?: $b['surveyCount'] <=> $a['surveyCount'];
+    //             })
+    //             ->first(); // Pilih mitra dengan skor tertinggi untuk tim tersebut
+    //         })
+    //         ->values(); // Reset indeks
+
+    //     // Ambil data mitra dan jumlah survei pada triwulan berjalan
+    //     $mitras = Mitra::withCount(['surveys' => function($query) use ($currentQuarterStart, $currentQuarterEnd) {
+    //         $query->where(function($query) use ($currentQuarterStart, $currentQuarterEnd) {
+    //             $query->whereBetween('start_date', [$currentQuarterStart, $currentQuarterEnd])
+    //                 ->orWhereBetween('end_date', [$currentQuarterStart, $currentQuarterEnd]);
+    //         });
+    //     }])
+    //     ->with(['surveys' => function($query) use ($currentQuarterStart, $currentQuarterEnd) {
+    //         $query->where(function($query) use ($currentQuarterStart, $currentQuarterEnd) {
+    //             $query->whereBetween('start_date', [$currentQuarterStart, $currentQuarterEnd])
+    //                 ->orWhereBetween('end_date', [$currentQuarterStart, $currentQuarterEnd]);
+    //         });
+    //     }])
+    //     ->paginate($perPage);
+
+    //     return view('mitrateladan', [
+    //         'user' => $this->user,
+    //         'mitras' => $mitras,
+    //         'leaderboards' => $mitraLeaderboards
+    //     ]);
+    // }
     public function index(Request $request)
-    {
-        $perPage = $request->input('per_page', 10);
+{
+    $perPage = $request->input('per_page', 10);
 
-        $mitras = Mitra::paginate($perPage);
-        return view('mitrateladan', [
-            'user' => $this->user,
-            'mitras' => $mitras
-        ]); // Mengirim data ke view// Mengirim data ke view
-    }
+    // Mendapatkan tanggal awal dan akhir kuartal saat ini
+    $currentQuarterStart = Carbon::now()->firstOfQuarter();
+    $currentQuarterEnd = Carbon::now()->lastOfQuarter();
 
-    
+    $mitras = Mitra::with(['transactions.survey' => function ($query) use ($currentQuarterStart, $currentQuarterEnd) {
+            $query->whereBetween('start_date', [$currentQuarterStart, $currentQuarterEnd])
+                  ->whereBetween('end_date', [$currentQuarterStart, $currentQuarterEnd]);
+        }])
+        ->withCount(['transactions' => function ($query) use ($currentQuarterStart, $currentQuarterEnd) {
+            $query->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
+                  ->whereBetween('surveys.start_date', [$currentQuarterStart, $currentQuarterEnd])
+                  ->whereBetween('surveys.end_date', [$currentQuarterStart, $currentQuarterEnd]);
+        }])
+        ->paginate($perPage);
 
-    public function show($id_sobat)
-    {
-        $mitra = Mitra::where('id_sobat', $id_sobat)->firstOrFail();
+        $leaderboards = $mitras->map(function ($mitra) {
+            $transactionIds = $mitra->transactions->pluck('id');
+        
+            $averageRating = DB::table('nilai1')
+                ->whereIn('transaction_id', $transactionIds)
+                ->avg('rerata');
+        
+            $rating = $averageRating !== null ? round($averageRating, 2) : null;
+        
+            return [
+                'name' => $mitra->name,
+                'id_sobat' => $mitra->id_sobat,
+                'rating' => $rating,
+                'banyak_survey' => $mitra->transactions_count,
+            ];
+        });
+        
+        $leaderboards = $leaderboards->sortByDesc('rating')->values();
+        
+        $leaderboards = $leaderboards->map(function ($item, $index) {
+            $item['ranking'] = $index + 1; 
+            $item['rating'] = $item['rating'] === null ? '-' : $item['rating']; 
+            return $item;
+        });
 
-        if (!$mitra) {
-            return redirect()->route('mitra')->withErrors('Mitra tidak ditemukan.');
-        }
+    // dd($leaderboards->toArray());
 
-        return view('mitradetail', [
-            'user' => $this->user,
-            'mitra' => $mitra
-        ]);
-    }
-
-
-    //mul
-   
+    return view('mitrateladan', [
+        'mitras' => $mitras,
+        'leaderboards' => $leaderboards,
+    ]);
 }
-?>
+
+
+}
 

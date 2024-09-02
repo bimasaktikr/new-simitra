@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('survey_id');
             $table->string('target', 200);
             $table->integer('payment');
-            $table->integer('nilai');
             $table->timestamps();
 
             $table->foreign('mitra_id')->references('id_sobat')->on('mitras')->onDelete('cascade');

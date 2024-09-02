@@ -14,13 +14,13 @@
             </div>
             
             <div class="flex space-x-4">
-
-                <select id="filter" name="filter" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
-                    <option value="all">Semua</option>
-                    <option value="ongoing">Sedang Berlangsung</option>
-                    <option value="ended">Sudah Berakhir</option>
-                </select>
-
+                <form method="GET" action="{{ route('survei') }}">
+                    <select name="status" id="status" onchange="this.form.submit()" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                        <option value="semua" {{ request('status') == 'semua' ? 'selected' : '' }}>Semua</option>
+                        <option value="sedang berlangsung" {{ request('status') == 'sedang berlangsung' ? 'selected' : '' }}>Sedang Berlangsung</option>
+                        <option value="sudah berakhir" {{ request('status') == 'sudah berakhir' ? 'selected' : '' }}>Sudah Berakhir</option>
+                    </select>
+                </form>
                 <button onclick="window.location='{{ route('addsurvei') }}'" class="inline-flex items-center px-4 py-2 text-white bg-orange-500 border border-transparent rounded-lg shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:bg-orange-600 dark:hover:bg-orange-700">
                     Tambah Survei
                 </button>

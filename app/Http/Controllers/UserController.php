@@ -22,24 +22,55 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
+        $status = $request->input('status', 'semua'); // Default ke 'semua'
 
         $users = User::select('users.*', 'roles.role as role', DB::raw('
-                    CASE
-                        WHEN mitras.email IS NOT NULL THEN mitras.name
-                        WHEN employees.email IS NOT NULL THEN employees.name
-                        ELSE NULL
-                    END as name
-                '))
-                ->join('roles', 'users.role_id', '=', 'roles.id')
-                ->leftJoin('mitras', 'users.email', '=', 'mitras.email')
-                ->leftJoin('employees', 'users.email', '=', 'employees.email')
-                ->paginate($perPage);
+                        CASE
+                            WHEN mitras.email IS NOT NULL THEN mitras.name
+                            WHEN employees.email IS NOT NULL THEN employees.name
+                            ELSE NULL
+                        END as name
+                    '))
+                    ->join('roles', 'users.role_id', '=', 'roles.id')
+                    ->leftJoin('mitras', 'users.email', '=', 'mitras.email')
+                    ->leftJoin('employees', 'users.email', '=', 'employees.email')
+                    ->when($status !== 'semua', function ($query) use ($status) {
+                        if ($status === 'aktif') {
+                            $query->where('users.status', 'Aktif');
+                        } elseif ($status === 'tidak aktif') {
+                            $query->where('users.status', 'Tidak Aktif');
+                        }
+                    })
+                    ->paginate($perPage);
 
         return view('user', [
             'user' => $this->user,
-            'users' => $users
+            'users' => $users,
+            'status' => $status
         ]);
     }
+
+    // public function index(Request $request)
+    // {
+    //     $perPage = $request->input('per_page', 10);
+
+    //     $users = User::select('users.*', 'roles.role as role', DB::raw('
+    //                 CASE
+    //                     WHEN mitras.email IS NOT NULL THEN mitras.name
+    //                     WHEN employees.email IS NOT NULL THEN employees.name
+    //                     ELSE NULL
+    //                 END as name
+    //             '))
+    //             ->join('roles', 'users.role_id', '=', 'roles.id')
+    //             ->leftJoin('mitras', 'users.email', '=', 'mitras.email')
+    //             ->leftJoin('employees', 'users.email', '=', 'employees.email')
+    //             ->paginate($perPage);
+
+    //     return view('user', [
+    //         'user' => $this->user,
+    //         'users' => $users
+    //     ]);
+    // }
 
     public function search(Request $request)
     {
@@ -58,25 +89,6 @@ class UserController extends Controller
 
         return view('usertable', compact('users'));
     }
-
-
-    // public function search(Request $request)
-    // {
-    //     $query = $request->input('query');
-    //     $perPage = $request->input('per_page', 10);
-
-    //     if ($query) {
-    //         $users = User::select('users.*')
-    //                     ->where('users.email', 'LIKE', "%{$query}%")
-    //                     ->orWhere('users.role', 'LIKE', "%{$query}%")
-    //                     ->paginate($perPage);
-    //     } else {
-    //         $users = User::select('users.*')
-    //                  ->paginate($perPage);
-    //     }
-
-    //     return view('usertable', compact('users'));
-    // }
 
     public function edit($id)
     {

@@ -20,16 +20,18 @@ class PegawaiController extends Controller
 
     public function __construct()
     {
-        $this->user = Auth::user(); // Mendapatkan data pengguna yang login
+        $this->user = Auth::user();
     }
 
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
 
-        $employees = Employee::paginate($perPage);
+        $employees = Employee::select('employees.*', 'users.status as status')
+                    ->join('users', 'users.email', '=', 'employees.email')
+                    ->where('users.status', '=', 'Aktif')
+                    ->paginate($perPage);
         
-        // Mengirim data survei ke view
         return view('pegawai', [
             'user' => $this->user,
             'employees' => $employees]);
@@ -68,18 +70,35 @@ class PegawaiController extends Controller
             'fungsi' => 'required|exists:teams,id',
             'peran' => 'required|string|max:255'
         ]);
-
+        
+        $role_id = $request->peran === 'Ketua-tim' ? 2 : 3;
         $employee = Employee::findOrFail($id);
+        
+        DB::beginTransaction();
+        
+        try {
+            $employee->update([
+                'name' => $request->input('nama'),
+                'jenis_kelamin' => $request->input('jk'),
+                'tanggal_lahir' => $request->input('tanggal_lahir'),
+                'team_id' => $request->input('fungsi'),
+                'peran' => $request->input('peran'),
+            ]);
 
-        $employee->update([
-            'name' => $request->input('nama'),
-            'jenis_kelamin' => $request->input('jk'),
-            'tanggal_lahir' => $request->input('tanggal_lahir'),
-            'team_id' => $request->input('fungsi'),
-            'peran' => $request->input('peran'),
-        ]);
 
-        return redirect()->route('pegawai')->with('success', 'Pegawai berhasil diperbarui.');
+            $user = User::where('email', $employee->email)->first();
+            if ($user) {
+                $user->update([
+                    'role_id' => $role_id
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->route('pegawai')->with('success', 'Pegawai berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('pegawai')->with('error', 'Terjadi kesalahan saat memperbarui pegawai: ' . $e->getMessage());
+        }
     }
 
     public function show($id)
@@ -114,7 +133,7 @@ class PegawaiController extends Controller
         try {
             DB::beginTransaction();
 
-            $role_id = $request->peran === 'Ketua tim' ? 2 : 3;
+            $role_id = $request->peran === 'Ketua-tim' ? 2 : 3;
 
             $user = User::create([
                 'email' => $request->email,

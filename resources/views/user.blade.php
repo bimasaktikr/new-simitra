@@ -14,11 +14,13 @@
             </div>
 
             <div class="flex space-x-4">
-                <select id="filter" name="filter" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
-                    <option value="all">Semua</option>
-                    <option value="ongoing">Aktif</option>
-                    <option value="ended">Tidak Aktif</option>
-                </select>
+                <form method="GET" action="{{ route('user') }}">
+                    <select name="status" id="status" onchange="this.form.submit()" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                        <option value="semua" {{ request('status') == 'semua' ? 'selected' : '' }}>Semua</option>
+                        <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="tidak aktif" {{ request('status') == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                    </select>
+                </form>
             </div>
         </div>
 

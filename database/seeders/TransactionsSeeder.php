@@ -19,7 +19,6 @@ class TransactionsSeeder extends Seeder
                 'survey_id' => 1,
                 'target' => 'Target A',
                 'payment' => 1000,
-                'nilai' => 4
             ],
             [
                 'id' => 2,
@@ -27,7 +26,6 @@ class TransactionsSeeder extends Seeder
                 'survey_id' => 2,
                 'target' => 'Target B',
                 'payment' => 2000,
-                'nilai' => 4.33
             ],
             [
                 'id' => 3,
@@ -35,7 +33,6 @@ class TransactionsSeeder extends Seeder
                 'survey_id' => 3,
                 'target' => 'Target C',
                 'payment' => 1500,
-                'nilai' => 4.67
             ],
             [
                 'id' => 4,
@@ -43,7 +40,6 @@ class TransactionsSeeder extends Seeder
                 'survey_id' => 4,
                 'target' => 'Target D',
                 'payment' => 2500,
-                'nilai' => 5
             ],
             [
                 'id' => 5,
@@ -51,7 +47,6 @@ class TransactionsSeeder extends Seeder
                 'survey_id' => 5,
                 'target' => 'Target E',
                 'payment' => 3000,
-                'nilai' => 4
             ],
         ]);
     }

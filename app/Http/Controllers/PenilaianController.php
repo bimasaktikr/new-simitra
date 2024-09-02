@@ -38,11 +38,14 @@ class PenilaianController extends Controller
         try {
             DB::beginTransaction();
 
+            $rerata = ($request->kualitas_data + $request->ketepatan_waktu + $request->pemahaman_pengetahuan_kerja) / 3;
+
             $nilai = Nilai::create([
                 'transaction_id' => $request->transaction_id,
                 'aspek1' => $request->kualitas_data,
                 'aspek2' => $request->ketepatan_waktu,
                 'aspek3' => $request->pemahaman_pengetahuan_kerja,
+                'rerata' => $rerata,
             ]);
 
             DB::commit();

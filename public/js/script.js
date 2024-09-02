@@ -32,9 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
     modal.classList.toggle('hidden');
 }
 
-document.getElementById('confirmDeleteButton').addEventListener('click', function() {
-    document.getElementById('deleteForm').submit();
-});
+// document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+//     document.getElementById('deleteForm').submit();
+// });
 
 document.addEventListener('DOMContentLoaded', function() {
   setupLiveSearch('search-survey', 'survey-table', '/surveys/search');

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Employee;
 use App\Models\Team;
+use App\Models\Survey;
 
 class TeamController extends Controller
 {
@@ -23,10 +24,10 @@ class TeamController extends Controller
     {
         $perPage = $request->input('per_page', 10);
 
-        $teams = Team::select('teams.*', 'employees.name as emp_name')
+        $teams = Team::select('teams.*', 'employees.name as ketua_tim')
                             ->leftJoin('employees', function($join) {
                                 $join->on('employees.team_id', '=', 'teams.id')
-                                    ->where('employees.peran', 'Ketua tim');
+                                    ->where('employees.peran', 'Ketua-tim');
                             })
                             ->paginate($perPage);
         
@@ -35,13 +36,26 @@ class TeamController extends Controller
             'teams' => $teams]);
     }
 
-    public function show($id_sobat)
+    public function show($id)
     {
-        $mitra = Mitra::where('id_sobat', $id_sobat)->firstOrFail();
+        $teams = Team::where('id', $id)->firstOrFail();
 
-        return view('mitradetail', [
+        $perPage = request()->get('per_page', 10);
+
+        $employee = Employee::select('employees.*')
+                            ->where('employees.peran', 'Ketua-tim')
+                            ->where('employees.team_id', $id)
+                            ->first();
+
+        $surveys = Survey::select('surveys.*')
+            ->where('surveys.team_id', $id)
+            ->paginate($perPage);
+
+        return view('team.detail', [
             'user' => $this->user,
-            'mitra' => $mitra
+            'teams' => $teams,
+            'employee' => $employee,
+            'surveys' => $surveys
         ]);
     }
 

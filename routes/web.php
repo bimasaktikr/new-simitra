@@ -58,11 +58,10 @@ Route::delete('/user/{email}', [UserController::class, 'destroy'])->name('users.
 Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
 
 Route::get('/team', [TeamController::class, 'index'])->name('team')->middleware('auth');
-// Route::get('/mitra/{id_sobat}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
+Route::get('/team/{id}', [TeamController::class, 'show'])->name('teamdetail')->middleware('auth');
 Route::get('/teams/search', [TeamController::class, 'search'])->name('team.search');
 
 Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction')->middleware('auth');
-// Route::get('/mitra/{id_sobat}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
 Route::get('/transactions/search', [TransactionController::class, 'search'])->name('transaction.search');
 
 Route::get('/penilaian/{transaction_id}/create', [PenilaianController::class, 'create'])->name('penilaian.create')->middleware('auth');

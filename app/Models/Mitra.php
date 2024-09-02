@@ -22,13 +22,25 @@ class Mitra extends Model
         'tanggal_lahir',
     ];
 
-    public function transaction()
+    public function transactions()
     {
-        return $this->hasMany(Transaction::class, 'mitra_id', 'id');
+        return $this->hasMany(Transaction::class, 'mitra_id', 'id_sobat');
     }
     
     public function user()
     {
         return $this->belongsTo(User::class, 'email');
+    }
+
+    public function surveys()
+    {
+        return $this->hasManyThrough(
+            Survey::class,
+            Transaction::class,
+            'mitra_id',    // Foreign key on transactions table...
+            'id',          // Foreign key on surveys table...
+            'id_sobat',    // Local key on mitras table...
+            'survey_id'    // Local key on transactions table...
+        );
     }
 }

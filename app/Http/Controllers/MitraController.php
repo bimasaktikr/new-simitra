@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log; 
 use App\Models\User;
 use App\Models\Mitra;
+use App\Models\Survey;
 use App\Models\Transaction;
 use Carbon\Carbon;
 
@@ -16,6 +17,8 @@ class MitraController extends Controller
 {
     protected $user;
     protected $mitra;
+    protected $survey;
+    protected $transaction;
 
     public function __construct()
     {
@@ -26,7 +29,10 @@ class MitraController extends Controller
     {
         $perPage = $request->input('per_page', 10);
 
-        $mitras = Mitra::paginate($perPage);
+        $mitras = Mitra::select('mitras.*', 'users.status as status')
+                    ->join('users', 'users.email', '=', 'mitras.email')
+                    ->where('users.status', '=', 'Aktif')
+                    ->paginate($perPage);
         
         return view('mitra', [
             'user' => $this->user,
@@ -79,10 +85,18 @@ class MitraController extends Controller
         $mitra = Mitra::where('id_sobat', $id_sobat)->firstOrFail();
 
         $perPage = request()->get('per_page', 10);
-        $transactions = Transaction::select('transactions.*', 'surveys.name as survey_name', 'surveys.code as survey_code', 'transactions.payment', DB::raw('IFNULL(transactions.nilai, "Belum dinilai") as nilai'))
-            ->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
-            ->where('transactions.mitra_id', $mitra->id_sobat)
-            ->paginate($perPage);
+
+        $transactions = Transaction::select(
+            'transactions.*', 
+            'surveys.name as survey_name', 
+            'surveys.id as survey_id', 
+            'surveys.code as survey_code',
+            DB::raw('IFNULL(nilai1.rerata, "Belum dinilai") as nilai')
+        )
+        ->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
+        ->leftJoin('nilai1', 'transactions.id', '=', 'nilai1.transaction_id') 
+        ->where('transactions.mitra_id', $mitra->id_sobat)
+        ->paginate($perPage);
 
         return view('mitradetail', [
             'user' => $this->user,
