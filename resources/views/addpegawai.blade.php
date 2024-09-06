@@ -20,6 +20,7 @@
         <div class="mb-4">
             <label for="jk" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Kelamin</label>
             <select name="jk" id="jk" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm dark:bg-gray-700 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400" required>
+                <option value="" disabled selected>Pilih Jenis Kelamin</option>
                 <option value="Laki-laki">Laki-laki</option>
                 <option value="Perempuan">Perempuan</option>
             </select>        
@@ -37,18 +38,19 @@
 
         <div class="mb-4">
             <label for="fungsi" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Fungsi</label>
-            <select name="fungsi" id="fungsi" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
-            @foreach($teams as $team)
-                <option value="{{ $team->id }}">
-                    {{ $team->name }}
-                </option>
-            @endforeach
+            <select name="fungsi" id="fungsi" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                <option value="" selected disabled>Pilih Fungsi</option>
+                <option value="">Kosongkan Pilihan</option> <!-- Opsi untuk mengosongkan -->
+                @foreach($teams as $team)
+                    <option value="{{ $team->id }}">{{ $team->name }}</option>
+                @endforeach
             </select>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4" id="peran-container" style="display: none;">
             <label for="peran" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Peran</label>
-            <select name="peran" id="peran" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <select name="peran" id="peran" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                <option value="" selected disabled>Pilih Peran</option>
                 <option value="Ketua-tim">Ketua tim</option>
                 <option value="Anggota">Anggota</option>
             </select>

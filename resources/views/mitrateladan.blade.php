@@ -40,23 +40,23 @@
                 </table>
             </div>
         </div><br>
-
+    
         <form action="{{ route('mitrateladan') }}" method="GET">
             <div class="flex justify-between mt-4 items-center">
                 <div>
                     <label for="per_page" class="text-sm text-gray-700 dark:text-gray-300">Records per halaman:</label>
-                    <select id="per_page" name="per_page" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
-                        <option value="10" {{ request('per_page') == '10' ? 'selected' : '' }}>10</option>
-                        <option value="15" {{ request('per_page') == '15' ? 'selected' : '' }}>15</option>
-                        <option value="20" {{ request('per_page') == '20' ? 'selected' : '' }}>20</option>
+                    <select id="per_page" name="per_page" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" onchange="this.form.submit()">
+                        <option value="10" {{ request()->get('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                        <option value="15" {{ request()->get('per_page') == 15 ? 'selected' : '' }}>15</option>
+                        <option value="20" {{ request()->get('per_page') == 20 ? 'selected' : '' }}>20</option>
                     </select>
+                </div>
+                <div>
+                    {{ $mitras->appends(['per_page' => request()->get('per_page', 10)])->links('components.pagination') }}
                 </div>
             </div>
         </form>
 
-        <div class="mt-4">
-            {{ $mitras->links() }}
-        </div>
     </div>
 </div>
 @endsection

@@ -126,19 +126,17 @@ class PegawaiController extends Controller
             'jk' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'tanggal_lahir' => 'required|date',
-            'fungsi' => 'required|exists:teams,id',
-            'peran' => 'required|string|max:255'
+            'fungsi' => 'nullable|exists:teams,id',
+            'peran' => 'nullable|string|max:255'
         ]);
 
         try {
             DB::beginTransaction();
 
-            $role_id = $request->peran === 'Ketua-tim' ? 2 : 3;
-
             $user = User::create([
                 'email' => $request->email,
                 'password' => bcrypt($request->nip), 
-                'role_id' => $role_id,
+                'role_id' => 2,
                 'status' => 'Aktif',
             ]);
 

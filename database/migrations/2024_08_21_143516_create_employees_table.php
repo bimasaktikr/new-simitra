@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email', 200)->unique();
             $table->date('tanggal_lahir');
             $table->unsignedBigInteger('team_id')->nullable();
-            $table->string('peran', 200);
+            $table->string('peran', 200)->nullable();
             $table->timestamps();
 
             $table->foreign('email')->references('email')->on('users')->onDelete('cascade');

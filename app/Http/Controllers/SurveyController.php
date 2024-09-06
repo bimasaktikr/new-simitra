@@ -9,6 +9,7 @@ use App\Models\Team;
 use App\Models\Transaction;
 use App\Models\Mitra; 
 use App\Models\PaymentType;
+use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 
 class SurveyController extends Controller
@@ -222,19 +223,19 @@ class SurveyController extends Controller
 
         // Cek apakah survei memiliki file
         if (!$survey->file) {
-            return redirect()->route('surveydetail', ['id' => $id])->with('error', 'Tidak ada file yang diunggah untuk survei ini.');
+            return redirect()->route('surveidetail', ['id' => $id])->with('error', 'Tidak ada file yang diunggah untuk survei ini.');
         }
 
         // Baca file Excel
         $filePath = storage_path('app/public/' . $survey->file);
         $data = Excel::toArray([], $filePath);
 
-        if (empty($data) || empty($data[0])) {
-            return redirect()->route('surveydetail', ['id' => $id])->with('error', 'File Excel tidak valid atau kosong.');
+        if (empty($data) || empty($data[1])) {
+            return redirect()->route('surveidetail', ['id' => $id])->with('error', 'File Excel tidak valid atau kosong.');
         }
 
         // Iterasi setiap baris dalam file Excel
-        foreach ($data[0] as $row) {
+        foreach ($data[1] as $row) {
             $id_mitra = $row[1]; // Asumsi id_mitra ada di kolom pertama
 
             // Cek apakah mitra sudah ada berdasarkan id_mitra
@@ -253,7 +254,7 @@ class SurveyController extends Controller
                 'payment' => $survey->payment,
             ]);
         }
-        return redirect()->route('surveydetail', ['id' => $id])->with('success', 'Data berhasil disinkronisasi.');
+        return redirect()->route('surveidetail', ['id' => $id])->with('success', 'Data berhasil disinkronisasi.');
     }
 
     public function destroy($id)
