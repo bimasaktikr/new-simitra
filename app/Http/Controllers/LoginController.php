@@ -35,8 +35,18 @@ class LoginController extends Controller
         if ($user->role_id == '4' && $mitra) {
             Session::put('user_data', $mitra);
         } elseif ($user->role_id != '4' && $employee) {
-            Session::put('user_data', $employee);
-        }
+            // Ambil team name berdasarkan team_id dari tabel employees
+            $team = DB::table('teams')->where('id', $employee->team_id)->first();
+
+            // Convert $employee (object) menjadi array
+            $employeeData = (array) $employee;
+
+            // Tambahkan team_name ke dalam array
+            $employeeData['team_name'] = $team ? $team->name : null;
+
+            // Simpan data ke dalam session
+            Session::put('user_data', (object)$employeeData);
+            }
 
         return redirect('/dashboard');
     } else {

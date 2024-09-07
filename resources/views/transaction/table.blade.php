@@ -22,7 +22,7 @@
                     <td class="px-6 py-4">{{ $transaction->survey_name }}</td>
                     <td class="px-6 py-4">{{ $transaction->survey_code }}</td>
                     <td class="px-6 py-4">{{ $transaction->target }}</td>
-                    <td class="px-6 py-4">{{ $transaction->payment }}</td>
+                    <td class="px-6 py-4">{{ number_format($transaction->payment, 2) }}</td>
                 </tr>
             @endforeach
         @endif

@@ -243,11 +243,12 @@ class SurveyController extends Controller
         // Iterasi setiap baris dalam file Excel
         foreach ($filterData as $row) {
             $id_mitra = $row[1];
-            $email = $row[3];
-            $name = $row[0];
-            $jenis_kelamin = $row[2];
-            $pendidikan = $row[4];
-            $tanggal_lahir = $row[5]; // Asumsi id_mitra ada di kolom pertama
+            $name = $row[2];
+            $jenis_kelamin = $row[3];
+            $email = $row[4];
+            $pendidikan = $row[5];
+            $tanggal_lahir = $row[6];
+            $target = isset($row[7]) ? $row[7] : 1;
 
             $user = User::firstOrCreate(['email' => $email],[
                 'password' => bcrypt($id_mitra), 
@@ -268,6 +269,7 @@ class SurveyController extends Controller
                 'survey_id' => $survey->id,
                 'mitra_id' => $mitra->id_sobat,
                 'payment' => $survey->payment,
+                'target' => $target ?? 1
             ]);
             
         }

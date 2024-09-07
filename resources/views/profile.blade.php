@@ -63,7 +63,7 @@
                 </div>
                 <div class="mb-4">
                     <p class="font-semibold text-gray-800 dark:text-gray-200">Fungsi</p>
-                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->team_id }}</p>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $userData->team_name }}</p>
                 </div>
                 <div class="mb-4">
                     <p class="font-semibold text-gray-800 dark:text-gray-200">Peran</p>
