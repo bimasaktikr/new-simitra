@@ -8,6 +8,7 @@ use App\Models\Survey;
 use App\Models\Team; 
 use App\Models\Transaction;
 use App\Models\Mitra; 
+use App\Models\User; 
 use App\Models\PaymentType;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
@@ -230,21 +231,36 @@ class SurveyController extends Controller
         $filePath = storage_path('app/public/' . $survey->file);
         $data = Excel::toArray([], $filePath);
 
-        if (empty($data) || empty($data[1])) {
-            return redirect()->route('surveidetail', ['id' => $id])->with('error', 'File Excel tidak valid atau kosong.');
-        }
+        $sheetdata = $data[0];
+        array_shift($sheetdata);
+
+        // Memfilter baris yang kosong atau hanya berisi null
+        $filterData = array_filter($sheetdata, function($row) {
+            // Memastikan baris tidak semuanya null
+            return array_filter($row);
+        });
 
         // Iterasi setiap baris dalam file Excel
-        foreach ($data[1] as $row) {
-            $id_mitra = $row[1]; // Asumsi id_mitra ada di kolom pertama
+        foreach ($filterData as $row) {
+            $id_mitra = $row[1];
+            $email = $row[3];
+            $name = $row[0];
+            $jenis_kelamin = $row[2];
+            $pendidikan = $row[4];
+            $tanggal_lahir = $row[5]; // Asumsi id_mitra ada di kolom pertama
 
-            // Cek apakah mitra sudah ada berdasarkan id_mitra
+            $user = User::firstOrCreate(['email' => $email],[
+                'password' => bcrypt($id_mitra), 
+                'role_id' => 4,
+                'status' => 'Aktif',
+            ]);
+
             $mitra = Mitra::firstOrCreate(['id_sobat' => $id_mitra], [
-                'name' => $row[0],
-                'email' => $row[3],
-                'jenis_kelamin' => $row[2], 
-                'pendidikan' => $row[4],
-                'tanggal_lahir' => $row[5]
+                'name' => $name,
+                'email' => $email,
+                'jenis_kelamin' => $jenis_kelamin, 
+                'pendidikan' => $pendidikan,
+                'tanggal_lahir' => $tanggal_lahir
             ]);
 
             // Tambahkan transaksi
@@ -253,6 +269,7 @@ class SurveyController extends Controller
                 'mitra_id' => $mitra->id_sobat,
                 'payment' => $survey->payment,
             ]);
+            
         }
         return redirect()->route('surveidetail', ['id' => $id])->with('success', 'Data berhasil disinkronisasi.');
     }
