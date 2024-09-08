@@ -134,7 +134,7 @@ class PegawaiController extends Controller
             DB::beginTransaction();
 
             // Set role_id berdasarkan nilai peran
-            $role_id = ($request->peran === 'Ketua Tim') ? 2 : 3;
+            $role_id = ($request->peran === 'Ketua-tim') ? 2 : 3;
 
             $user = User::create([
                 'email' => $request->email,
