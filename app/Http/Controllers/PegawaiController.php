@@ -133,10 +133,13 @@ class PegawaiController extends Controller
         try {
             DB::beginTransaction();
 
+            // Set role_id berdasarkan nilai peran
+            $role_id = ($request->peran === 'Ketua Tim') ? 2 : 3;
+
             $user = User::create([
                 'email' => $request->email,
                 'password' => bcrypt($request->nip), 
-                'role_id' => 2,
+                'role_id' => $role_id,
                 'status' => 'Aktif',
             ]);
 
