@@ -38,7 +38,7 @@
     </dl>
   </div>
   <div class="px-4 sm:px-0 m-5">
-    <h3 class="text-base font-bold leading-8 text-gray-900 dark:text-gray-100">Daftar Mitra</h3>
+    <h3 class="text-xl font-bold leading-8 text-gray-900 dark:text-gray-100">Daftar Mitra</h3>
   </div>
   <div class="mt-6">
     <div class="flex justify-between mb-4">
@@ -50,6 +50,19 @@
                 </button>
           </form>
       </div>
+
+      <div class="flex space-x-4">
+        <form action="{{ route('survei.finalisasi', $survey->id) }}" method="POST">
+            @csrf
+            @if($belumDinilai)
+              <button class="ml-2 px-4 py-2 text-white bg-gray-400 border border-transparent rounded-lg shadow-sm cursor-not-allowed" disabled>Finalisasi Nilai</button>
+            @else
+              <button type="submit" class="inline-flex items-center px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-800">
+              Finalisasi Nilai
+              </button>
+            @endif
+        </form>
+    </div>
     </div>
   </div>
 
@@ -61,7 +74,7 @@
             <th scope="col" class="px-6 py-3">No</th>
             <th scope="col" class="px-6 py-3">Id</th>
             <th scope="col" class="px-6 py-3">Mitra</th>
-            <th scope="col" class="px-6 py-3">Aksi</th>
+            <th scope="col" class="px-6 py-3">Nilai</th>
           </tr>
         </thead>
         <tbody>
@@ -71,13 +84,35 @@
                       <td class="px-6 py-4">{{ $transaction->mitra_id }}</td>
                       <td class="px-6 py-4">{{ $transaction->mitra_name }}</td>
                       <td class="px-6 py-4">
-                      @if (\Carbon\Carbon::now()->lessThan(\Carbon\Carbon::parse($survey['end_date'])))
-                        <button class="ml-2 px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>Nilai</button>
-                      @else
-                        <button onclick="window.location='{{ route('penilaian.create', ['transaction_id' => $transaction->id]) }}'" class="ml-2 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-500">
-                            Nilai
-                        </button>
-                      @endif
+                        @if (\Carbon\Carbon::now()->lessThan(\Carbon\Carbon::parse($survey['end_date'])))
+                            {{-- Tombol Nilai disable jika periode survei belum berakhir --}}
+                            <button class="ml-2 px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>Nilai</button>
+                        @else
+                            @php
+                                // Cek apakah nilai sudah ada di tabel 'nilai' berdasarkan transaction_id
+                                $nilai = \App\Models\Nilai1::where('transaction_id', $transaction->id)->first();
+                            @endphp
+
+                            @if ($survey->is_sudah_dinilai == 0)
+                                @if (!$nilai)
+                                    {{-- Tombol Nilai aktif jika survei sudah berakhir dan mitra belum dinilai --}}
+                                    <button onclick="window.location='{{ route('penilaian.create', ['transaction_id' => $transaction->id]) }}'" class="ml-2 px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-500">
+                                        Nilai
+                                    </button>
+                                @else
+                                    {{-- Tampilkan nilai dan tombol edit jika survei sudah berakhir dan mitra sudah dinilai --}}
+                                    <span>{{ $nilai->rerata }}</span>
+                                    <button onclick="" class="ml-2 px-3 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-500">
+                                        Edit
+                                    </button>
+                                @endif
+                            @else
+                                {{-- Hanya tampilkan nilai jika survei sudah dinilai (is_sudah_dinilai == 1) --}}
+                                @if ($nilai)
+                                    <span>{{ $nilai->rerata }}</span>
+                                @endif
+                            @endif
+                        @endif
                     </td>
                   </tr>
               @endforeach

@@ -21,6 +21,8 @@ class PenilaianController extends Controller
 
         $survey = Survey::where('id', $transaction->survey_id)->first();
 
+        session(['previous_url' => url()->previous()]);
+
         return view('penilaian.create', compact('transaction_id', 'mitra', 'survey'));
     }
 
@@ -49,7 +51,8 @@ class PenilaianController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('surveydetail', ['id' => $request->survey_id])->with('success', 'Penilaian berhasil disimpan!');
+            $previousUrl = session('previous_url', route('surveidetail', ['id' => $request->survey_id]));
+            return redirect($previousUrl)->with('success', 'Penilaian berhasil disimpan!');
 
         } catch (\Exception $e) {
             DB::rollBack();

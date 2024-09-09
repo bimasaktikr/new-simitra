@@ -9,6 +9,7 @@ use App\Models\Team;
 use App\Models\Transaction;
 use App\Models\Mitra; 
 use App\Models\User; 
+use App\Models\Nilai1; 
 use App\Models\PaymentType;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
@@ -49,31 +50,15 @@ class SurveyController extends Controller
         ]);
     }
 
-
-    // public function index(Request $request)
-    // {
-    //     $perPage = $request->input('per_page', 10);
-
-    //     $surveys = Survey::select('surveys.*', 'teams.name as team_name', 'teams.code as team_code')
-    //                  ->join('teams', 'surveys.team_id', '=', 'teams.id')
-    //                  ->paginate($perPage);
-
-    //     return view('survey', [
-    //         'user' => $this->user,
-    //         'surveys' => $surveys
-    //     ]);
-    // }
-
     public function add()
     {
-        // Ambil semua tim dan tipe pembayaran untuk pilihan di formulir
         $teams = Team::all();
         $paymentTypes = PaymentType::all();
 
         return view('addsurvey', [
             'user' => $this->user,
             'teams' => $teams,
-            'paymentTypes' => $paymentTypes // Kirim data tipe pembayaran ke view
+            'paymentTypes' => $paymentTypes 
         ]);
     }
 
@@ -86,7 +71,7 @@ class SurveyController extends Controller
             'tanggal_mulai' => 'required|date',
             'tanggal_berakhir' => 'required|date',
             'tim' => 'required|exists:teams,id',
-            'tipe_pembayaran' => 'required|exists:payment_types,id', // Validasi payment_type_id
+            'tipe_pembayaran' => 'required|exists:payment_types,id',
             'harga' => 'required|numeric',
             'file' => 'nullable|file|mimes:csv,xls,xlsx',
         ]);
@@ -100,16 +85,15 @@ class SurveyController extends Controller
         }
 
         // Simpan survei baru
-
         Survey::create([
             'name' => $request->input('nama'),
             'code' => $request->input('kode'),
             'start_date' => $request->input('tanggal_mulai'),
             'end_date' => $request->input('tanggal_berakhir'),
             'team_id' => $request->input('tim'),
-            'payment_type_id' => $request->input('tipe_pembayaran'), // Simpan payment_type_id
+            'payment_type_id' => $request->input('tipe_pembayaran'), 
             'payment' => $request->input('harga'),
-            'file' => $filePath, // Simpan path file
+            'file' => $filePath, 
             'is_sudah_dinilai' => 0,
         ]);
 
@@ -137,43 +121,107 @@ class SurveyController extends Controller
         return view('surveytable', compact('surveys'))->render();
     }
 
-    public function show($id)
-    {
-        $survey = Survey::where('id', $id)->firstOrFail();
+//     public function show($id)
+//     {
+//         $survey = Survey::where('id', $id)->firstOrFail();
 
-        $survey = Survey::select('surveys.*', 'teams.name as team_name', 'teams.code as team_code', 'payment_types.payment_type as payment_type_name')
-                    ->join('teams', 'surveys.team_id', '=', 'teams.id')
-                    ->join('payment_types', 'surveys.payment_type_id', '=', 'payment_types.id') 
-                    ->where('surveys.id', $id)
-                    ->first();
+//         $survey = Survey::select('surveys.*', 'teams.name as team_name', 'teams.code as team_code', 'payment_types.payment_type as payment_type_name')
+//                     ->join('teams', 'surveys.team_id', '=', 'teams.id')
+//                     ->join('payment_types', 'surveys.payment_type_id', '=', 'payment_types.id') 
+//                     ->where('surveys.id', $id)
+//                     ->first();
 
-        $perPage = request()->get('per_page', 10);
-        // $transactions = Transaction::select('transactions.*', 'mitras.name as mitra_name', 'mitras.id_sobat as mitra_id', DB::raw('IFNULL(transactions.nilai, "Belum dinilai") as nilai'))
-        //             ->join('mitras', 'transactions.mitra_id', '=', 'mitras.id_sobat')
-        //             ->where('transactions.survey_id', $survey->id)
-        //             ->paginate($perPage);
+//         $perPage = request()->get('per_page', 10);
 
-                    $transactions = Transaction::select(
+//                     $transactions = Transaction::select(
+//                         'transactions.*', 
+//                         'mitras.name as mitra_name', 
+//                         'mitras.id_sobat as mitra_id', 
+//                         DB::raw('IFNULL(nilai1.rerata, "Belum dinilai") as nilai')
+//                     )
+//                     ->join('mitras', 'transactions.mitra_id', '=', 'mitras.id_sobat')
+//                     ->leftJoin('nilai1', 'transactions.id', '=', 'nilai1.transaction_id') // Join ke tabel nilai1
+//                     ->where('transactions.survey_id', $survey->id)
+//                     ->paginate($perPage);
+
+//         if (!$survey) {
+//             return redirect()->route('survei')->with('error', 'Survei tidak ditemukan');
+//         }
+
+//         return view('surveydetail', [
+//             'user' => $this->user,
+//             'survey' => $survey,
+//             'transactions' => $transactions,
+//         ]);
+//     }
+
+//     public function surveiDetail($id)
+// {
+//     // Ambil survei dan transaksi terkait
+//     $survey = Survey::with(['transactions.mitra'])->findOrFail($id);
+
+//     // Cek apakah ada transaksi yang belum dinilai
+//     $belumDinilai = $survey->transactions->contains(function ($transaction) {
+//         return is_null($transaction->nilai1);
+//     });
+
+//     return view('surveydetail', [
+//         'user' => $this->user,
+//         'survey' => $survey,
+//         'transactions' => $survey->transactions,
+//         'belumDinilai' => $belumDinilai
+//     ]);
+// }
+
+public function show($id)
+{
+    // Ambil survei dengan detail tim dan tipe pembayaran
+    $survey = Survey::select('surveys.*', 'teams.name as team_name', 'teams.code as team_code', 'payment_types.payment_type as payment_type_name')
+                ->join('teams', 'surveys.team_id', '=', 'teams.id')
+                ->join('payment_types', 'surveys.payment_type_id', '=', 'payment_types.id')
+                ->where('surveys.id', $id)
+                ->firstOrFail();
+
+    // Ambil jumlah per halaman dari request atau default 10
+    $perPage = request()->get('per_page', 10);
+
+    // Ambil transaksi terkait survei, mitra, dan nilai
+    $transactions = Transaction::select(
                         'transactions.*', 
                         'mitras.name as mitra_name', 
                         'mitras.id_sobat as mitra_id', 
+                        'nilai1.rerata as nilai',
                         DB::raw('IFNULL(nilai1.rerata, "Belum dinilai") as nilai')
                     )
                     ->join('mitras', 'transactions.mitra_id', '=', 'mitras.id_sobat')
-                    ->leftJoin('nilai1', 'transactions.id', '=', 'nilai1.transaction_id') // Join ke tabel nilai1
+                    ->leftJoin('nilai1', 'transactions.id', '=', 'nilai1.transaction_id')
                     ->where('transactions.survey_id', $survey->id)
                     ->paginate($perPage);
 
-        if (!$survey) {
-            return redirect()->route('survei')->with('error', 'Survei tidak ditemukan');
-        }
+    // Cek apakah ada transaksi yang belum dinilai
+    $belumDinilai = $transactions->contains(function ($transaction) {
+        return $transaction->nilai === "Belum dinilai";
+    });
 
-        return view('surveydetail', [
-            'user' => $this->user,
-            'survey' => $survey,
-            'transactions' => $transactions
-        ]);
-    }
+    return view('surveydetail', [
+        'user' => $this->user,
+        'survey' => $survey,
+        'transactions' => $transactions,
+        'belumDinilai' => $belumDinilai,
+    ]);
+}
+
+public function finalisasiNilai($id)
+{
+    $survey = Survey::findOrFail($id);
+
+    // Update kolom is_sudah_dinilai menjadi 1
+    $survey->update([
+        'is_sudah_dinilai' => 1,
+    ]);
+
+    return redirect()->route('surveidetail', ['id' => $id])->with('success', 'Survei telah difinalisasi.');
+}
 
     public function edit($id)
     {

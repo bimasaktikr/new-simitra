@@ -82,18 +82,18 @@ class MitraTeladanController extends Controller{
 {
     $perPage = $request->input('per_page', 10);
 
-    // Mendapatkan tanggal awal dan akhir kuartal saat ini
-    $currentQuarterStart = Carbon::now()->firstOfQuarter();
-    $currentQuarterEnd = Carbon::now()->lastOfQuarter();
+    $currentYear = date('Y'); 
+    $currentPeriodStart = "{$currentYear}-01-01"; 
+    $currentPeriodEnd = "{$currentYear}-12-31";   
 
-    $mitras = Mitra::with(['transactions.survey' => function ($query) use ($currentQuarterStart, $currentQuarterEnd) {
-            $query->whereBetween('start_date', [$currentQuarterStart, $currentQuarterEnd])
-                  ->whereBetween('end_date', [$currentQuarterStart, $currentQuarterEnd]);
+    $mitras = Mitra::with(['transactions.survey' => function ($query) use ($currentPeriodStart, $currentPeriodEnd) {
+            $query->whereBetween('start_date', [$currentPeriodStart, $currentPeriodEnd])
+                  ->whereBetween('end_date', [$currentPeriodStart, $currentPeriodEnd]);
         }])
-        ->withCount(['transactions' => function ($query) use ($currentQuarterStart, $currentQuarterEnd) {
+        ->withCount(['transactions' => function ($query) use ($currentPeriodStart, $currentPeriodEnd) {
             $query->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
-                  ->whereBetween('surveys.start_date', [$currentQuarterStart, $currentQuarterEnd])
-                  ->whereBetween('surveys.end_date', [$currentQuarterStart, $currentQuarterEnd]);
+                  ->whereBetween('surveys.start_date', [$currentPeriodStart, $currentPeriodEnd])
+                  ->whereBetween('surveys.end_date', [$currentPeriodStart, $currentPeriodEnd]);
         }])
         ->paginate($perPage);
 

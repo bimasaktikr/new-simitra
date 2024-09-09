@@ -29,6 +29,7 @@ Route::put('/survei/{id}', [SurveyController::class, 'update'])->name('editsurve
 Route::post('/survei/{id}/sync', [SurveyController::class, 'sync'])->name('survei.sync')->middleware('auth');
 Route::delete('/surveys/{id}', [SurveyController::class, 'destroy'])->name('surveys.destroy');
 Route::get('/surveys/search', [SurveyController::class, 'search'])->name('surveys.search');
+Route::post('/survei/{id}/finalisasi', [SurveyController::class, 'finalisasiNilai'])->name('survei.finalisasi');
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware('auth');
 Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
