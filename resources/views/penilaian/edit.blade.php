@@ -9,9 +9,13 @@
         <p class="pb-2 text-gray-900 dark:text-gray-100"><strong>Survei:</strong> {{ $survey->name }}</p>
     </div>
 
-    <form action="{{ route('penilaian.store') }}" method="POST">
+    <form action="{{ route('penilaian.update', $transaction->id) }}" method="POST">
         @csrf
-        <input type="hidden" name="transaction_id" value="{{ $transaction_id }}">
+        @method('PUT')
+
+        <p>Form Action: {{ route('penilaian.update', $transaction->id) }}</p>
+        
+        <input type="hidden" name="transaction_id" value="{{ $transaction->id }}">
         <input type="hidden" name="survey_id" value="{{ $survey->id }}">
         
         <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md">
@@ -31,7 +35,9 @@
                         <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Kualitas Data</td>
                         @for($i = 1; $i <= 5; $i++)
                             <td class="px-6 py-4 text-center">
-                                <input type="radio" name="kualitas_data" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400 required">
+                                <input type="radio" name="kualitas_data" value="{{ $i }}" 
+                                    {{ old('kualitas_data', $transaction->aspek1) == $i ? 'checked' : '' }} 
+                                    class="form-radio text-blue-600 dark:text-blue-400 required">
                             </td>
                         @endfor
                     </tr>
@@ -39,7 +45,9 @@
                         <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Ketepatan Waktu</td>
                         @for($i = 1; $i <= 5; $i++)
                             <td class="px-6 py-4 text-center">
-                                <input type="radio" name="ketepatan_waktu" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400 required">
+                                <input type="radio" name="ketepatan_waktu" value="{{ $i }}" 
+                                {{ old('ketepatan_waktu', $transaction->aspek1) == $i ? 'checked' : '' }} 
+                                class="form-radio text-blue-600 dark:text-blue-400 required">
                             </td>
                         @endfor
                     </tr>
@@ -47,7 +55,9 @@
                         <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Pemahaman Pengetahuan Kerja</td>
                         @for($i = 1; $i <= 5; $i++)
                             <td class="px-6 py-4 text-center">
-                                <input type="radio" name="pemahaman_pengetahuan_kerja" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400 required">
+                                <input type="radio" name="pemahaman_pengetahuan_kerja" value="{{ $i }}" 
+                                {{ old('pemahaman_pengetahuan_kerja', $transaction->aspek1) == $i ? 'checked' : '' }} 
+                                class="form-radio text-blue-600 dark:text-blue-400 required">
                             </td>
                         @endfor
                     </tr>

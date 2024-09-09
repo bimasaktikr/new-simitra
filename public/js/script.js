@@ -72,3 +72,42 @@ document.getElementById('fungsi').addEventListener('change', function() {
       peranContainer.style.display = 'none';
   }
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const syncForm = document.getElementById('sync-form');
+    const syncButton = document.getElementById('sync-button');
+
+    syncForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah pengiriman form default
+
+        syncButton.disabled = true; // Nonaktifkan tombol
+        syncButton.textContent = 'Sedang Proses...'; // Ubah teks tombol
+
+        fetch(syncForm.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(new FormData(syncForm)),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Jika berhasil, sembunyikan tombol
+            syncButton.style.display = 'none';
+            alert('Sinkronisasi berhasil!');
+        })
+        .catch(error => {
+            console.error('Ada masalah dengan permintaan:', error);
+            syncButton.disabled = false; // Aktifkan kembali tombol jika gagal
+            syncButton.textContent = 'Sinkronisasi Data Mitra'; // Kembalikan teks tombol
+        });
+    });
+});
+

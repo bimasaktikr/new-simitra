@@ -25,10 +25,14 @@ class TransactionController extends Controller
     {
         $perPage = $request->input('per_page', 10);
 
-        $transactions = Transaction::select('transactions.*', 'mitras.name as mitra_name', 'surveys.name as survey_name', 'surveys.code as survey_code')
-                            ->join('mitras', 'transactions.mitra_id', '=', 'mitras.id_sobat')
-                            ->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
-                            ->paginate($perPage);
+        // $transactions = Transaction::select('transactions.*', 'mitras.name as mitra_name', 'surveys.name as survey_name', 'surveys.code as survey_code')
+        //                     ->join('mitras', 'transactions.mitra_id', '=', 'mitras.id_sobat')
+        //                     ->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
+        //                     ->paginate($perPage);
+        $transactions = Transaction::with(['mitra', 'survey', 'nilai1'])
+                                    // ->select('transactions.*')
+                                    ->paginate($perPage);
+
         
         return view('transaction.index', [
             'user' => $this->user,

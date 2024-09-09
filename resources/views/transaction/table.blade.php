@@ -7,6 +7,8 @@
             <th scope="col" class="px-6 py-3">Kode Survei</th>
             <th scope="col" class="px-6 py-3">Target</th>
             <th scope="col" class="px-6 py-3">Pembayaran</th>
+            <th scope="col" class="px-6 py-3">Total Pembayaran</th>
+            <th scope="col" class="px-6 py-3">Nilai</th>
         </tr>
     </thead>
     <tbody>
@@ -18,11 +20,13 @@
             @foreach($transactions as $index => $transaction)
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <td class="px-6 py-4">{{ $transactions->firstItem() + $index }}</td>
-                    <td class="px-6 py-4">{{ $transaction->mitra_name }}</td>
-                    <td class="px-6 py-4">{{ $transaction->survey_name }}</td>
-                    <td class="px-6 py-4">{{ $transaction->survey_code }}</td>
+                    <td class="px-6 py-4">{{ $transaction->mitra->name }}</td>
+                    <td class="px-6 py-4">{{ $transaction->survey->name }}</td>
+                    <td class="px-6 py-4">{{ $transaction->survey->code }}</td>
                     <td class="px-6 py-4">{{ $transaction->target }}</td>
                     <td class="px-6 py-4">{{ number_format($transaction->payment, 2) }}</td>
+                    <td class="px-6 py-4">{{ number_format($transaction->payment*$transaction->target, 2) }}</td>
+                    <td class="px-6 py-4">{{ $transaction->nilai1->rerata ?? '-'}}</td>
                 </tr>
             @endforeach
         @endif
