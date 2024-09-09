@@ -4,18 +4,18 @@
 <section class="bg-white dark:bg-gray-900">
     <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
         <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 md:p-12 mb-8 dark:bg-gray-800 dark:border-gray-700">
-            <h1 class="text-gray-900 dark:text-white text-3xl md:text-5xl font-extrabold mb-2">
+            <h1 class="text-gray-900 dark:text-white text-4xl md:text-4xl font-extrabold mb-2">
                 <strong>Selamat Datang, {{ ucfirst($userData->name) }}!</strong>
             </h1>
-            <p class="text-lg font-normal text-gray-500 dark:text-gray-400 mb-6">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            <p class="text-lg font-normal text-gray-500 dark:text-gray-400 mt-4 mb-3">
+                Penyedia Data Berkualitas Untuk Indonesia Maju
             </p>
-            <a href="#" class="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            <!-- <a href="#" class="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 Read more
                 <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                 </svg>
-            </a>
+            </a> -->
         </div>
 
         <div class="grid md:grid-cols-2 gap-8 justify-center">
@@ -132,19 +132,42 @@
                 </div>
             </div>
             <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 md:p-12 dark:bg-gray-800 dark:border-gray-700">
-                <a href="#" class="bg-purple-100 text-purple-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 dark:bg-purple-900 dark:text-purple-200">
-                    <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4 1 8l4 4m10-8 4 4-4 4M11 1 9 15"/>
-                    </svg>
-                    Code
-                </a>
-                <h2 class="text-gray-900 dark:text-white text-3xl font-extrabold mb-2">Best react libraries around the web</h2>
-                <p class="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers.</p>
-                <a href="#" class="text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300 font-medium text-lg inline-flex items-center">Read more
-                    <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                    </svg>
-                </a>
+                <div class="max-w-sm w-full bg-white rounded-lg shadow p-4 md:p-6 mx-auto dark:bg-gray-700 dark:text-white">
+                    <div class="flex justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="flex justify-center items-center">
+                                <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1">Progress Penilaian Mitra</h5>
+                                <!-- Circular Progress -->
+                                <div class="relative size-40">
+                                    <svg class="size-full -rotate-90" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                                        <!-- Background Circle -->
+                                        <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-200 dark:text-neutral-300" stroke-width="2"></circle>
+                                        <!-- Progress Circle -->
+                                            <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-blue-600 dark:text-blue-500" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="{{ 100 - $overallPercentage }}" stroke-linecap="round"></circle>
+                                    </svg>
+                                    <!-- Percentage Text -->
+                                    <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                                        <span class="text-center text-2xl font-bold text-blue-600 dark:text-blue-500">{{ number_format($overallPercentage, 0) }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- Progress Bars -->
+                <div class="space-y-4">
+                    @foreach ($progressData as $teamId => $data)
+                    <div class="flex flex-col space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-base font-medium text-gray-700 dark:text-white">{{ $data['name'] }}</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-white">{{ number_format($data['percentage'], 0) }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-200">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ $data['percentage'] }}%"></div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                <!-- End Progress Bars -->
             </div>
         </div>
     </div>
