@@ -79,24 +79,27 @@ class MitraTeladanController extends Controller{
     //     ]);
     // }
     public function index(Request $request)
-{
-    $perPage = $request->input('per_page', 10);
+    {
+        $perPage = $request->input('per_page', 10);
 
-    // Mendapatkan tanggal awal dan akhir kuartal saat ini
-    $currentQuarterStart = Carbon::now()->firstOfQuarter();
-    $currentQuarterEnd = Carbon::now()->lastOfQuarter();
+        // Mendapatkan tanggal awal dan akhir kuartal saat ini
+        $currentYear = date('Y'); 
+        $currentPeriodStart = "{$currentYear}-01-01"; 
+        $currentPeriodEnd = "{$currentYear}-12-31";   
 
-    $mitras = Mitra::with(['transactions.survey' => function ($query) use ($currentQuarterStart, $currentQuarterEnd) {
-            $query->whereBetween('start_date', [$currentQuarterStart, $currentQuarterEnd])
-                  ->whereBetween('end_date', [$currentQuarterStart, $currentQuarterEnd]);
-        }])
-        ->withCount(['transactions' => function ($query) use ($currentQuarterStart, $currentQuarterEnd) {
-            $query->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
-                  ->whereBetween('surveys.start_date', [$currentQuarterStart, $currentQuarterEnd])
-                  ->whereBetween('surveys.end_date', [$currentQuarterStart, $currentQuarterEnd]);
-        }])
-        ->paginate($perPage);
+        // Ambil semua mitra beserta transaksi dan surveynya
+        $mitras = Mitra::with(['transactions.survey' => function ($query) use ($currentPeriodStart, $currentPeriodEnd) {
+                $query->whereBetween('start_date', [$currentPeriodStart, $currentPeriodEnd])
+                    ->whereBetween('end_date', [$currentPeriodStart, $currentPeriodEnd]);
+            }])
+            ->withCount(['transactions' => function ($query) use ($currentPeriodStart, $currentPeriodEnd) {
+                $query->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
+                    ->whereBetween('surveys.start_date', [$currentPeriodStart, $currentPeriodEnd])
+                    ->whereBetween('surveys.end_date', [$currentPeriodStart, $currentPeriodEnd]);
+            }])
+            ->get(); // Ambil semua data tanpa pagination dulu
 
+        // Hitung rating rata-rata untuk setiap mitra
         $leaderboards = $mitras->map(function ($mitra) {
             $transactionIds = $mitra->transactions->pluck('id');
         
@@ -113,23 +116,34 @@ class MitraTeladanController extends Controller{
                 'banyak_survey' => $mitra->transactions_count,
             ];
         });
-        
+
+        // Urutkan berdasarkan rating secara global (desc)
         $leaderboards = $leaderboards->sortByDesc('rating')->values();
-        
+
+        // Hitung ranking global
         $leaderboards = $leaderboards->map(function ($item, $index) {
-            $item['ranking'] = $index + 1; 
+            $item['ranking'] = $index + 1; // Ranking global
             $item['rating'] = $item['rating'] === null ? '-' : $item['rating']; 
             return $item;
         });
 
-    // dd($leaderboards->toArray());
+        // Setelah diurutkan dan diranking, lakukan pagination pada hasil yang sudah diranking
+        $paginatedLeaderboards = $leaderboards->slice(($request->input('page', 1) - 1) * $perPage, $perPage)->values();
 
-    return view('mitrateladan', [
-        'mitras' => $mitras,
-        'leaderboards' => $leaderboards,
-    ]);
-}
+        // Lakukan pagination manual
+        $pagination = new \Illuminate\Pagination\LengthAwarePaginator(
+            $paginatedLeaderboards, // Data yang dipaginate
+            $leaderboards->count(), // Total item
+            $perPage, // Item per halaman
+            $request->input('page', 1), // Halaman saat ini
+            ['path' => $request->url(), 'query' => $request->query()] // URL dan query string
+        );
 
+        return view('mitrateladan', [
+            'mitras' => $pagination, // Passing hasil paginated
+            'leaderboards' => $pagination, // Leaderboards terpaginated
+        ]);
+    }
 
 }
 
