@@ -19,7 +19,8 @@ class Survey extends Model
         'end_date',
         'payment',
         'team_id',
-        'file'
+        'file',
+        'is_sudah_dinilai',
     ];
 
     public function transaction()

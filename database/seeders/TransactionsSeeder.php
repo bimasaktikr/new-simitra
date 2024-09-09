@@ -12,42 +12,31 @@ class TransactionsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('transactions')->insert([
+        DB::table('transactions')->insert([ 
             [
                 'id' => 1,
                 'mitra_id' => 212112328,
                 'survey_id' => 1,
-                'target' => 'Target A',
-                'payment' => 1000,
+                'target' => 5,
+                'payment' => 100000,
+                'total_payment' => 500000,
             ],
             [
                 'id' => 2,
                 'mitra_id' => 212112287,
                 'survey_id' => 2,
-                'target' => 'Target B',
-                'payment' => 2000,
+                'target' => 10,
+                'payment' => 200000,
+                'total_payment' => 2000000,
             ],
             [
                 'id' => 3,
                 'mitra_id' => 212112328,
                 'survey_id' => 3,
-                'target' => 'Target C',
-                'payment' => 1500,
-            ],
-            [
-                'id' => 4,
-                'mitra_id' => 212112328,
-                'survey_id' => 4,
-                'target' => 'Target D',
-                'payment' => 2500,
-            ],
-            [
-                'id' => 5,
-                'mitra_id' => 212112287,
-                'survey_id' => 5,
-                'target' => 'Target E',
-                'payment' => 3000,
-            ],
+                'target' => 20,
+                'payment' => 50000,
+                'total_payment' => 1000000,
+            ]
         ]);
     }
 }

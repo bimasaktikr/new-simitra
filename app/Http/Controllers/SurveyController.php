@@ -100,6 +100,7 @@ class SurveyController extends Controller
         }
 
         // Simpan survei baru
+
         Survey::create([
             'name' => $request->input('nama'),
             'code' => $request->input('kode'),
@@ -109,6 +110,7 @@ class SurveyController extends Controller
             'payment_type_id' => $request->input('tipe_pembayaran'), // Simpan payment_type_id
             'payment' => $request->input('harga'),
             'file' => $filePath, // Simpan path file
+            'is_sudah_dinilai' => 0,
         ]);
 
         return redirect()->route('survei')->with('success', 'Survei berhasil ditambahkan.');
@@ -252,7 +254,7 @@ class SurveyController extends Controller
 
             $user = User::firstOrCreate(['email' => $email],[
                 'password' => bcrypt($id_mitra), 
-                'role_id' => 4,
+                'role_id' => 3,
                 'status' => 'Aktif',
             ]);
 
@@ -265,11 +267,13 @@ class SurveyController extends Controller
             ]);
 
             // Tambahkan transaksi
+            $total_payment = $survey->payment * $target;
             Transaction::create([
                 'survey_id' => $survey->id,
                 'mitra_id' => $mitra->id_sobat,
                 'payment' => $survey->payment,
-                'target' => $target ?? 1
+                'target' => $target ?? 1,
+                'total_payment' => $total_payment,
             ]);
             
         }

@@ -18,7 +18,7 @@
             @include('transaction.table')
         </div>
 
-        <form action="{{ route('team') }}" method="GET">
+        <form action="{{ route('transaction') }}" method="GET">
             <div class="flex justify-between mt-4 items-center">
                 <div>
                     <label for="per_page" class="text-sm text-gray-700 dark:text-gray-300">Records per halaman:</label>
@@ -29,9 +29,9 @@
                     </select>
                 </div>
 
-                <div>
+                <!-- <div>
                     {{ $transactions->appends(['per_page' => request()->get('per_page', 10)])->links('components.pagination') }}
-                </div>
+                </div> -->
             </div>
         </form>
     </div>

@@ -18,7 +18,8 @@ class SurveysSeeder extends Seeder
                 'start_date' => '2024-01-01',
                 'end_date' => '2024-12-31',
                 'payment' => 1000000,
-                'team_id' => 1
+                'team_id' => 1,
+                'is_sudah_dinilai' => 0,
             ],
             [
                 'id' => 2,
@@ -28,7 +29,8 @@ class SurveysSeeder extends Seeder
                 'start_date' => '2024-02-01',
                 'end_date' => '2024-11-30',
                 'payment' => 20000,
-                'team_id' => 2
+                'team_id' => 2,
+                'is_sudah_dinilai' => 0,
             ],
             [
                 'id' => 3,
@@ -38,7 +40,8 @@ class SurveysSeeder extends Seeder
                 'start_date' => '2024-03-01',
                 'end_date' => '2024-10-31',
                 'payment' => 50000,
-                'team_id' => 3
+                'team_id' => 3,
+                'is_sudah_dinilai' => 0,
             ],
             [
                 'id' => 4,
@@ -48,7 +51,8 @@ class SurveysSeeder extends Seeder
                 'start_date' => '2024-04-01',
                 'end_date' => '2024-09-30',
                 'payment' => 2500,
-                'team_id' => 4
+                'team_id' => 4,
+                'is_sudah_dinilai' => 0,
             ],
             [
                 'id' => 5,
@@ -58,7 +62,8 @@ class SurveysSeeder extends Seeder
                 'start_date' => '2024-05-01',
                 'end_date' => '2024-08-31',
                 'payment' => 3000,
-                'team_id' => 5
+                'team_id' => 5,
+                'is_sudah_dinilai' => 0,
             ],
         ]);
     }

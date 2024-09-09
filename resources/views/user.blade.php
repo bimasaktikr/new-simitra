@@ -39,9 +39,9 @@
                     </select>
                 </div>
 
-                <div>
+                <!-- <div>
                     {{ $users->appends(['per_page' => request()->get('per_page', 10)])->links('components.pagination') }}
-                </div>
+                </div> -->
             </div>
         </form>
 

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Mitra;
 use App\Models\Survey;
-use App\Models\Nilai;
+use App\Models\Nilai1;
 use App\Models\Transaction;
 
 class PenilaianController extends Controller
@@ -40,7 +40,7 @@ class PenilaianController extends Controller
 
             $rerata = ($request->kualitas_data + $request->ketepatan_waktu + $request->pemahaman_pengetahuan_kerja) / 3;
 
-            $nilai = Nilai::create([
+            $nilai = Nilai1::create([
                 'transaction_id' => $request->transaction_id,
                 'aspek1' => $request->kualitas_data,
                 'aspek2' => $request->ketepatan_waktu,
@@ -49,7 +49,7 @@ class PenilaianController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('survey.detail', ['id' => $request->survey_id])->with('success', 'Penilaian berhasil disimpan!');
+            return redirect()->route('surveydetail', ['id' => $request->survey_id])->with('success', 'Penilaian berhasil disimpan!');
 
         } catch (\Exception $e) {
             DB::rollBack();

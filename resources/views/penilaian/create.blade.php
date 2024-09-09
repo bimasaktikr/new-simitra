@@ -4,6 +4,16 @@
 <div class="container mx-auto px-4 py-6 bg-white dark:bg-gray-900">
     <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">Penilaian Survei</h1>
 
+    @if ($errors->any())
+           <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+               <ul>
+                   @foreach ($errors->all() as $error)
+                       <li>{{ $error }}</li>
+                   @endforeach
+               </ul>
+           </div>
+       @endif
+
     <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md mb-6">
         <p class="pb-2 text-gray-900 dark:text-gray-100"><strong>Mitra:</strong> {{ $mitra->name }}</p>
         <p class="pb-2 text-gray-900 dark:text-gray-100"><strong>Survei:</strong> {{ $survey->name }}</p>
@@ -12,6 +22,7 @@
     <form action="{{ route('penilaian.store') }}" method="POST">
         @csrf
         <input type="hidden" name="transaction_id" value="{{ $transaction_id }}">
+        <input type="hidden" name="survey_id" value="{{ $survey->id }}">
         
         <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
