@@ -29,10 +29,10 @@ class TransactionController extends Controller
         //                     ->join('mitras', 'transactions.mitra_id', '=', 'mitras.id_sobat')
         //                     ->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
         //                     ->paginate($perPage);
-        $transactions = Transaction::with('mitra')
-                                    ->with('survey')
-                                    ->with('nilai1')
+        $transactions = Transaction::with(['mitra', 'survey', 'nilai1'])
+                                    // ->select('transactions.*')
                                     ->paginate($perPage);
+
         
         return view('transaction.index', [
             'user' => $this->user,

@@ -16,7 +16,6 @@ class Transaction extends Model
         'survey_id',
         'target',
         'payment',
-        'total_payment',
     ];
 
     public function survey()

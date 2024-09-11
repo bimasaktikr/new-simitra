@@ -67,5 +67,7 @@ Route::get('/transactions/search', [TransactionController::class, 'search'])->na
 
 Route::get('/penilaian/{transaction_id}/create', [PenilaianController::class, 'create'])->name('penilaian.create')->middleware('auth');
 Route::post('/penilaian', [PenilaianController::class, 'store'])->name('penilaian.store')->middleware('auth');
+Route::get('/penilaian/{transaction_id}/edit', [PenilaianController::class, 'edit'])->name('penilaian.edit');
+Route::put('/penilaian/{transaction_id}', [PenilaianController::class, 'update'])->name('penilaian.update');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');
