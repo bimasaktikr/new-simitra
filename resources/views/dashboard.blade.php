@@ -44,21 +44,22 @@
             </div>
         </div>
         
-        <ul class="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
+        <div class="bg-gray-100 dark:bg-gray-700 rounded-lg">
+        <ul class="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 border border-gray-100 dark:border-gray-700">
             <li class="w-full focus-within:z-10">
-                <a href="{{ route('dashboard', ['period' => 'all-time']) }}" class="inline-block w-full p-4 {{ $period == 'all-time' ? ' active dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-200 dark:border-gray-700 rounded-s-lg hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Semua</a>
+                <a href="{{ route('dashboard', ['period' => 'all-time']) }}" class="inline-block w-full p-4 {{ $period == 'all-time' ? ' active dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-100 dark:border-gray-700 rounded-s-lg hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Semua</a>
             </li>
             <li class="w-full focus-within:z-10">
-                <a href="{{ route('dashboard', ['period' => 'q1']) }}" class="inline-block w-full p-4 {{ $period == 'q1' ? ' dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Triwulan 1</a>
+                <a href="{{ route('dashboard', ['period' => 'q1']) }}" class="inline-block w-full p-4 {{ $period == 'q1' ? ' dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-100 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Triwulan 1</a>
             </li>
             <li class="w-full focus-within:z-10">
-                <a href="{{ route('dashboard', ['period' => 'q2']) }}" class="inline-block w-full p-4 {{ $period == 'q2' ? ' dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Triwulan 2</a>
+                <a href="{{ route('dashboard', ['period' => 'q2']) }}" class="inline-block w-full p-4 {{ $period == 'q2' ? ' dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-100 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Triwulan 2</a>
             </li>
             <li class="w-full focus-within:z-10">
-                <a href="{{ route('dashboard', ['period' => 'q3']) }}" class="inline-block w-full p-4 {{ $period == 'q3' ? ' dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Triwulan 3</a>
+                <a href="{{ route('dashboard', ['period' => 'q3']) }}" class="inline-block w-full p-4 {{ $period == 'q3' ? ' dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-100 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Triwulan 3</a>
             </li>
             <li class="w-full focus-within:z-10">
-                <a href="{{ route('dashboard', ['period' => 'q4']) }}" class="inline-block w-full p-4 {{ $period == 'q4' ? ' dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Triwulan 4</a>
+                <a href="{{ route('dashboard', ['period' => 'q4']) }}" class="inline-block w-full p-4 {{ $period == 'q4' ? ' dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-100 dark:border-gray-700 hover:text-gray-700 rounded-e-lg hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Triwulan 4</a>
             </li>
         </ul>
         
@@ -162,6 +163,7 @@
             </div>
         </div>
     </div>
+</div>
 </section>
 
 <script>    
