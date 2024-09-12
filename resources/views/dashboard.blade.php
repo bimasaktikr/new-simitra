@@ -114,9 +114,9 @@
                 </div>
 
                 <div id="column-chart"></div>
-                <div class="grid grid-cols-1 items-center justify-between">
-                    <div class="flex justify-between items-center pt-5">
-                        <!-- Dropdown and button content -->
+                <div class="grid grid-cols-1 items-center justify-center">
+                    <div class="flex justify-center items-center pt-5">
+                        
                     </div>
                 </div>
             </div>
@@ -177,7 +177,7 @@
         const options = {
             series: series,
             labels: labels,
-            colors: ["#1C64F2", "#16BDCA", "#9061F9", "#FFA500", "#CE2029"], // Sesuaikan warna sesuai kebutuhan
+            colors: ["#1C64F2", "#16BDCA", "#9061F9", "#FFA500", "#CE2029"], 
             chart: {
                 height: 420,
                 width: "100%",
@@ -221,7 +221,7 @@
         const progressData = @json($progressData); // Mengubah data dari PHP menjadi JSON
         
         const options = {
-            colors: ["#1A56DB", "#FDBA8C"],
+            colors: ["#F77F00", "#1A56DB", "#FDBA8C"],
             series: [
                 {
                     name: "Total Survei",
