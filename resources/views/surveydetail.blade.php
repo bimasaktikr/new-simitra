@@ -53,18 +53,20 @@
         @endif
       </div>
 
-      <div class="flex space-x-4">
-        <form action="{{ route('survei.finalisasi', $survey->id) }}" method="POST">
-            @csrf
-            @if($belumDinilai)
-              <button class="ml-2 px-4 py-2 text-white bg-gray-400 border border-transparent rounded-lg shadow-sm cursor-not-allowed" disabled>Finalisasi Nilai</button>
-            @else
-              <button type="submit" class="inline-flex items-center px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-800">
-              Finalisasi Nilai
-              </button>
-            @endif
-        </form>
-    </div>
+      @if($survey->is_sudah_dinilai == 0)
+        <div class="flex space-x-4">
+          <form action="{{ route('survei.finalisasi', $survey->id) }}" method="POST">
+              @csrf
+              @if($belumDinilai)
+                <button class="ml-2 px-4 py-2 text-white bg-gray-400 border border-transparent rounded-lg shadow-sm cursor-not-allowed" disabled>Finalisasi Nilai</button>
+              @else
+                <button type="submit" class="inline-flex items-center px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-800">
+                Finalisasi Nilai
+                </button>
+              @endif
+          </form>
+        </div>
+      @endif  
     </div>
   </div>
 

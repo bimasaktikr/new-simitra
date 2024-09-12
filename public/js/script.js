@@ -111,3 +111,51 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search');
+    const tabs = document.querySelectorAll('.tab-link');
+    let selectedPeriod = document.getElementById('selected-period').value;
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function (e) {
+            e.preventDefault();
+            selectedPeriod = this.getAttribute('data-period');
+            document.getElementById('selected-period').value = selectedPeriod;
+            loadLeaderboard(selectedPeriod);
+        });
+    });
+
+    searchInput.addEventListener('input', function () {
+        performLiveSearch(this.value, selectedPeriod);
+    });
+
+    function performLiveSearch(query, period) {
+        fetch(`/mitrateladan/live-search?search=${query}&period=${period}`)
+            .then(response => response.json())
+            .then(data => updateTable(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function updateTable(data) {
+        const tbody = document.querySelector('#leaderboard-table tbody');
+        tbody.innerHTML = ''; // Clear existing rows
+        data.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.classList.add('bg-white', 'border-b', 'dark:bg-gray-800', 'dark:border-gray-700');
+            row.innerHTML = `
+                <td class="px-6 py-4">${index + 1}</td>
+                <td class="px-6 py-4">${item.name}</td>
+                <td class="px-6 py-4">${item.id_sobat}</td>
+                <td class="px-6 py-4">${item.rating}</td>
+                <td class="px-6 py-4">${item.banyak_survey}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function loadLeaderboard(period) {
+        // Fetch data according to the selected tab and update the table
+        performLiveSearch(searchInput.value, period);
+    }
+});

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             TeamsSeeder::class,
             TransactionsSeeder::class,
             UsersSeeder::class,
+            VariabelPenilaian::class,
         ]);
     }
 }

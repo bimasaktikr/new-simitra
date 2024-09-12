@@ -32,4 +32,8 @@ class Transaction extends Model
     {
         return $this->hasOne(Nilai1::class, 'transaction_id', 'id');
     }
+    public function nilai2()
+    {
+        return $this->hasOne(Nilai1::class, 'transaction_id', 'id');
+    }
 }

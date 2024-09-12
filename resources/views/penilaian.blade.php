@@ -23,33 +23,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Variabel 1: Kualitas Data -->
-                    <tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
-                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Kualitas Data</td>
-                        @for($i = 1; $i <= 5; $i++)
-                            <td class="px-6 py-4 text-center">
-                                <input type="radio" name="kualitas_data" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400">
-                            </td>
-                        @endfor
-                    </tr>
-                    <!-- Variabel 2: Ketepatan Waktu -->
-                    <tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
-                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Ketepatan Waktu</td>
-                        @for($i = 1; $i <= 5; $i++)
-                            <td class="px-6 py-4 text-center">
-                                <input type="radio" name="ketepatan_waktu" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400">
-                            </td>
-                        @endfor
-                    </tr>
-                    <!-- Variabel 3: Pemahaman Pengetahuan Kerja -->
-                    <tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
-                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Pemahaman Pengetahuan Kerja</td>
-                        @for($i = 1; $i <= 5; $i++)
-                            <td class="px-6 py-4 text-center">
-                                <input type="radio" name="pemahaman_pengetahuan_kerja" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400">
-                            </td>
-                        @endfor
-                    </tr>
+                    @foreach ($tahap1 as $var)
+                        <tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
+                            <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">{{ $var->variabel }}</td>
+                            @for($i = 1; $i <= 5; $i++)
+                                <td class="px-6 py-4 text-center">
+                                    <input type="radio" name="{{ $var->id }}" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400">
+                                </td>
+                            @endfor
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

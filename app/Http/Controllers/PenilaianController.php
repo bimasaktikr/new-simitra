@@ -9,6 +9,7 @@ use App\Models\Mitra;
 use App\Models\Survey;
 use App\Models\Nilai1;
 use App\Models\Transaction;
+use App\Models\VariabelPenilaian;
 
 class PenilaianController extends Controller
 {
@@ -20,6 +21,10 @@ class PenilaianController extends Controller
         $mitra = Mitra::where('id_sobat', $transaction->mitra_id)->first();
 
         $survey = Survey::where('id', $transaction->survey_id)->first();
+
+        // $tahap1 = VariabelPenilaian::where('tahap', 1)->get();
+        // $tahap2 = VariabelPenilaian::where('tahap', 2)->get();
+
 
         session(['previous_url' => url()->previous()]);
 

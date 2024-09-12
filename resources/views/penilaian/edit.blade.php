@@ -12,8 +12,6 @@
     <form action="{{ route('penilaian.update', $transaction->id) }}" method="POST">
         @csrf
         @method('PUT')
-
-        <p>Form Action: {{ route('penilaian.update', $transaction->id) }}</p>
         
         <input type="hidden" name="transaction_id" value="{{ $transaction->id }}">
         <input type="hidden" name="survey_id" value="{{ $survey->id }}">
@@ -46,7 +44,7 @@
                         @for($i = 1; $i <= 5; $i++)
                             <td class="px-6 py-4 text-center">
                                 <input type="radio" name="ketepatan_waktu" value="{{ $i }}" 
-                                {{ old('ketepatan_waktu', $transaction->aspek1) == $i ? 'checked' : '' }} 
+                                {{ old('ketepatan_waktu', $transaction->aspek2) == $i ? 'checked' : '' }} 
                                 class="form-radio text-blue-600 dark:text-blue-400 required">
                             </td>
                         @endfor
@@ -56,7 +54,7 @@
                         @for($i = 1; $i <= 5; $i++)
                             <td class="px-6 py-4 text-center">
                                 <input type="radio" name="pemahaman_pengetahuan_kerja" value="{{ $i }}" 
-                                {{ old('pemahaman_pengetahuan_kerja', $transaction->aspek1) == $i ? 'checked' : '' }} 
+                                {{ old('pemahaman_pengetahuan_kerja', $transaction->aspek3) == $i ? 'checked' : '' }} 
                                 class="form-radio text-blue-600 dark:text-blue-400 required">
                             </td>
                         @endfor
