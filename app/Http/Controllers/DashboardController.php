@@ -43,17 +43,6 @@ class DashboardController extends Controller
 
         // Ambil semua tim
         $teams = Team::all();
-
-        // $totalSurveys = Survey::select(function($query) use ($start, $end){
-        //     $query->whereBetween('start_date', [$start, $end])
-        //           ->whereBetween('end_date', [$start, $end]);
-        //     })->count();
-        // $totalSurveysReviewed = Survey::select(function($query) use ($start, $end){
-        //     $query->whereBetween('start_date', [$start, $end])
-        //           ->whereBetween('end_date', [$start, $end]);
-        //     })
-        //     ->where('is_sudah_dinilai', 1)
-        //     ->count();
             
         $totalSurveys = Survey::whereBetween('start_date', [$start, $end])
                                 ->whereBetween('end_date', [$start, $end])
