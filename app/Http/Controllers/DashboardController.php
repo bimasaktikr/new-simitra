@@ -19,41 +19,49 @@ class DashboardController extends Controller
 
         switch ($period) {
             case 'q1':
-                $start = Carbon::createFromDate(now()->year, 1, 1);
-                $end = Carbon::createFromDate(now()->year, 3, 31);
+                $start = Carbon::createFromDate(now()->year, 1, 1)->startOfDay();
+                $end = Carbon::createFromDate(now()->year, 3, 31)->endOfDay();
                 break;
             case 'q2':
-                $start = Carbon::createFromDate(now()->year, 4, 1);
-                $end = Carbon::createFromDate(now()->year, 6, 30);
+                $start = Carbon::createFromDate(now()->year, 4, 1)->startOfDay();
+                $end = Carbon::createFromDate(now()->year, 6, 30)->endOfDay();
                 break;
             case 'q3':
-                $start = Carbon::createFromDate(now()->year, 7, 1);
-                $end = Carbon::createFromDate(now()->year, 9, 30);
+                $start = Carbon::createFromDate(now()->year, 7, 1)->startOfDay();
+                $end = Carbon::createFromDate(now()->year, 9, 30)->endOfDay();
                 break;
             case 'q4':
-                $start = Carbon::createFromDate(now()->year, 10, 1);
-                $end = Carbon::createFromDate(now()->year, 12, 31);
+                $start = Carbon::createFromDate(now()->year, 10, 1)->startOfDay();
+                $end = Carbon::createFromDate(now()->year, 12, 31)->endOfDay();
                 break;
             case 'all-time':
             default:
-                $start = Carbon::createFromDate(now()->year, 1, 1);
-                $end = Carbon::createFromDate(now()->year, 12, 31);
+                $start = Carbon::createFromDate(now()->year, 1, 1)->startOfDay();
+                $end = Carbon::createFromDate(now()->year, 12, 31)->endOfDay();
                 break;
         }
 
         // Ambil semua tim
         $teams = Team::all();
 
-        $totalSurveys = Survey::select(function($query) use ($start, $end){
-            $query->whereBetween('start_date', [$start, $end])
-                  ->whereBetween('end_date', [$start, $end]);
-            })->count();
-        $totalSurveysReviewed = Survey::select(function($query) use ($start, $end){
-            $query->whereBetween('start_date', [$start, $end])
-                  ->whereBetween('end_date', [$start, $end]);
-            })
-            ->where('is_sudah_dinilai', 1)
-            ->count();
+        // $totalSurveys = Survey::select(function($query) use ($start, $end){
+        //     $query->whereBetween('start_date', [$start, $end])
+        //           ->whereBetween('end_date', [$start, $end]);
+        //     })->count();
+        // $totalSurveysReviewed = Survey::select(function($query) use ($start, $end){
+        //     $query->whereBetween('start_date', [$start, $end])
+        //           ->whereBetween('end_date', [$start, $end]);
+        //     })
+        //     ->where('is_sudah_dinilai', 1)
+        //     ->count();
+            
+        $totalSurveys = Survey::whereBetween('start_date', [$start, $end])
+                                ->whereBetween('end_date', [$start, $end])
+                                ->count();
+        $totalSurveysReviewed = Survey::whereBetween('start_date', [$start, $end])
+                                ->whereBetween('end_date', [$start, $end])
+                                ->where('is_sudah_dinilai', 1)
+                                ->count();
 
         // Hitung persentase survei yang sudah dinilai secara keseluruhan
         $overallPercentage = ($totalSurveys > 0) ? ($totalSurveysReviewed / $totalSurveys) * 100 : 0;
@@ -68,19 +76,15 @@ class DashboardController extends Controller
 
         foreach ($teams as $team) {
             // Hitung total survei yang sudah dinilai
-            $totalSurveysTeam = Survey::select(function($query) use ($start, $end){
-                $query->whereBetween('start_date', [$start, $end])
-                      ->whereBetween('end_date', [$start, $end]);
-                })
-                ->where('team_id', $team->id)
-                ->count();
-            $completedSurveysTeam = Survey::select(function($query) use ($start, $end){
-                $query->whereBetween('start_date', [$start, $end])
-                      ->whereBetween('end_date', [$start, $end]);
-                })
-                ->where('team_id', $team->id)
-                ->where('is_sudah_dinilai', 1)
-                ->count();
+            $totalSurveysTeam = Survey::whereBetween('start_date', [$start, $end])
+                                        ->whereBetween('end_date', [$start, $end])
+                                        ->where('team_id', $team->id)
+                                        ->count();
+            $completedSurveysTeam = Survey::whereBetween('start_date', [$start, $end])
+                                        ->whereBetween('end_date', [$start, $end])
+                                        ->where('team_id', $team->id)
+                                        ->where('is_sudah_dinilai', 1)
+                                        ->count();
 
             // Hitung persentase
             $percentage = $totalSurveysTeam > 0 ? ($completedSurveysTeam / $totalSurveysTeam) * 100 : 0;
