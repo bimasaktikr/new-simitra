@@ -1,0 +1,20 @@
+<?php
+
+use App\Models\Transaction;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class TransactionFactory extends Factory
+{
+    protected $model = Transaction::class;
+
+    public function definition()
+    {
+        return [
+            'mitra_id' => \App\Models\Mitra::factory(),
+            'survey_id' => \App\Models\Survey::factory(),
+            'target' => $this->faker->numberBetween(50, 100),
+            'payment' => $this->faker->numberBetween(100000, 500000),
+            'total_payment' => $this->faker->numberBetween(200000, 1000000),
+        ];
+    }
+}

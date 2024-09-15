@@ -171,7 +171,7 @@
     <main class="content p-4">
         @yield('content')
     </main>
-
+    @yield('script')
     <script src="{{ asset('js/script.js') }}"></script>
     
 </body>

@@ -29,7 +29,7 @@ class Transaction extends Model
         return $this->belongsTo(Mitra::class, 'mitra_id');
     }
 
-    public function nilai()
+    public function nilai1()
     {
         return $this->hasOne(Nilai1::class, 'transaction_id', 'id');
     }

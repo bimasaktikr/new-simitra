@@ -1,0 +1,22 @@
+<?php
+use App\Models\Survey;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class SurveyFactory extends Factory
+{
+    protected $model = Survey::class;
+
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->word(),
+            'code' => $this->faker->unique()->word(),
+            'payment_type_id' => \App\Models\PaymentType::factory(),
+            'start_date' => $this->faker->dateTimeBetween('2024-01-01', '2024-12-31'),
+            'end_date' => $this->faker->dateTimeBetween('2024-01-01', '2024-12-31'),
+            'payment' => $this->faker->numberBetween(100000, 500000),
+            'team_id' => \App\Models\Team::factory(),
+            'is_sudah_dinilai' => $this->faker->boolean(),
+        ];
+    }
+}
