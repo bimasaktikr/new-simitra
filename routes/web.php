@@ -1,17 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\SurveyController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MitraController;
-use App\Http\Controllers\PegawaiController;
-use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\MitraTeladanController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\Penilaian1Controller;
+use App\Http\Controllers\Penilaian2Controller;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', [LoginController::class, 'login'])->name('login');
 Route::post('actionlogin', [LoginController::class, 'actionlogin'])->name('actionlogin');
@@ -65,10 +66,15 @@ Route::get('/teams/search', [TeamController::class, 'search'])->name('team.searc
 Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction')->middleware('auth');
 Route::get('/transactions/search', [TransactionController::class, 'search'])->name('transaction.search');
 
-Route::get('/penilaian/{transaction_id}/create', [PenilaianController::class, 'create'])->name('penilaian.create')->middleware('auth');
-Route::post('/penilaian', [PenilaianController::class, 'store'])->name('penilaian.store')->middleware('auth');
-Route::get('/penilaian/{transaction_id}/edit', [PenilaianController::class, 'edit'])->name('penilaian.edit');
-Route::put('/penilaian/{transaction_id}', [PenilaianController::class, 'update'])->name('penilaian.update');
+Route::get('/penilaian1/{transaction_id}/create', [Penilaian1Controller::class, 'create'])->name('penilaian1.create')->middleware('auth');
+Route::post('/penilaian1', [Penilaian1Controller::class, 'store'])->name('penilaian1.store')->middleware('auth');
+Route::get('/penilaian1/{transaction_id}/edit', [Penilaian1Controller::class, 'edit'])->name('penilaian1.edit');
+Route::put('/penilaian1/{transaction_id}', [Penilaian1Controller::class, 'update'])->name('penilaian1.update');
+
+Route::get('/penilaian2/{mitra_id}/create', [Penilaian2Controller::class, 'create'])->name('penilaian2.create')->middleware('auth');
+Route::post('/penilaian2', [Penilaian2Controller::class, 'store'])->name('penilaian2.store')->middleware('auth');
+Route::get('/penilaian2/{mitra}/edit', [Penilaian2Controller::class, 'edit'])->name('penilaian2.edit');
+Route::put('/penilaian2/{mitra}', [Penilaian2Controller::class, 'update'])->name('penilaian2.update');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');
 Route::get('/mitrateladan/live-search', [MitraTeladanController::class, 'liveSearch'])->name('mitrateladan.liveSearch');

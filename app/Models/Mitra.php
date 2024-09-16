@@ -43,4 +43,9 @@ class Mitra extends Model
             'survey_id'    // Local key on transactions table...
         );
     }
+
+    public function mitrateladan()
+    {
+        return $this->hasMany(MitraTeladan::class, 'mitra_id', 'id_sobat');
+    }
 }

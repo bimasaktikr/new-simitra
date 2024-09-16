@@ -9,7 +9,7 @@
         <p class="pb-2 text-gray-900 dark:text-gray-100"><strong>Survei:</strong> {{ $survey->name }}</p>
     </div>
 
-    <form action="{{ route('penilaian.store') }}" method="POST">
+    <form action="{{ route('penilaian1.store') }}" method="POST">
         @csrf
         <input type="hidden" name="transaction_id" value="{{ $transaction_id }}">
         <input type="hidden" name="survey_id" value="{{ $survey->id }}">
