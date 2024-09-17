@@ -25,7 +25,7 @@
         </div>
 
         <div id="survey-user" class="bg-gray-100 p-4 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
-            @include('usertable')
+            @include('user.table')
         </div>
 
         <form action="{{ route('user') }}" method="GET">

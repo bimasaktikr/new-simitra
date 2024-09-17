@@ -34,14 +34,14 @@ class MitraController extends Controller
                     ->where('users.status', '=', 'Aktif')
                     ->paginate($perPage);
         
-        return view('mitra', [
+        return view('mitra.index', [
             'user' => $this->user,
             'mitras' => $mitras]);
     }
 
     public function add()
     {
-        return view('addmitra', ['user' => $this->user]);  
+        return view('mitra.add', ['user' => $this->user]);  
     }
     
     public function edit($id_sobat)
@@ -49,7 +49,7 @@ class MitraController extends Controller
         $mitra = Mitra::findOrFail($id_sobat);
         $mitra->tanggal_lahir = Carbon::parse($mitra->tanggal_lahir);
 
-        return view('editmitra', [
+        return view('mitra.edit', [
             'user' => $this->user,
             'mitra' => $mitra
         ]);
@@ -98,7 +98,7 @@ class MitraController extends Controller
         ->where('transactions.mitra_id', $mitra->id_sobat)
         ->paginate($perPage);
 
-        return view('mitradetail', [
+        return view('mitra.detail', [
             'user' => $this->user,
             'mitra' => $mitra,
             'transactions' => $transactions
@@ -160,7 +160,7 @@ class MitraController extends Controller
 
         $mitras = $mitras->paginate($perPage);
 
-        return view('mitratable', compact('mitras'));
+        return view('mitra.table', compact('mitras'));
     }
 
     public function destroy($id_sobat)

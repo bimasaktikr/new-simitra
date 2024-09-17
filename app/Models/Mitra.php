@@ -32,6 +32,11 @@ class Mitra extends Model
         return $this->belongsTo(User::class, 'email');
     }
 
+    public function nilai2()
+    {
+        return $this->hasMany(Nilai2::class, 'mitra_id', 'id_sobat');
+    }
+
     public function surveys()
     {
         return $this->hasManyThrough(

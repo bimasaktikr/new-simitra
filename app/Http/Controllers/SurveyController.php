@@ -43,7 +43,7 @@ class SurveyController extends Controller
                     })
                     ->paginate($perPage);
 
-        return view('survey', [
+        return view('survey.index', [
             'user' => $this->user,
             'surveys' => $surveys,
             'status' => $status
@@ -55,7 +55,7 @@ class SurveyController extends Controller
         $teams = Team::all();
         $paymentTypes = PaymentType::all();
 
-        return view('addsurvey', [
+        return view('survey.add', [
             'user' => $this->user,
             'teams' => $teams,
             'paymentTypes' => $paymentTypes 
@@ -118,60 +118,8 @@ class SurveyController extends Controller
                         ->paginate($perPage);
         }
 
-        return view('surveytable', compact('surveys'))->render();
+        return view('survey.table', compact('surveys'))->render();
     }
-
-//     public function show($id)
-//     {
-//         $survey = Survey::where('id', $id)->firstOrFail();
-
-//         $survey = Survey::select('surveys.*', 'teams.name as team_name', 'teams.code as team_code', 'payment_types.payment_type as payment_type_name')
-//                     ->join('teams', 'surveys.team_id', '=', 'teams.id')
-//                     ->join('payment_types', 'surveys.payment_type_id', '=', 'payment_types.id') 
-//                     ->where('surveys.id', $id)
-//                     ->first();
-
-//         $perPage = request()->get('per_page', 10);
-
-//                     $transactions = Transaction::select(
-//                         'transactions.*', 
-//                         'mitras.name as mitra_name', 
-//                         'mitras.id_sobat as mitra_id', 
-//                         DB::raw('IFNULL(nilai1.rerata, "Belum dinilai") as nilai')
-//                     )
-//                     ->join('mitras', 'transactions.mitra_id', '=', 'mitras.id_sobat')
-//                     ->leftJoin('nilai1', 'transactions.id', '=', 'nilai1.transaction_id') // Join ke tabel nilai1
-//                     ->where('transactions.survey_id', $survey->id)
-//                     ->paginate($perPage);
-
-//         if (!$survey) {
-//             return redirect()->route('survei')->with('error', 'Survei tidak ditemukan');
-//         }
-
-//         return view('surveydetail', [
-//             'user' => $this->user,
-//             'survey' => $survey,
-//             'transactions' => $transactions,
-//         ]);
-//     }
-
-//     public function surveiDetail($id)
-// {
-//     // Ambil survei dan transaksi terkait
-//     $survey = Survey::with(['transactions.mitra'])->findOrFail($id);
-
-//     // Cek apakah ada transaksi yang belum dinilai
-//     $belumDinilai = $survey->transactions->contains(function ($transaction) {
-//         return is_null($transaction->nilai1);
-//     });
-
-//     return view('surveydetail', [
-//         'user' => $this->user,
-//         'survey' => $survey,
-//         'transactions' => $survey->transactions,
-//         'belumDinilai' => $belumDinilai
-//     ]);
-// }
 
 public function show($id)
 {
@@ -203,7 +151,7 @@ public function show($id)
         return $transaction->nilai === "Belum dinilai";
     });
 
-    return view('surveydetail', [
+    return view('survey.detail', [
         'user' => $this->user,
         'survey' => $survey,
         'transactions' => $transactions,
@@ -232,7 +180,7 @@ public function finalisasiNilai($id)
         $teams = Team::all();
         $paymentTypes = PaymentType::all();
 
-        return view('editsurvey', [
+        return view('survey.edit', [
             'user' => $this->user,
             'survey' => $survey,
             'teams' => $teams,
