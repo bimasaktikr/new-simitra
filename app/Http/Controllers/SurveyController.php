@@ -315,16 +315,18 @@ public function finalisasiNilai($id)
             ]);
 
             // Tambahkan transaksi
-            $total_payment = $survey->payment * $target;
             Transaction::create([
                 'survey_id' => $survey->id,
                 'mitra_id' => $mitra->id_sobat,
                 'payment' => $survey->payment,
                 'target' => $target ?? 1,
-                'total_payment' => $total_payment,
             ]);
             
         }
+
+        $survey->is_synced = true;
+        $survey->save();
+
         return redirect()->route('surveidetail', ['id' => $id])->with('success', 'Data berhasil disinkronisasi.');
     }
 

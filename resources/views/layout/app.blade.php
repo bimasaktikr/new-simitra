@@ -7,7 +7,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
     <title>Dashboard SIMITRA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -15,12 +14,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <!-- Vite CSS -->
+    @vite('resources/css/app.css')
+
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,0,0" />
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 </head>
-<body class="sidebar-open dark:bg-gray-900">
+<body class="sidebar-open bg-gray-50 dark:bg-gray-900">
 
     <!-- Navbar -->
     <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -84,7 +87,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{route('mitrateladan')}}" 
+                    <a href="{{route('mitrateladan.index')}}" 
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white 
                         {{ request()->is('mitrateladan/*') || request()->is('mitrateladan') ? 'bg-blue-500 text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }} group">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -172,6 +175,7 @@
         @yield('content')
     </main>
     @yield('script')
+    @vite('resources/js/app.js')
     <script src="{{ asset('js/script.js') }}"></script>
     
 </body>

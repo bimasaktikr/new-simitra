@@ -11,8 +11,8 @@ use App\Models\Nilai;
 use App\Services\MitraService;
 use Carbon\Carbon;
 
-class MitraTeladanController extends Controller{ 
-
+class MitraTeladanController extends Controller
+{
     protected $user;
     protected $mitra;
     protected $mitraService;
@@ -25,63 +25,92 @@ class MitraTeladanController extends Controller{
     }
 
     public function index(Request $request)
-    {   
-        /**
-         *  Filter Years -> Quarter
-         *  1. Return Mitra dengan Transaksi.
-         *  2. Group by Team
-         *  3. Jumlah Survey Distinct
-         *  4. 
-         */
-        $perPage = $request->input('per_page', 10);
+    {
+        // $perPage = $request->input('per_page', 10);
+        $year = $request->input('year');
+        $quarter = $request->input('quarter');
 
-        $mitras = $this->mitraService->getAllMitra(2024, 3);
+      
+        switch ($quarter) {
+            case '1':
+                $mitras = $this->mitraService->getTopMitra($year, 1);
+                break;
+            case '2':
+                $mitras = $this->mitraService->getTopMitra($year, 2);
+                break;
+            case '3':
+                $mitras = $this->mitraService->getTopMitra($year, 3);
+                break;
+            case '4':
+                $mitras = $this->mitraService->getTopMitra($year, 4);
+                break;
+            case 'all-time':
+            default:
+                $mitras = $this->mitraService->getTopMitra($year);
+                break;
+        }
 
-        return json_encode($mitras);
-        // Hitung rating rata-rata untuk setiap mitra
-        // $leaderboards = $mitras->map(function ($mitra) {
-        //     $transactionIds = $mitra->transactions->pluck('id');
-        
-        //     $averageRating = DB::table('nilai1')
-        //         ->whereIn('transaction_id', $transactionIds)
-        //         ->avg('rerata');
-        
-        //     $rating = $averageRating !== null ? round($averageRating, 2) : null;
-        
-        //     return [
-        //         'name' => $mitra->name,
-        //         'id_sobat' => $mitra->id_sobat,
-        //         'rating' => $rating,
-        //         'banyak_survey' => $mitra->transactions_count,
-        //     ];
-        // });
+   $mitras =  json_decode($mitras,  true);
+//    return $mitras->toJson();
+   return view('mitrateladan', compact('mitras', 'year', 'quarter'));
 
-        // Urutkan berdasarkan rating secara global (desc)
-        $leaderboards = $leaderboards->sortByDesc('rating')->values();
+}
 
-        // Hitung ranking global
-        $leaderboards = $leaderboards->map(function ($item, $index) {
-            $item['ranking'] = $index + 1; // Ranking global
-            $item['rating'] = $item['rating'] === null ? '-' : $item['rating']; 
-            return $item;
-        });
+    public function liveSearch(Request $request)
+    {
+        $searchTerm = $request->input('search');
+        $period = $request->input('period', 'all-time');
 
-        // Setelah diurutkan dan diranking, lakukan pagination pada hasil yang sudah diranking
-        $paginatedLeaderboards = $leaderboards->slice(($request->input('page', 1) - 1) * $perPage, $perPage)->values();
+        switch ($period) {
+            case 'q1':
+                $this->mitraService->getAllMitra(2024, 1);
+                break;
+            case 'q2':
+                $this->mitraService->getAllMitra(2024, 2);
+                break;
+            case 'q3':
+                $this->mitraService->getAllMitra(2024, 3);
+                
+                break;
+            case 'q4':
+                $this->mitraService->getAllMitra(2024, 4);
+                break;
+            case 'all-time':
+            default:
+                $start = Carbon::createFromDate(now()->year, 1, 1);
+                $end = Carbon::createFromDate(now()->year, 12, 31);
+                break;
+        }
 
-        // Lakukan pagination manual
-        $pagination = new \Illuminate\Pagination\LengthAwarePaginator(
-            $paginatedLeaderboards, // Data yang dipaginate
-            $leaderboards->count(), // Total item
-            $perPage, // Item per halaman
-            $request->input('page', 1), // Halaman saat ini
-            ['path' => $request->url(), 'query' => $request->query()] // URL dan query string
-        );
+        $mitras = Mitra::with(['transactions.survey' => function ($query) use ($start, $end) {
+                $query->whereBetween('start_date', [$start, $end])
+                    ->whereBetween('end_date', [$start, $end]);
+            }])
+            ->withCount(['transactions' => function ($query) use ($start, $end) {
+                $query->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
+                    ->whereBetween('surveys.start_date', [$start, $end])
+                    ->whereBetween('surveys.end_date', [$start, $end]);
+            }])
+            ->where('name', 'like', '%' . $searchTerm . '%')
+            ->get();
 
-        return view('mitrateladan', [
-            'mitras' => $mitras, // Passing hasil paginated
-            'leaderboards' => $pagination, // Leaderboards terpaginated
-        ]);
+        $leaderboards = $mitras->map(function ($mitra) {
+            $transactionIds = $mitra->transactions->pluck('id');
+
+            $averageRating = DB::table('nilai1')
+                ->whereIn('transaction_id', $transactionIds)
+                ->avg('rerata');
+
+            $rating = $averageRating !== null ? round($averageRating, 2) : '-';
+
+            return [
+                'name' => $mitra->name,
+                'id_sobat' => $mitra->id_sobat,
+                'rating' => $rating,
+                'banyak_survey' => $mitra->transactions_count,
+            ];
+        })->sortByDesc('rating')->values();
+
+        return response()->json($leaderboards);
     }
-
 }

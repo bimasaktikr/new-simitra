@@ -7,7 +7,8 @@
             <th scope="col" class="px-6 py-3">Kode Survei</th>
             <th scope="col" class="px-6 py-3">Target</th>
             <th scope="col" class="px-6 py-3">Pembayaran</th>
-            <th scope="col" class="px-6 py-3">Rating</th>
+            <th scope="col" class="px-6 py-3">Total Pembayaran</th>
+            <th scope="col" class="px-6 py-3">Nilai</th>
         </tr>
     </thead>
     <tbody>
@@ -24,11 +25,8 @@
                     <td class="px-6 py-4">{{ $transaction->survey->code }}</td>
                     <td class="px-6 py-4">{{ $transaction->target }}</td>
                     <td class="px-6 py-4">{{ number_format($transaction->payment, 2) }}</td>
-                    @if (isset($transaction->nilai1->rerate))
-                        <td class="px-6 py-4">{{ $transaction->nilai1->rerata }}</td>
-                    @else
-                        <td class="px-6 py-4">Belum Ada Rating</td>
-                    @endif
+                    <td class="px-6 py-4">{{ number_format($transaction->payment*$transaction->target, 2) }}</td>
+                    <td class="px-6 py-4">{{ $transaction->nilai1->rerata ?? '-'}}</td>
                 </tr>
             @endforeach
         @endif

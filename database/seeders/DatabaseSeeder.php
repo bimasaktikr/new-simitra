@@ -20,7 +20,12 @@ class DatabaseSeeder extends Seeder
             PaymentTypesSeeder::class,
             SurveysSeeder::class,
             TransactionsSeeder::class,
+<<<<<<< HEAD
             MitraTeladanSeeder::class
+=======
+            UsersSeeder::class,
+            VariabelPenilaian::class,
+>>>>>>> dev
         ]);
     }
 }

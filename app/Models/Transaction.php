@@ -16,7 +16,6 @@ class Transaction extends Model
         'survey_id',
         'target',
         'payment',
-        'total_payment',
     ];
 
     public function survey()
@@ -30,6 +29,10 @@ class Transaction extends Model
     }
 
     public function nilai1()
+    {
+        return $this->hasOne(Nilai1::class, 'transaction_id', 'id');
+    }
+    public function nilai2()
     {
         return $this->hasOne(Nilai1::class, 'transaction_id', 'id');
     }

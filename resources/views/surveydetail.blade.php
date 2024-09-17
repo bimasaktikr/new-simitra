@@ -43,26 +43,30 @@
   <div class="mt-6">
     <div class="flex justify-between mb-4">
       <div class="flex space-x-4">
+        @if(!$survey->is_synced)
           <form action="{{ route('survei.sync', $survey->id) }}" method="POST">
-                @csrf
-                <button type="submit" class="inline-flex items-center px-4 py-2 text-white bg-orange-500 border border-transparent rounded-lg shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:bg-orange-600 dark:hover:bg-orange-700">
-                    Sinkronisasi Data Mitra
-                </button>
+              @csrf
+              <button type="submit" class="inline-flex items-center px-4 py-2 text-white bg-orange-500 border border-transparent rounded-lg shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:bg-orange-600 dark:hover:bg-orange-700">
+                  Sinkronisasi Data Mitra
+              </button>
           </form>
+        @endif
       </div>
 
-      <div class="flex space-x-4">
-        <form action="{{ route('survei.finalisasi', $survey->id) }}" method="POST">
-            @csrf
-            @if($belumDinilai)
-              <button class="ml-2 px-4 py-2 text-white bg-gray-400 border border-transparent rounded-lg shadow-sm cursor-not-allowed" disabled>Finalisasi Nilai</button>
-            @else
-              <button type="submit" class="inline-flex items-center px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-800">
-              Finalisasi Nilai
-              </button>
-            @endif
-        </form>
-    </div>
+      @if($survey->is_sudah_dinilai == 0)
+        <div class="flex space-x-4">
+          <form action="{{ route('survei.finalisasi', $survey->id) }}" method="POST">
+              @csrf
+              @if($belumDinilai)
+                <button class="ml-2 px-4 py-2 text-white bg-gray-400 border border-transparent rounded-lg shadow-sm cursor-not-allowed" disabled>Finalisasi Nilai</button>
+              @else
+                <button type="submit" class="inline-flex items-center px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-800">
+                Finalisasi Nilai
+                </button>
+              @endif
+          </form>
+        </div>
+      @endif  
     </div>
   </div>
 
@@ -102,7 +106,7 @@
                                 @else
                                     {{-- Tampilkan nilai dan tombol edit jika survei sudah berakhir dan mitra sudah dinilai --}}
                                     <span>{{ $nilai->rerata }}</span>
-                                    <button onclick="" class="ml-2 px-3 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-500">
+                                    <button onclick="window.location='{{ route('penilaian.edit', ['transaction_id' => $transaction->id]) }}'" class="ml-2 px-3 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-500">
                                         Edit
                                     </button>
                                 @endif

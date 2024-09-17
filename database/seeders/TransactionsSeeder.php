@@ -19,7 +19,6 @@ class TransactionsSeeder extends Seeder
                 'survey_id' => 1,
                 'target' => 5,
                 'payment' => 100000,
-                'total_payment' => 500000,
             ],
             [
                 'id' => 2,
@@ -27,7 +26,6 @@ class TransactionsSeeder extends Seeder
                 'survey_id' => 2,
                 'target' => 10,
                 'payment' => 200000,
-                'total_payment' => 2000000,
             ],
             [
                 'id' => 3,
@@ -35,7 +33,6 @@ class TransactionsSeeder extends Seeder
                 'survey_id' => 3,
                 'target' => 20,
                 'payment' => 50000,
-                'total_payment' => 1000000,
             ]
         ]);
     }
