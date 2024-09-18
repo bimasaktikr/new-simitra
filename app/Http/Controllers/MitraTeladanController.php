@@ -6,10 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Mitra;
+use App\Models\MitraTeladan;
 use App\Models\Survey;
 use App\Models\Nilai;
+use App\Models\Team;
 use App\Services\MitraService;
 use Carbon\Carbon;
+use Psy\Readline\Hoa\Console;
+
+use function Laravel\Prompts\alert;
 
 class MitraTeladanController extends Controller
 {
@@ -29,88 +34,65 @@ class MitraTeladanController extends Controller
         // $perPage = $request->input('per_page', 10);
         $year = $request->input('year');
         $quarter = $request->input('quarter');
-
-      
-        switch ($quarter) {
-            case '1':
-                $mitras = $this->mitraService->getTopMitra($year, 1);
-                break;
-            case '2':
-                $mitras = $this->mitraService->getTopMitra($year, 2);
-                break;
-            case '3':
-                $mitras = $this->mitraService->getTopMitra($year, 3);
-                break;
-            case '4':
-                $mitras = $this->mitraService->getTopMitra($year, 4);
-                break;
-            case 'all-time':
-            default:
-                $mitras = $this->mitraService->getTopMitra($year);
-                break;
-        }
-
-   $mitras =  json_decode($mitras,  true);
-//    return $mitras->toJson();
-   return view('mitrateladan', compact('mitras', 'year', 'quarter'));
-
-}
-
-    public function liveSearch(Request $request)
-    {
-        $searchTerm = $request->input('search');
-        $period = $request->input('period', 'all-time');
-
-        switch ($period) {
-            case 'q1':
-                $this->mitraService->getAllMitra(2024, 1);
-                break;
-            case 'q2':
-                $this->mitraService->getAllMitra(2024, 2);
-                break;
-            case 'q3':
-                $this->mitraService->getAllMitra(2024, 3);
+        
+        $groupedByTeam = [];
+        $mitra_teladan_check = $this->mitraService->checkMitraTeladan($year,$quarter);
+        
+        $mitra_teladan_empty = $mitra_teladan_check['mitra_teladan_empty'];
+        $mitra_teladan = $mitra_teladan_check['mitra_teladan'];
+        
+        if(empty($mitra_teladan_empty))
+        {   
+            $mitrateladan = MitraTeladan::where('year', $year)
+                                        ->where('quarter', $quarter)
+                                        ->get();
+            $groupedByTeam  = $mitrateladan;
+            return view('mitrateladan', compact('groupedByTeam ', 'year', 'quarter'));
+        } else {
+            /**
+             *  Jika Ada Tim Yang kosong, maka akan dilakukan generate data
+             *  dari database.
+             */
+            foreach ($mitra_teladan_empty as $team_id) {
+                // alert($team_id);
+                // Call the service method with the team_id
+                $result = $this->mitraService->getTopMitra($year, $quarter, $team_id);
+                // dd($result);
+                // Optionally decode the result if it's JSON
+                $result = json_decode($result, true);
                 
-                break;
-            case 'q4':
-                $this->mitraService->getAllMitra(2024, 4);
-                break;
-            case 'all-time':
-            default:
-                $start = Carbon::createFromDate(now()->year, 1, 1);
-                $end = Carbon::createFromDate(now()->year, 12, 31);
-                break;
+                // Combine the results (assuming you want to aggregate them)
+                $groupedByTeam = array_merge($groupedByTeam, $result);
+            }
+            // dd($groupedByTeam);
+            return view('mitrateladan', compact('groupedByTeam', 'year', 'quarter'));
         }
+    }
 
-        $mitras = Mitra::with(['transactions.survey' => function ($query) use ($start, $end) {
-                $query->whereBetween('start_date', [$start, $end])
-                    ->whereBetween('end_date', [$start, $end]);
-            }])
-            ->withCount(['transactions' => function ($query) use ($start, $end) {
-                $query->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
-                    ->whereBetween('surveys.start_date', [$start, $end])
-                    ->whereBetween('surveys.end_date', [$start, $end]);
-            }])
-            ->where('name', 'like', '%' . $searchTerm . '%')
-            ->get();
+    // In your Controller
+    public function storeMitraTeladan(Request $request)
+    {
+        $validatedData = $request->validate([
+            'mitra_id' => 'required',
+            'rating' => 'required',
+            'survey_count' => 'required',
+            'team_id' => 'required',
+            'year' => 'required',
+            'quarter' => 'required',
+        ]);
 
-        $leaderboards = $mitras->map(function ($mitra) {
-            $transactionIds = $mitra->transactions->pluck('id');
-
-            $averageRating = DB::table('nilai1')
-                ->whereIn('transaction_id', $transactionIds)
-                ->avg('rerata');
-
-            $rating = $averageRating !== null ? round($averageRating, 2) : '-';
-
-            return [
-                'name' => $mitra->name,
-                'id_sobat' => $mitra->id_sobat,
-                'rating' => $rating,
-                'banyak_survey' => $mitra->transactions_count,
-            ];
-        })->sortByDesc('rating')->values();
-
-        return response()->json($leaderboards);
+        // dd($validated);
+        // Save to the mitra_teladan table
+        MitraTeladan::create([
+            'mitra_id'      => $validatedData['mitra_id'],
+            'team_id'       => $validatedData['team_id'],
+            'year'          => (int)$validatedData['year'],         // Ensure year is an integer
+            'quarter'       => (int)$validatedData['quarter'],      // Ensure quarter is an integer
+            'avg_rating'    => (float)$validatedData['rating'],     // Ensure rating is a float
+            'surveys_count' => (int)$validatedData['survey_count'], // Ensure survey_count is an integer
+        ]);
+    
+        // Step 3: Return a response (you can adjust this as needed)
+        return response()->json(['message' => 'Mitra Teladan data saved successfully'], 200);
     }
 }

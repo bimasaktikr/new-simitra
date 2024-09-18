@@ -19,8 +19,9 @@ class SurveyFactory extends Factory
         // Generate a start date
         $start_date = $this->faker->dateTimeBetween('2024-01-01', '2024-12-31');
 
-        // Generate an end date that is always after the start date
-        $end_date = $this->faker->dateTimeBetween($start_date, '2024-12-31');
+        // Generate an end date that is 30 to 60 days after the start date
+        $end_date = (clone $start_date)->modify('+' . $this->faker->numberBetween(30, 60) . ' days');
+    
 
         return [
             'name' => $this->faker->word(),
@@ -30,7 +31,9 @@ class SurveyFactory extends Factory
             'end_date' => $end_date,
             'payment' => $this->faker->numberBetween(100000, 500000),
             'team_id' => $this->faker->numberBetween(1, 5),
-            'is_sudah_dinilai' => $this->faker->boolean(),
+            'is_sudah_dinilai' => $this->faker->boolean('true'),
+            'is_synced' => $this->faker->boolean('true'),
+            'status' => $this->faker->randomElement(['not started', 'in progress', 'done']),
         ];
     }
 }

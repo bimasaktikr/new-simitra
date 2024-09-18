@@ -24,6 +24,8 @@ class CreateSurveysTable extends Migration
         $table->unsignedBigInteger('team_id');
         $table->string('file',255)->nullable();
         $table->boolean('is_sudah_dinilai');
+        $table->boolean('is_synced')->default(false);
+        $table->enum('status',['not started', 'in progress', 'done']);
         $table->timestamps();
 
         $table->foreign('payment_type_id')->references('id')->on('payment_types')->onDelete('cascade');

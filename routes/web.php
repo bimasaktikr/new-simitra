@@ -71,4 +71,5 @@ Route::get('/penilaian/{transaction_id}/edit', [PenilaianController::class, 'edi
 Route::put('/penilaian/{transaction_id}', [PenilaianController::class, 'update'])->name('penilaian.update');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan.index')->middleware('auth');
+Route::post('/addmitrateladan', [MitraTeladanController::class, 'storeMitraTeladan'])->name('mitrateladan.add')->middleware('auth');
 Route::get('/mitrateladan/live-search', [MitraTeladanController::class, 'liveSearch'])->name('mitrateladan.liveSearch');

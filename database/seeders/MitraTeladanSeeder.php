@@ -21,10 +21,10 @@ class MitraTeladanSeeder extends Seeder
         Mitra::factory()->count(200)->create();
 
         // Seed Surveys for the year 2024
-        Survey::factory()->count(10)->create();
+        Survey::factory()->count(20)->create();
 
         // Seed Transactions
-        $transactions = Transaction::factory()->count(100)->create();
+        $transactions = Transaction::factory()->count(400)->create();
 
         // Seed Nilai1
         // For each transaction, create a corresponding Nilai1

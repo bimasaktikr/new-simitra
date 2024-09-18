@@ -21,9 +21,9 @@ class TransactionFactory extends Factory
         return [
             'mitra_id' => Mitra::inRandomOrder()->first()->id_sobat, // Get random mitra_id
             'survey_id' => Survey::inRandomOrder()->first()->id, 
-            'target' => $this->faker->numberBetween(50, 100),
-            'payment' => $this->faker->numberBetween(100000, 500000),
-            'total_payment' => $this->faker->numberBetween(200000, 1000000),
+            'target' => $this->faker->numberBetween(1, 100),
+            'payment' => $this->faker->numberBetween(1000000, 3000000),
+            // 'total_payment' => $this->faker->numberBetween(200000, 1000000),
         ];
     }
 }

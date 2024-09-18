@@ -3,15 +3,17 @@
 namespace App\Services;
 
 use App\Models\Mitra;
+use App\Models\MitraTeladan;
+use App\Models\Team;
 use App\Models\Transaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class MitraService
 {
-    
-    public function getTopMitra($year=null, $quarter=null)
-    {   
+        
+    public function getTopMitra($year=null, $quarter=null, $team_id)
+    { 
         if ($year && $quarter)
         {
             $startDate = $this->getQuarterStartDate($year,$quarter);
@@ -21,27 +23,74 @@ class MitraService
             $endDate = $this->getQuarterEndDate($year,4);
         }
 
-        $mitraSummary = $this->getMitraSummary($startDate, $endDate);
-        $rankedMitra = $this->getRankedMitra($mitraSummary);
+        // $mitraSummary = $this->getMitraSummary($startDate, $endDate);
+        $mitraSummary = $this->getMitraSummary($startDate, $endDate, $team_id);
         
-        return $this->getFinalMitraResult($rankedMitra, $startDate, $endDate);
+        // dd($mitraSummary->toSql(), $mitraSummary->getBindings());
+        // dd($mitraSummary->toSql());
+        
+        $rankedMitra = $this->getRankedMitra($mitraSummary);
+        // dd($rankedMitra->toSql());
+        //  dd($rankedMitra->toSql(), $rankedMitra->getBindings());
+
+        $finalMitraResult = $this->getFinalMitraResult($rankedMitra, $startDate, $endDate, $team_id);
+        // dd($finalMitraResult);
+
+        // $groupedByTeam = $finalMitraResult->groupBy('team_id');
+        $groupedByTeam = $finalMitraResult;
+        // dd($groupedByTeam);
+        return $groupedByTeam;
     }
+
+    /**
+     * Check Mitra Teladan on Year & Quarter
+     */
+    public function checkMitraTeladan($year,$quarter)
+    {
+        $team = Team::all()->count();
+
+        $mitra_teladan_empty = [];
+        $mitra_teladan = [];
+        // Loop through team_id from 1 to 5 
+        for ($i = 1; $i <= $team; $i++) 
+        {
+            // Query to check if there are any entries for the given team_id
+            $mitrateladan = MitraTeladan::where('year', $year)
+                                        ->where('quarter', $quarter)
+                                        ->where('team_id', $i)
+                                        ->exists();
+
+            // If entries exist, push the team_id into the array
+            if (!$mitrateladan) {
+                $mitra_teladan_empty[] = $i;
+            } else {
+                $mitra_teladan[]= $i;
+            }
+        }
+
+        return [
+            'mitra_teladan_empty' => $mitra_teladan_empty,
+            'mitra_teladan' => $mitra_teladan
+        ];
+    }
+    
     /**
      * Get mitra summary (distinct survey count, average rerata, etc.)
      */
-    private function getMitraSummary($startDate, $endDate)
-    {
+    private function getMitraSummary($startDate, $endDate, $team_id)
+    {   
         return DB::table('transactions as t')
-            ->join('surveys as s', 't.survey_id', '=', 's.id')
-            ->join('nilai1 as n', 't.id', '=', 'n.transaction_id')
-            ->select(
-                't.mitra_id',
-                DB::raw('COUNT(DISTINCT s.id) as distinct_survey_count'),
-                DB::raw('AVG(n.rerata) as average_rerata'),
-                's.team_id'
-            )
-            ->whereBetween('s.end_date', [$startDate, $endDate])
-            ->groupBy('t.mitra_id', 's.team_id');
+                    ->join('surveys as s', 't.survey_id', '=', 's.id')
+                    ->join('nilai1 as n', 't.id', '=', 'n.transaction_id')
+                    ->select(
+                        't.mitra_id',
+                        DB::raw('COUNT(DISTINCT s.id) as distinct_survey_count'),
+                        DB::raw('AVG(n.rerata) as average_rerata'),
+                        's.team_id'
+                    )
+                    ->whereBetween('s.end_date', [$startDate, $endDate])
+                    ->where('s.team_id', $team_id)
+                    ->groupBy('t.mitra_id', 's.team_id');
     }
 
     /**
@@ -57,36 +106,31 @@ class MitraService
                 'ms.average_rerata',
                 'ms.team_id',
                 DB::raw('RANK() OVER (PARTITION BY ms.team_id ORDER BY ms.average_rerata DESC, ms.distinct_survey_count DESC) as rnk')
+                // DB::raw('RANK() PARTITION BY ms.team_id ORDER BY ms.average_rerata DESC as rnk')
             );
     }
 
     /**
      * Get the final result for top mitra within the given date range
      */
-    private function getFinalMitraResult($rankedMitra, $startDate, $endDate)
+    private function getFinalMitraResult($rankedMitra)
     {
         return DB::table(DB::raw("({$rankedMitra->toSql()}) as rm"))
             ->mergeBindings($rankedMitra)
             ->join('mitras as m', 'rm.mitra_id', '=', 'm.id_sobat')
-            ->join('transactions as t', 't.mitra_id', '=', 'rm.mitra_id')
-            ->join('surveys as s', 't.survey_id', '=', 's.id')
-            ->join('nilai1 as n', 't.id', '=', 'n.transaction_id')
             ->select(
                 'm.id_sobat as mitra_id',
                 'm.name as mitra_name',
                 'rm.average_rerata',
                 'rm.distinct_survey_count',
-                DB::raw('MAX(s.name) as survey_name'),
-                DB::raw('MAX(s.start_date) as start_date'),
-                DB::raw('MAX(s.end_date) as end_date'),
-                DB::raw('MAX(n.rerata) as rerata'),
-                's.team_id'
+                'rm.team_id',
+                'rm.rnk'
             )
             ->where('rm.rnk', 1)
-            ->whereBetween('s.end_date', [$startDate, $endDate])
-            ->groupBy('m.id_sobat', 'm.name', 'rm.average_rerata', 'rm.distinct_survey_count', 's.team_id')
+            ->groupBy('m.id_sobat', 'm.name', 'rm.average_rerata', 'rm.distinct_survey_count', 'rm.team_id')
             ->get();
     }
+
     /**
      * Get the start date of a specific quarter in a year.
      *

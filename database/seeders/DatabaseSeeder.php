@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\VariabelPenilaian;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,16 +17,12 @@ class DatabaseSeeder extends Seeder
             TeamsSeeder::class,
             EmployeesSeeder::class,
             FaqsSeeder::class,
-            MitrasSeeder::class,
+            // MitrasSeeder::class,
             PaymentTypesSeeder::class,
-            SurveysSeeder::class,
-            TransactionsSeeder::class,
-<<<<<<< HEAD
-            MitraTeladanSeeder::class
-=======
-            UsersSeeder::class,
-            VariabelPenilaian::class,
->>>>>>> dev
+            // SurveysSeeder::class,
+            // TransactionsSeeder::class,
+            // UsersSeeder::class,
+            // VariabelPenilaian::class,
         ]);
     }
 }
