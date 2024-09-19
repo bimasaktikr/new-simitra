@@ -71,7 +71,7 @@ class MitraTeladanController extends Controller
                         
 
         // dd($groupedByTeam);
-        return view('mitrateladan', compact('groupedByTeam', 'year', 'quarter'));
+        return view('mitrateladan.index', compact('groupedByTeam', 'year', 'quarter'));
         
     }
 

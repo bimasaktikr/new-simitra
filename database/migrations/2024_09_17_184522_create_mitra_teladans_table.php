@@ -18,7 +18,8 @@ return new class extends Migration
             $table->foreignId('team_id')->constrained();
             $table->year('year');
             $table->integer('quarter');
-            $table->decimal('avg_rating', 3 ,2);
+            $table->decimal('avg_rating_1', 3 ,2);
+            $table->decimal('avg_rating_2', 3 ,2);
             $table->integer('surveys_count');
             $table->timestamps();
         });

@@ -1,115 +1,235 @@
-
-
 @extends('layout.app')
 
 @section('content')
-<div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Mitra Teladan</h1>
+<div class="container p-4 mx-auto">
+    <h1 class="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100">Mitra Teladan</h1>
 
-    <div class="flex flex-wrap justify-center gap-4 mb-8">
-        @forelse ($topMitraPerTeam as $mitra)
-        <div class="w-1/6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 text-center">
-            <div class="py-8">
-                <h5 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white mb-1">{{ $mitra->name }}</h5>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">{{ $mitra->team }}</p>
-                <div class="flex flex-col items-center mt-2.5 mb-5">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Tahap 1: <span class="text-sm font-semibold tracking-tight text-gray-900 dark:text-white">{{ number_format($mitra->average_rating, 2) }}</span></p>
-                    
-                </div>
-                <button onclick="window.location='{{ route('penilaian2.create', ['mitra_id' => $mitra->id_sobat, 'team' => $mitra->team_id]) }}'" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Nilai</button>
+
+    <div class="mt-6">
+        <!-- Filter Form -->
+        <form action="{{ route('mitrateladan.index') }}" method="GET" class="flex mb-4 space-x-4">
+            <!-- Year Dropdown -->
+            <div class="w-1/3">
+                <label for="year" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Year</label>
+                <select id="year" name="year" class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                    <option value="">Select Year</option>
+                    <option value="2024" {{ request('year') == '2024' ? 'selected' : '' }}>2024</option>
+                    <!-- Add more years as needed -->
+                </select>
             </div>
-        </div>
-        @empty
-        <p class="text-center text-gray-500 dark:text-gray-400">No mitras qualified for stage 2 evaluation in this period.</p>
-        @endforelse
-    </div>
 
-    <!-- Search and Period Filter Form -->
-    <form method="GET" action="{{ route('mitrateladan') }}" class="flex justify-between mb-4">
-        <div class="relative w-1/3">
-            <input type="text" id="search" name="search" value="{{ request()->get('search') }}" class="block w-full p-2 pl-10 text-sm border rounded-lg border-gray-300 bg-white shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" placeholder="Search..." />
-            <svg class="absolute top-1/2 left-3 transform -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-        </div>
-        <input type="hidden" id="selected-period" name="period" value="{{ $period }}">
-        <button type="submit" class="p-2 text-white bg-blue-600 rounded">Cari</button>
-    </form>
+            <!-- Quarter Dropdown -->
+            <div class="w-1/3">
+                <label for="quarter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quarter</label>
+                <select id="quarter" name="quarter" class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                    <option value="">Select Quarter</option>
+                    <option value="1" {{ request('quarter') == '1' ? 'selected' : '' }}>Q1</option>
+                    <option value="2" {{ request('quarter') == '2' ? 'selected' : '' }}>Q2</option>
+                    <option value="3" {{ request('quarter') == '3' ? 'selected' : '' }}>Q3</option>
+                    <option value="4" {{ request('quarter') == '4' ? 'selected' : '' }}>Q4</option>
+                </select>   
+            </div>
 
-    <!-- Tabs for Selecting Period -->
-    <div class="w-full border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-        <ul class="flex flex-wrap text-sm font-medium text-center dark:bg-gray-900 dark:border-gray-700 border-b border-gray-200 rounded-t-lg bg-gray-50" id="defaultTab" data-tabs-toggle="#defaultTabContent" role="tablist">
-            <li> 
-                <a href="{{ route('mitrateladan', ['period' => 'all-time']) }}" class="inline-block py-4 px-8 {{ $period == 'all-time' ? 'text-blue-500 dark:text-blue-400 bg-gray-100 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }} rounded-ss-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Semua
-                </a> 
-            </li> 
-            <li> 
-                <a href="{{ route('mitrateladan', ['period' => 'q1']) }}" class="inline-block py-4 px-8 {{ $period == 'q1' ? 'text-blue-500 dark:text-blue-400 bg-gray-100 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }} hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Triwulan 1
-                </a> 
-            </li> 
-            <li> 
-                <a href="{{ route('mitrateladan', ['period' => 'q2']) }}" class="inline-block py-4 px-8 {{ $period == 'q2' ? 'text-blue-500 dark:text-blue-400 bg-gray-100 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }} hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Triwulan 2
-                </a> 
-            </li> 
-            <li> 
-                <a href="{{ route('mitrateladan', ['period' => 'q3']) }}" class="inline-block py-4 px-8 {{ $period == 'q3' ? 'text-blue-500 dark:text-blue-400 bg-gray-100 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }} hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Triwulan 3
-                </a> 
-            </li> 
-            <li> 
-                <a href="{{ route('mitrateladan', ['period' => 'q4']) }}" class="inline-block py-4 px-8 {{ $period == 'q4' ? 'text-blue-500 dark:text-blue-400 bg-gray-100 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }} hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Triwulan 4
-                </a> 
-            </li> 
-        </ul>
+            <!-- Submit Button -->
+            <div class="flex items-end w-1/3">
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Generate Data
+                </button>
+            </div>
+        </form>        
+        
+       
 
-        <!-- Section for Individual Leaderboard -->
-        <div id="defaultTabContent">
-            <div class="overflow-hidden overflow-x-auto">
-                <table id="leaderboard-table" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <div class="p-4 bg-gray-100 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+             <!-- Table Title -->
+            <div class="mb-4">
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Mitra Teladan Tahun {{ $year }} Triwulan  {{ $quarter }}</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Status : </p>
+            </div>
+
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-200">
                         <tr>
-                            <th scope="col" class="px-6 py-3">No.</th>
-                            <th scope="col" class="px-6 py-3">Name</th>
                             <th scope="col" class="px-6 py-3">ID Sobat</th>
+                            <th scope="col" class="px-6 py-3">Nama</th>
                             <th scope="col" class="px-6 py-3">Rating</th>
                             <th scope="col" class="px-6 py-3">Banyak Survey</th>
+                            <th scope="col" class="px-6 py-3">Team</th>
+                            <th scope="col" class="px-6 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($individualLeaderboards as $index => $leaderboard)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">{{ $index + 1 }}</td>
-                                <td class="px-6 py-4">{{ $leaderboard['name'] }}</td>
-                                <td class="px-6 py-4">{{ $leaderboard['id_sobat'] }}</td>
-                                <td class="px-6 py-4">{{ $leaderboard['rating'] }}</td>
-                                <td class="px-6 py-4">{{ $leaderboard['banyak_survey'] }}</td>
-                            </tr>
-                        @endforeach
+                        @foreach($groupedByTeam as $mitra)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="px-6 py-4">{{ $mitra['mitra_id'] ?? $mitra['id'] }}</td>
+                            
+                            <!-- Check if 'mitra_name' exists -->
+                            <td class="px-6 py-4">
+                                @if (isset($mitra['mitra_name']))
+                                    {{ $mitra['mitra_name'] }}
+                                @else
+                                    {{ $mitra['mitra']['name'] ?? 'Unknown' }}
+                                @endif
+                            </td>
+                            
+                            <!-- Check if 'average_rerata' exists and format it, else use 'avg_rating' -->
+                            <td class="px-6 py-4">
+                                {{ isset($mitra['average_rerata']) ? number_format((float)$mitra['average_rerata'], 2) : number_format((float)$mitra['avg_rating'], 2) }}
+                            </td>
+                            
+                            <!-- Check if 'distinct_survey_count' exists, else use 'surveys_count' -->
+                            <td class="px-6 py-4">
+                                {{ $mitra['distinct_survey_count'] ?? $mitra['surveys_count'] }}
+                            </td>
+                            
+                            <!-- Team ID -->
+                            <td class="px-6 py-4">{{ $mitra['team_id'] }}</td>
+                            
+                            <!-- Action Button -->
+                            <td class="px-6 py-4">
+                                <button type="button"
+                                        class="accept-btn font-medium rounded-lg text-sm px-5 py-2.5
+                                               @if(isset($mitra['status']))
+                                                   bg-gray-500 text-gray-200 cursor-not-allowed
+                                               @else
+                                                   bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300
+                                               @endif"
+                                        data-mitra-id="{{ $mitra['mitra_id'] ?? $mitra['id'] }}"
+                                        data-mitra-name="{{ $mitra['mitra_name'] ?? ($mitra['mitra']['name'] ?? 'Unknown') }}"
+                                        data-mitra-rating="{{ isset($mitra['average_rerata']) ? number_format((float)$mitra['average_rerata'], 2) : number_format((float)$mitra['avg_rating'], 2) }}"
+                                        data-mitra-surveys="{{ $mitra['distinct_survey_count'] ?? $mitra['surveys_count'] }}"
+                                        data-mitra-team="{{ $mitra['team_id'] }}"
+                                        @if(isset($mitra['status'])) disabled @endif>
+                                    @if(isset($mitra['status']))
+                                        Accepted
+                                    @else
+                                        Accept
+                                    @endif
+                                </button>
+                            </td>
+                            
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination for the Individual Leaderboard -->
-            <div class="m-4">
-                {{ $individualLeaderboards->appends(request()->input())->links() }}
-            </div>
-        </div>
+        </div><br>
+    
     </div>
-
-    <!-- Records per page selector -->
-    <form action="{{ route('mitrateladan') }}" method="GET">
-        <div class="flex mt-4 items-center">
-            <label for="per_page" class="text-sm text-gray-700 dark:text-gray-300">Records per halaman:</label>
-            <select id="per_page" name="per_page" class="ml-2 p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" onchange="this.form.submit()">
-                <option value="10" {{ request()->get('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
-                <option value="15" {{ request()->get('per_page') == 15 ? 'selected' : '' }}>15</option>
-                <option value="20" {{ request()->get('per_page') == 20 ? 'selected' : '' }}>20</option>
-            </select>
-        </div>
-    </form>
 </div>
+@endsection
+
+@section('script')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle year dropdown item click
+        document.querySelectorAll('#dropdownHover .dropdown-item').forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                const value = this.getAttribute('data-value');
+                document.getElementById('selectedYear').value = value;
+                document.getElementById('dropdownHoverButton').textContent = `Pilih Tahun (${value})`;
+            });
+        });
+
+        // Handle quarter dropdown item click
+        document.querySelectorAll('#dropdowntrimesterHover .dropdown-item').forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                const value = this.getAttribute('data-value');
+                document.getElementById('selectedQuarter').value = value;
+                document.getElementById('dropdownTriwulanButton').textContent = `Pilih Triwulan (${value})`;
+            });
+        });
+
+        // Handle accept button click for each mitra
+        document.querySelectorAll('.accept-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const mitraId = this.getAttribute('data-mitra-id');
+                const row = this.closest('tr');
+                const mitraName = this.getAttribute('data-mitra-name');
+                const rating = this.getAttribute('data-mitra-rating');
+                const surveyCount = this.getAttribute('data-mitra-surveys');
+                const teamId = this.getAttribute('data-mitra-team');
+                const year = document.getElementById('year').value;
+                const quarter = document.getElementById('quarter').value;
+                const quarterInt = parseInt(quarter, 10);
+                // SweetAlert confirmation
+                Swal.fire({
+                    title: 'Confirm Mitra Selection',
+                    text: `Apakah anda yakin memilih ${mitraName} (ID: ${mitraId}) sebagai Mitra Terbaik Tim ${teamId} ?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, select it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Proceed with sending the data to the server
+                        fetch('/addmitrateladan', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF protection
+                            },
+                            body: JSON.stringify({
+                                mitra_id: mitraId,
+                                mitra_name: mitraName,
+                                rating: rating,
+                                survey_count: surveyCount,
+                                team_id: teamId,
+                                year: year,
+                                quarter: quarterInt
+                            })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                // If response is not ok (e.g., 500, 400), throw an error
+                                throw new Error(`HTTP error! Status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+
+                            console.log(data);
+
+                            if (data.success === true) {
+                                Swal.fire(
+                                    'Success!',
+                                    `${mitraName} has been selected as the top mitra.`,
+                                    'success'
+                                );
+
+                                // Optionally add the row to another table or update the UI
+                                // addToMitraTeladanTable(mitraId, mitraName, rating, surveyCount, teamId);
+                            } else {
+                                Swal.fire(
+                                    'Error',
+                                    'There was a problem selecting this mitra. Please try again.',
+                                    'error'
+                                );
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire(
+                                'Error',
+                                'There was a server error. Please try again later.',
+                                'error'
+                            );
+                            console.error('Error:', error); // Log the error for 
+                            console.log('Swal alert should be shown now.');
+                        });
+                    }
+                });
+            });
+        });
+    });
+
+   
+</script>
+
 @endsection
