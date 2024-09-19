@@ -1,0 +1,20 @@
+<?php
+
+use App\Models\Mitra;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class MitraFactory extends Factory
+{
+    protected $model = Mitra::class;
+
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'pendidikan' => $this->faker->randomElement(['SMA', 'D3', 'S1', 'S2']),
+            'jenis_kelamin' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
+            'tanggal_lahir' => $this->faker->date('Y-m-d', '2000-01-01'),
+        ];
+    }
+}

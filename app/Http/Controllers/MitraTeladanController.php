@@ -6,172 +6,127 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Mitra;
+use App\Models\MitraTeladan;
+use App\Models\Survey;
+use App\Models\Nilai;
+use App\Models\Team;
+use App\Services\MitraService;
 use Carbon\Carbon;
+use Psy\Readline\Hoa\Console;
+
+use function Laravel\Prompts\alert;
 
 class MitraTeladanController extends Controller
 {
     protected $user;
+    protected $mitra;
+    protected $mitraService;
 
-    public function __construct()
+
+    public function __construct(MitraService $mitraService)
     {
         $this->user = Auth::user();
+        $this->mitraService = $mitraService;
     }
 
-public function index(Request $request)
+    public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 10);
-        $period = $request->input('period', 'all-time');
-        $start = Carbon::createFromDate(now()->year, 1, 1)->startOfDay();
-        $end = Carbon::createFromDate(now()->year, 12, 31)->endOfDay();
-
-        // Adjust period dates based on request
-        switch ($period) {
-            case 'q1':
-                $start = Carbon::createFromDate(now()->year, 1, 1)->startOfDay();
-                $end = Carbon::createFromDate(now()->year, 3, 31)->endOfDay();
-                break;
-            case 'q2':
-                $start = Carbon::createFromDate(now()->year, 4, 1)->startOfDay();
-                $end = Carbon::createFromDate(now()->year, 6, 30)->endOfDay();
-                break;
-            case 'q3':
-                $start = Carbon::createFromDate(now()->year, 7, 1)->startOfDay();
-                $end = Carbon::createFromDate(now()->year, 9, 30)->endOfDay();
-                break;
-            case 'q4':
-                $start = Carbon::createFromDate(now()->year, 10, 1)->startOfDay();
-                $end = Carbon::createFromDate(now()->year, 12, 31)->endOfDay();
-                break;
+        // $perPage = $request->input('per_page', 10);
+        $year = $request->input('year');
+        $quarter = $request->input('quarter');
+        
+        $groupedByTeam = [];
+        $mitra_teladan = [];
+        $mitra_teladan_check = $this->mitraService->checkMitraTeladan($year,$quarter);
+        
+        $mitra_teladan_empty = $mitra_teladan_check['mitra_teladan_empty'];
+        $mitra_teladan_choosed = $mitra_teladan_check['mitra_teladan'];
+        
+        $mitrateladan = MitraTeladan::where('year', $year)
+                        ->where('quarter', $quarter)
+                        ->with('mitra:id_sobat,name')
+                        ->get()
+                        ->toArray();
+        // Adding the 'status' attribute to each item
+        foreach ($mitrateladan as &$item) {
+            $item['status'] = 'final'; // Replace 'some status' with the desired status value
         }
 
-        // Fetch mitras individually ranked
-        $mitras = Mitra::with(['transactions.survey' => function ($query) use ($start, $end) {
-                $query->whereBetween('start_date', [$start, $end])
-                      ->whereBetween('end_date', [$start, $end]);
-            }])
-            ->withCount(['transactions' => function ($query) use ($start, $end) {
-                $query->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
-                      ->whereBetween('surveys.start_date', [$start, $end])
-                      ->whereBetween('surveys.end_date', [$start, $end]);
-            }])
-            ->get();
+        // dd($mitrateladan);
 
-        // Individual rankings
-        $individualLeaderboards = $mitras->map(function ($mitra) use ($start, $end) {
-            $transactionIds = $mitra->transactions->pluck('id');
+        foreach ($mitra_teladan_empty as $team_id) {
+            // alert($team_id);
+            // Call the service method with the team_id
+            $result = $this->mitraService->getTopMitra($year, $quarter, $team_id);
 
-            $averageRating = DB::table('nilai1')
-                ->join('transactions', 'nilai1.transaction_id', '=', 'transactions.id')
-                ->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
-                ->whereIn('transactions.id', $transactionIds)
-                ->whereBetween('surveys.start_date', [$start, $end])
-                ->whereBetween('surveys.end_date', [$start, $end])
-                ->avg('nilai1.rerata');
-
-            $rating = $averageRating !== null ? round($averageRating, 2) : '-';
-
-            return [
-                'name' => $mitra->name,
-                'id_sobat' => $mitra->id_sobat,
-                'rating' => $rating,
-                'banyak_survey' => $mitra->transactions_count,
-            ];
-        })->sortByDesc('rating')->values();
-
-        // Top mitra per team for stage 2 evaluation
-        $topMitraPerTeam = DB::table('mitras')
-            ->join('transactions', 'mitras.id_sobat', '=', 'transactions.mitra_id')
-            ->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
-            ->join('nilai1', 'nilai1.transaction_id', '=', 'transactions.id')
-            ->join('teams', 'surveys.team_id', '=', 'teams.id')
-            ->select('mitras.name', 'mitras.id_sobat', DB::raw('AVG(nilai1.rerata) as average_rating'), 'surveys.team_id', 'teams.name as team')
-            ->whereBetween('surveys.start_date', [$start, $end])
-            ->whereBetween('surveys.end_date', [$start, $end])
-            ->groupBy('mitras.id_sobat', 'surveys.team_id')
-            ->orderBy('average_rating', 'desc')
-            ->get()
-            ->groupBy('team_id')
-            ->map(function ($group) {
-                return $group->first();
-            })
-            ->take(5);
-
-        // Pagination
-        $paginatedLeaderboards = $individualLeaderboards->slice(($request->input('page', 1) - 1) * $perPage, $perPage)->values();
-
-        $pagination = new \Illuminate\Pagination\LengthAwarePaginator(
-            $paginatedLeaderboards,
-            $individualLeaderboards->count(),
-            $perPage,
-            $request->input('page', 1),
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-
-        return view('mitrateladan.index', [
-            'individualLeaderboards' => $pagination,
-            'topMitraPerTeam' => $topMitraPerTeam,
-            'period' => $period,
-        ]);
-    }
-
-    public function liveSearch(Request $request)
-    {
-        $searchTerm = $request->input('search');
-        $period = $request->input('period', 'all-time');
-
-        switch ($period) {
-            case 'q1':
-                $start = Carbon::createFromDate(now()->year, 1, 1);
-                $end = Carbon::createFromDate(now()->year, 3, 31);
-                break;
-            case 'q2':
-                $start = Carbon::createFromDate(now()->year, 4, 1);
-                $end = Carbon::createFromDate(now()->year, 6, 30);
-                break;
-            case 'q3':
-                $start = Carbon::createFromDate(now()->year, 7, 1);
-                $end = Carbon::createFromDate(now()->year, 9, 30);
-                break;
-            case 'q4':
-                $start = Carbon::createFromDate(now()->year, 10, 1);
-                $end = Carbon::createFromDate(now()->year, 12, 31);
-                break;
-            case 'all-time':
-            default:
-                $start = Carbon::createFromDate(now()->year, 1, 1);
-                $end = Carbon::createFromDate(now()->year, 12, 31);
-                break;
+            // dd($result);
+            // Optionally decode the result if it's JSON
+            $result = json_decode($result, true);
+            
+            // Combine the results (assuming you want to aggregate them)
+            $groupedByTeam = array_merge($groupedByTeam, $result);
         }
 
-        $mitras = Mitra::with(['transactions.survey' => function ($query) use ($start, $end) {
-                $query->whereBetween('start_date', [$start, $end])
-                    ->whereBetween('end_date', [$start, $end]);
-            }])
-            ->withCount(['transactions' => function ($query) use ($start, $end) {
-                $query->join('surveys', 'transactions.survey_id', '=', 'surveys.id')
-                    ->whereBetween('surveys.start_date', [$start, $end])
-                    ->whereBetween('surveys.end_date', [$start, $end]);
-            }])
-            ->where('name', 'like', '%' . $searchTerm . '%')
-            ->get();
+        $groupedByTeam = array_merge($groupedByTeam, $mitrateladan);
+                        
 
-        $leaderboards = $mitras->map(function ($mitra) {
-            $transactionIds = $mitra->transactions->pluck('id');
-
-            $averageRating = DB::table('nilai1')
-                ->whereIn('transaction_id', $transactionIds)
-                ->avg('rerata');
-
-            $rating = $averageRating !== null ? round($averageRating, 2) : '-';
-
-            return [
-                'name' => $mitra->name,
-                'id_sobat' => $mitra->id_sobat,
-                'rating' => $rating,
-                'banyak_survey' => $mitra->transactions_count,
-            ];
-        })->sortByDesc('rating')->values();
-
-        return response()->json($leaderboards);
+        // dd($groupedByTeam);
+        return view('mitrateladan', compact('groupedByTeam', 'year', 'quarter'));
+        
     }
+
+    // In your Controller
+    public function storeMitraTeladan(Request $request)
+    {
+        try {
+            // Validate incoming data
+            $validatedData = $request->validate([
+                'mitra_id' => 'required',
+                'rating' => 'required',
+                'survey_count' => 'required',
+                'team_id' => 'required',
+                'year' => 'required',
+                'quarter' => 'required',
+            ]);
+
+             // Check if a Mitra Teladan already exists for this team, year, and quarter
+            $existingMitra = MitraTeladan::where('team_id', $validatedData['team_id'])
+                                ->where('year', (int)$validatedData['year'])
+                                ->where('quarter', (int)$validatedData['quarter'])
+                                ->first();
+            
+            if ($existingMitra) {
+                // If an entry already exists, return an error response
+                return response()->json([
+                    'success' => false,
+                    'message' => 'A Mitra Teladan already exists for this team, year, and quarter.'
+                ], 409); // HTTP 409 Conflict
+            }
+
+            // Save to the mitra_teladan table
+            MitraTeladan::firstOrCreate([
+                'mitra_id'      => $validatedData['mitra_id'],
+                'team_id'       => $validatedData['team_id'],
+                'year'          => (int)$validatedData['year'],         // Ensure year is an integer
+                'quarter'       => (int)$validatedData['quarter'],      // Ensure quarter is an integer
+                'avg_rating'    => (float)$validatedData['rating'],     // Ensure rating is a float
+                'surveys_count' => (int)$validatedData['survey_count'], // Ensure survey_count is an integer
+            ]);
+
+            // Return a success response
+            return response()->json([
+                'success' => true, 
+                'message' => 'Mitra Teladan data saved successfully'
+            ], 200);
+        
+        } catch (\Exception $e) {
+            // If an error occurs, return a JSON error response
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to save Mitra Teladan data',
+                'error' => $e->getMessage()  // Optional: for debugging purposes, you might want to include the error message
+            ], 500);
+        }
+    }
+
 }

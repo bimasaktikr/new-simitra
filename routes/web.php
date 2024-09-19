@@ -76,5 +76,6 @@ Route::post('/penilaian2', [Penilaian2Controller::class, 'store'])->name('penila
 Route::get('/penilaian2/{mitra}/edit', [Penilaian2Controller::class, 'edit'])->name('penilaian2.edit');
 Route::put('/penilaian2/{mitra}', [Penilaian2Controller::class, 'update'])->name('penilaian2.update');
 
-Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan')->middleware('auth');
+Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan.index')->middleware('auth');
+Route::post('/addmitrateladan', [MitraTeladanController::class, 'storeMitraTeladan'])->name('mitrateladan.add')->middleware('auth');
 Route::get('/mitrateladan/live-search', [MitraTeladanController::class, 'liveSearch'])->name('mitrateladan.liveSearch');

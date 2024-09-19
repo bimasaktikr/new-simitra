@@ -9,19 +9,17 @@ class MitraTeladan extends Model
 {
     use HasFactory;
 
-    protected $table = 'nilai1';
-
     protected $fillable = [
         'mitra_id',
-        'tim',
-        'nilai_tahap1',
-        'nilai_tahap2',
-        'tahun',
-        'periode',
+        'team_id',
+        'year',
+        'quarter',
+        'avg_rating',
+        'surveys_count',
     ];
 
     public function mitra()
     {
-        return $this->belongsTo(Mitra::class, 'mitra_id');
+        return $this->belongsTo(Mitra::class, 'mitra_id', 'id_sobat');
     }
 }

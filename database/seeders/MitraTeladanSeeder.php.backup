@@ -1,0 +1,14 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class MitraTeladanSeeder extends Seeder
+{
+    public function run()
+    {
+        \App\Models\Mitra::factory()->count(150)->create(); // Create 50 mitras
+        \App\Models\Survey::factory()->count(10)->create(); // Create 20 surveys
+        \App\Models\Transaction::factory()->count(200)->create(); // Create 100 transactions
+        \App\Models\Nilai1::factory()->count(200)->create(); // Create 100 nilai1 entries
+    }
+}
