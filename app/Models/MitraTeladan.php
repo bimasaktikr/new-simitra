@@ -17,4 +17,9 @@ class MitraTeladan extends Model
         'avg_rating',
         'surveys_count',
     ];
+
+    public function mitra()
+    {
+        return $this->belongsTo(MitraTeladan::class, 'mitra_id', 'id_sobat');
+    }
 }

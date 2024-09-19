@@ -1,18 +1,18 @@
 @extends('layout.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-6 bg-white dark:bg-gray-900">
+<div class="container px-4 py-6 mx-auto bg-white dark:bg-gray-900">
     <div class="mb-6">
-        <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Penilaian Survei</h1>
-        <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
+        <h1 class="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100">Penilaian Survei</h1>
+        <div class="p-4 bg-gray-100 rounded-md dark:bg-gray-800">
             <p class="text-sm text-gray-700 dark:text-gray-400">Mitra:</p>
         </div>
     </div>
 
     <form action="#" method="POST">
-        <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md">
+        <div class="p-6 bg-gray-100 rounded-md shadow-md dark:bg-gray-800">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
-                <thead class="text-xs text-gray-700 dark:text-gray-400 uppercase bg-gray-50 dark:bg-gray-700">
+                <thead class="text-xs text-gray-700 uppercase dark:text-gray-400 bg-gray-50 dark:bg-gray-700">
                     <tr>
                         <th scope="col" class="px-6 py-3">Variabel</th>
                         <th scope="col" class="px-6 py-3 text-center">Sangat Buruk</th>
@@ -24,11 +24,11 @@
                 </thead>
                 <tbody>
                     @foreach ($tahap1 as $var)
-                        <tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
+                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                             <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">{{ $var->variabel }}</td>
                             @for($i = 1; $i <= 5; $i++)
                                 <td class="px-6 py-4 text-center">
-                                    <input type="radio" name="{{ $var->id }}" value="{{ $i }}" class="form-radio text-blue-600 dark:text-blue-400">
+                                    <input type="radio" name="{{ $var->id }}" value="{{ $i }}" class="text-blue-600 form-radio dark:text-blue-400">
                                 </td>
                             @endfor
                         </tr>
