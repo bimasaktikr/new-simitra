@@ -57,29 +57,59 @@
                             <th scope="col" class="px-6 py-3">Rating</th>
                             <th scope="col" class="px-6 py-3">Banyak Survey</th>
                             <th scope="col" class="px-6 py-3">Team</th>
-                            <th scope="col" class="px-6 py-3">Rank</th>
                             <th scope="col" class="px-6 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach($groupedByTeam as $mitra)
+                        @foreach($groupedByTeam as $mitra)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <td class="px-6 py-4">{{ $mitra['mitra_id'] }}</td>
-                            <td class="px-6 py-4">{{ $mitra['mitra_name'] }}</td>
-                            <td class="px-6 py-4">{{ number_format((float)$mitra['average_rerata'], 2) }}</td>
-                            <td class="px-6 py-4">{{ $mitra['distinct_survey_count'] }}</td>
-                            <td class="px-6 py-4">{{ $mitra['team_id'] }}</td>
-                            <td class="px-6 py-4">{{ $mitra['rnk'] }}</td>
+                            <td class="px-6 py-4">{{ $mitra['mitra_id'] ?? $mitra['id'] }}</td>
+                            
+                            <!-- Check if 'mitra_name' exists -->
                             <td class="px-6 py-4">
-                                <button type="button" class="accept-btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
-                                        data-mitra-id="{{ $mitra['mitra_id'] }}"
-                                        data-mitra-name="{{ $mitra['mitra_name'] }}"
-                                        data-mitra-rating="{{ number_format((float)$mitra['average_rerata'], 2) }}"
-                                        data-mitra-surveys="{{ $mitra['distinct_survey_count'] }}"
-                                        data-mitra-team="{{ $mitra['team_id'] }}">
-                                    Accept
+                                @if (isset($mitra['mitra_name']))
+                                    {{ $mitra['mitra_name'] }}
+                                @else
+                                    {{ $mitra['mitra']['name'] ?? 'Unknown' }}
+                                @endif
+                            </td>
+                            
+                            <!-- Check if 'average_rerata' exists and format it, else use 'avg_rating' -->
+                            <td class="px-6 py-4">
+                                {{ isset($mitra['average_rerata']) ? number_format((float)$mitra['average_rerata'], 2) : number_format((float)$mitra['avg_rating'], 2) }}
+                            </td>
+                            
+                            <!-- Check if 'distinct_survey_count' exists, else use 'surveys_count' -->
+                            <td class="px-6 py-4">
+                                {{ $mitra['distinct_survey_count'] ?? $mitra['surveys_count'] }}
+                            </td>
+                            
+                            <!-- Team ID -->
+                            <td class="px-6 py-4">{{ $mitra['team_id'] }}</td>
+                            
+                            <!-- Action Button -->
+                            <td class="px-6 py-4">
+                                <button type="button"
+                                        class="accept-btn font-medium rounded-lg text-sm px-5 py-2.5
+                                               @if(isset($mitra['status']))
+                                                   bg-gray-500 text-gray-200 cursor-not-allowed
+                                               @else
+                                                   bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300
+                                               @endif"
+                                        data-mitra-id="{{ $mitra['mitra_id'] ?? $mitra['id'] }}"
+                                        data-mitra-name="{{ $mitra['mitra_name'] ?? ($mitra['mitra']['name'] ?? 'Unknown') }}"
+                                        data-mitra-rating="{{ isset($mitra['average_rerata']) ? number_format((float)$mitra['average_rerata'], 2) : number_format((float)$mitra['avg_rating'], 2) }}"
+                                        data-mitra-surveys="{{ $mitra['distinct_survey_count'] ?? $mitra['surveys_count'] }}"
+                                        data-mitra-team="{{ $mitra['team_id'] }}"
+                                        @if(isset($mitra['status'])) disabled @endif>
+                                    @if(isset($mitra['status']))
+                                        Accepted
+                                    @else
+                                        Accept
+                                    @endif
                                 </button>
                             </td>
+                            
                         </tr>
                     @endforeach
                     </tbody>
@@ -156,9 +186,18 @@
                                 quarter: quarterInt
                             })
                         })
-                        .then(response => response.json())
+                        .then(response => {
+                            if (!response.ok) {
+                                // If response is not ok (e.g., 500, 400), throw an error
+                                throw new Error(`HTTP error! Status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
                         .then(data => {
-                            if (data.success) {
+
+                            console.log(data);
+
+                            if (data.success === true) {
                                 Swal.fire(
                                     'Success!',
                                     `${mitraName} has been selected as the top mitra.`,
@@ -166,7 +205,7 @@
                                 );
 
                                 // Optionally add the row to another table or update the UI
-                                addToMitraTeladanTable(mitraId, mitraName, rating, surveyCount, teamId);
+                                // addToMitraTeladanTable(mitraId, mitraName, rating, surveyCount, teamId);
                             } else {
                                 Swal.fire(
                                     'Error',
@@ -181,6 +220,8 @@
                                 'There was a server error. Please try again later.',
                                 'error'
                             );
+                            console.error('Error:', error); // Log the error for 
+                            console.log('Swal alert should be shown now.');
                         });
                     }
                 });
@@ -188,19 +229,7 @@
         });
     });
 
-    // Helper function to add the selected mitra to another table or update the UI
-    function addToMitraTeladanTable(mitraId, mitraName, rating, surveyCount, teamId) {
-        const table = document.querySelector('#mitraTeladanTable tbody');
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td>${mitraId}</td>
-            <td>${mitraName}</td>
-            <td>${rating}</td>
-            <td>${surveyCount}</td>
-            <td>${teamId}</td>
-        `;
-        table.appendChild(newRow);
-    }
+   
 </script>
 
 @endsection
