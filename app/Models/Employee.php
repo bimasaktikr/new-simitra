@@ -30,4 +30,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Team::class, 'team_id');
     }
+
+    public function nilai2()
+    {
+        return $this->hasMany(Nilai2::class, 'penilai_id', 'nip');
+    }
 }

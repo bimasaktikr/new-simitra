@@ -40,7 +40,6 @@
             <label for="fungsi" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Fungsi</label>
             <select name="fungsi" id="fungsi" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                 <option value="" selected disabled>Pilih Fungsi</option>
-                <option value="">Kosongkan Pilihan</option> <!-- Opsi untuk mengosongkan -->
                 @foreach($teams as $team)
                     <option value="{{ $team->id }}">{{ $team->name }}</option>
                 @endforeach

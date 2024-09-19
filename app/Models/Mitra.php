@@ -32,6 +32,11 @@ class Mitra extends Model
         return $this->belongsTo(User::class, 'email');
     }
 
+    public function nilai2()
+    {
+        return $this->hasMany(Nilai2::class, 'mitra_id', 'id_sobat');
+    }
+
     public function surveys()
     {
         return $this->hasManyThrough(
@@ -42,5 +47,10 @@ class Mitra extends Model
             'id_sobat',    // Local key on mitras table...
             'survey_id'    // Local key on transactions table...
         );
+    }
+
+    public function mitrateladan()
+    {
+        return $this->hasMany(MitraTeladan::class, 'mitra_id', 'id_sobat');
     }
 }

@@ -23,4 +23,9 @@ class Team extends Model
     {
         return $this->hasMany(Survey::class, 'team_id', 'id');
     }
+
+    public function nilai2()
+    {
+        return $this->hasMany(Nilai2::class, 'team_id', 'id');
+    }
 }

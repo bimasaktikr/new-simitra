@@ -32,7 +32,7 @@ class PegawaiController extends Controller
                     ->where('users.status', '=', 'Aktif')
                     ->paginate($perPage);
         
-        return view('pegawai', [
+        return view('pegawai.index', [
             'user' => $this->user,
             'employees' => $employees]);
     }
@@ -41,7 +41,7 @@ class PegawaiController extends Controller
     {
         $teams = Team::all();
 
-        return view('addpegawai', [
+        return view('pegawai.add', [
             'user' => $this->user,
             'teams' => $teams
         ]);
@@ -54,7 +54,7 @@ class PegawaiController extends Controller
 
         $teams = Team::all();
 
-        return view('editpegawai', [
+        return view('pegawai.edit', [
             'user' => $this->user,
             'employee' => $employee,
             'teams' => $teams,
@@ -112,7 +112,7 @@ class PegawaiController extends Controller
             return redirect()->route('pegawai')->with('error', 'Pegawai tidak ditemukan');
         }
 
-        return view('pegawaidetail', [
+        return view('pegawai.detail', [
             'user' => $this->user,
             'employee' => $employee
         ]);
@@ -177,7 +177,7 @@ class PegawaiController extends Controller
 
         $employees = $employees->paginate($perPage);
 
-        return view('pegawaitable', compact('employees'));
+        return view('pegawai.table', compact('employees'));
     }
 
     public function destroy($id)

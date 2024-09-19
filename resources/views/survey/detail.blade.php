@@ -53,7 +53,7 @@
         @endif
       </div>
 
-      @if($survey->is_sudah_dinilai == 0)
+      @if($survey->is_sudah_dinilai==0)
         <div class="flex space-x-4">
           <form action="{{ route('survei.finalisasi', $survey->id) }}" method="POST">
               @csrf

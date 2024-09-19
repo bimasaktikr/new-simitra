@@ -45,7 +45,7 @@
         </div>
         
         <div class="bg-gray-100 dark:bg-gray-700 rounded-lg">
-        <ul class="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 border border-gray-100 dark:border-gray-700">
+        <ul class="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 border border-gray-100 dark:border-gray-700" id="defaultTab" data-tabs-toggle="#defaultTabContent" role="tablist">
             <li class="w-full focus-within:z-10">
                 <a href="{{ route('dashboard', ['period' => 'all-time']) }}" class="inline-block w-full p-4 {{ $period == 'all-time' ? ' active dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-100 dark:border-gray-700 rounded-s-lg hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Semua</a>
             </li>
@@ -65,7 +65,7 @@
         
         <div class="grid grid-cols-3 gap-4 max-w-full w-full rounded-lg shadow p-4 md:p-6 bg-gray-100 dark:bg-gray-700">
         
-    <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+    <div id="defaultTabContent" class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
         <div class="flex justify-between items-start w-full">
             <div class="flex-col items-center">
             <div class="flex items-center mb-1">

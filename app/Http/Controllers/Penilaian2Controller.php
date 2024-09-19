@@ -11,7 +11,7 @@ use App\Models\Nilai1;
 use App\Models\Transaction;
 use App\Models\VariabelPenilaian;
 
-class PenilaianController extends Controller
+class Penilaian2Controller extends Controller
 {
     public function create($transaction_id)
     {
@@ -28,7 +28,7 @@ class PenilaianController extends Controller
 
         session(['previous_url' => url()->previous()]);
 
-        return view('penilaian.create', compact('transaction_id', 'mitra', 'survey'));
+        return view('penilaian1.create', compact('transaction_id', 'mitra', 'survey'));
     }
 
 
@@ -80,7 +80,7 @@ class PenilaianController extends Controller
 
         session(['previous_url' => url()->previous()]);
 
-        return view('penilaian.edit', compact('transaction', 'mitra', 'survey'));
+        return view('penilaian1.edit', compact('transaction', 'mitra', 'survey'));
     }
 
     public function update(Request $request, $transaction_id)

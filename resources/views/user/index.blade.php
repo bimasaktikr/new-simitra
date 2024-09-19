@@ -1,30 +1,34 @@
 @extends('layout.app')
 
 @section('content')
-<div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Daftar Mitra</h1>
+<div class="container mx-auto p-4 dark:bg-gray-900 dark:text-gray-200">
+    <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Daftar User</h1>
 
     <div class="mt-6">
         <div class="flex justify-between mb-4">
-        <div class="relative w-1/3">
-                <input type="text" id="search-mitra" class="block w-full p-2 pl-10 text-sm border rounded-lg border-gray-300 bg-white shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" placeholder="Search..." />
+            <div class="relative w-1/3">
+                <input type="text" id="search-user" class="block w-full p-2 pl-10 text-sm border rounded-lg border-gray-300 bg-white shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" placeholder="Search..." />
                 <svg class="absolute top-1/2 left-3 transform -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
             </div>
-            
+
             <div class="flex space-x-4">
-                <button onclick="window.location='{{ route('addmitra') }}'" class="inline-flex items-center px-4 py-2 text-white bg-orange-500 border border-transparent rounded-lg shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:bg-orange-600 dark:hover:bg-orange-700">
-                    Tambah Mitra
-                </button>
+                <form method="GET" action="{{ route('user') }}">
+                    <select name="status" id="status" onchange="this.form.submit()" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                        <option value="semua" {{ request('status') == 'semua' ? 'selected' : '' }}>Semua</option>
+                        <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="tidak aktif" {{ request('status') == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                    </select>
+                </form>
             </div>
         </div>
 
-        <div id="mitra-table" class="bg-gray-100 p-4 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
-            @include('mitratable')
+        <div id="survey-user" class="bg-gray-100 p-4 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+            @include('user.table')
         </div>
 
-        <form action="{{ route('mitra') }}" method="GET">
+        <form action="{{ route('user') }}" method="GET">
             <div class="flex justify-between mt-4 items-center">
                 <div>
                     <label for="per_page" class="text-sm text-gray-700 dark:text-gray-300">Records per halaman:</label>
@@ -36,11 +40,11 @@
                 </div>
 
                 <!-- <div>
-                    {{ $mitras->appends(['per_page' => request()->get('per_page', 10)])->links('components.pagination') }}
+                    {{ $users->appends(['per_page' => request()->get('per_page', 10)])->links('components.pagination') }}
                 </div> -->
             </div>
         </form>
+
     </div>
 </div>
-
 @endsection

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('nilai2', function (Blueprint $table) {
             $table->id();
+            $table->integer('mitra_id');
+            $table->integer('team_id');
+            $table->integer('penilai_id');
             $table->integer('aspek1');
             $table->integer('aspek2');
             $table->integer('aspek3');
@@ -24,6 +27,8 @@ return new class extends Migration
             $table->integer('aspek9');
             $table->integer('aspek10');
             $table->integer('rerata');
+            $table->integer('tahun');
+            $table->string('periode');
             $table->timestamps();
         });
     }

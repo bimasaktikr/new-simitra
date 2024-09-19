@@ -9,7 +9,7 @@
         <p class="pb-2 text-gray-900 dark:text-gray-100"><strong>Survei:</strong> {{ $survey->name }}</p>
     </div>
 
-    <form action="{{ route('penilaian.update', $transaction->id) }}" method="POST">
+    <form action="{{ route('penilaian2.update', $transaction->id) }}" method="POST">
         @csrf
         @method('PUT')
         

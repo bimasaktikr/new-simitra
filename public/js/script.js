@@ -64,13 +64,18 @@ function setupLiveSearch(searchInputId, resultContainerId, searchUrl) {
   });
 }
 
-document.getElementById('fungsi').addEventListener('change', function() {
-  var peranContainer = document.getElementById('peran-container');
-  if (this.value && this.value !== "") {
-      peranContainer.style.display = 'block';
-  } else {
-      peranContainer.style.display = 'none';
-  }
+document.addEventListener('DOMContentLoaded', function() {
+    var fungsiSelect = document.getElementById('fungsi');
+    var peranContainer = document.getElementById('peran-container');
+    
+    fungsiSelect.addEventListener('change', function() {
+        console.log('Fungsi changed:', this.value); // Debugging line
+        if (this.value) {
+            peranContainer.style.display = 'block';
+        } else {
+            peranContainer.style.display = 'none';
+        }
+    });
 });
 
 

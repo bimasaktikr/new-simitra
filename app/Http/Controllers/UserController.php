@@ -43,34 +43,12 @@ class UserController extends Controller
                     })
                     ->paginate($perPage);
 
-        return view('user', [
+        return view('user.index', [
             'user' => $this->user,
             'users' => $users,
             'status' => $status
         ]);
     }
-
-    // public function index(Request $request)
-    // {
-    //     $perPage = $request->input('per_page', 10);
-
-    //     $users = User::select('users.*', 'roles.role as role', DB::raw('
-    //                 CASE
-    //                     WHEN mitras.email IS NOT NULL THEN mitras.name
-    //                     WHEN employees.email IS NOT NULL THEN employees.name
-    //                     ELSE NULL
-    //                 END as name
-    //             '))
-    //             ->join('roles', 'users.role_id', '=', 'roles.id')
-    //             ->leftJoin('mitras', 'users.email', '=', 'mitras.email')
-    //             ->leftJoin('employees', 'users.email', '=', 'employees.email')
-    //             ->paginate($perPage);
-
-    //     return view('user', [
-    //         'user' => $this->user,
-    //         'users' => $users
-    //     ]);
-    // }
 
     public function search(Request $request)
     {
@@ -87,7 +65,7 @@ class UserController extends Controller
                     })
                     ->paginate($perPage);
 
-        return view('usertable', compact('users'));
+        return view('user.table', compact('users'));
     }
 
     public function edit($id)
@@ -99,7 +77,7 @@ class UserController extends Controller
         $nama = Mitra::where('email', $user->email)->value('name') 
                 ?? Employee::where('email', $user->email)->value('name');
 
-        return view('edituser', [
+        return view('user.edit', [
             'user' => $user,
             'roles' => $roles,
             'name' => $nama
