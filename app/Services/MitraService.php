@@ -13,7 +13,7 @@ class MitraService
 {
         
     public function getTopMitra($year=null, $quarter=null, $team_id)
-    { 
+    {   
         if ($year && $quarter)
         {
             $startDate = $this->getQuarterStartDate($year,$quarter);
@@ -22,7 +22,7 @@ class MitraService
             $startDate = $this->getQuarterStartDate($year,1);
             $endDate = $this->getQuarterEndDate($year,4);
         }
-
+        
         // $mitraSummary = $this->getMitraSummary($startDate, $endDate);
         $mitraSummary = $this->getMitraSummary($startDate, $endDate, $team_id);
         

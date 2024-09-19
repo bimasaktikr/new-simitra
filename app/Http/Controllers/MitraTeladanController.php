@@ -44,12 +44,15 @@ class MitraTeladanController extends Controller
         
         $mitrateladan = MitraTeladan::where('year', $year)
                         ->where('quarter', $quarter)
+                        ->with('mitra:id_sobat,name')
                         ->get()
                         ->toArray();
         // Adding the 'status' attribute to each item
         foreach ($mitrateladan as &$item) {
             $item['status'] = 'final'; // Replace 'some status' with the desired status value
         }
+
+        // dd($mitrateladan);
 
         foreach ($mitra_teladan_empty as $team_id) {
             // alert($team_id);
@@ -65,6 +68,7 @@ class MitraTeladanController extends Controller
         }
 
         $groupedByTeam = array_merge($groupedByTeam, $mitrateladan);
+                        
 
         // dd($groupedByTeam);
         return view('mitrateladan', compact('groupedByTeam', 'year', 'quarter'));

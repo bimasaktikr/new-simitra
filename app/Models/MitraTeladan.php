@@ -20,6 +20,6 @@ class MitraTeladan extends Model
 
     public function mitra()
     {
-        return $this->belongsTo(MitraTeladan::class, 'mitra_id', 'id_sobat');
+        return $this->belongsTo(Mitra::class, 'mitra_id', 'id_sobat');
     }
 }
