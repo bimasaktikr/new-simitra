@@ -9,8 +9,10 @@ use App\Models\Mitra;
 use App\Models\MitraTeladan;
 use App\Models\Survey;
 use App\Models\Nilai;
+use App\Models\Nilai2;
 use App\Models\Team;
 use App\Services\MitraService;
+use App\Services\Nilai2Service;
 use Carbon\Carbon;
 use Psy\Readline\Hoa\Console;
 
@@ -21,12 +23,15 @@ class MitraTeladanController extends Controller
     protected $user;
     protected $mitra;
     protected $mitraService;
+    protected $nilai2Service;
 
 
-    public function __construct(MitraService $mitraService)
+
+    public function __construct(MitraService $mitraService, Nilai2Service $nilai2Service)
     {
         $this->user = Auth::user();
         $this->mitraService = $mitraService;
+        $this->nilai2Service = $nilai2Service;
     }
 
     public function index(Request $request)
@@ -47,9 +52,17 @@ class MitraTeladanController extends Controller
                         ->with('mitra:id_sobat,name')
                         ->get()
                         ->toArray();
+
         // Adding the 'status' attribute to each item
         foreach ($mitrateladan as &$item) {
-            $item['status'] = 'final'; // Replace 'some status' with the desired status value
+            $item['status'] = 'final';
+            
+            $nilai_2_average = $this->nilai2Service->getAverageRating($item['id']); 
+            $item['nilai_2'] = $nilai_2_average;
+
+            $team_done = $this->nilai2Service->getTeamDone($item['id']);
+            $item['team_done'] = $team_done;
+
         }
 
         // dd($mitrateladan);
@@ -67,12 +80,12 @@ class MitraTeladanController extends Controller
             $groupedByTeam = array_merge($groupedByTeam, $result);
         }
 
-        $groupedByTeam = array_merge($groupedByTeam, $mitrateladan);
-                        
-
         // dd($groupedByTeam);
+
+        $groupedByTeam = array_merge($groupedByTeam, $mitrateladan);
+        // dd($groupedByTeam);
+
         return view('mitrateladan.index', compact('groupedByTeam', 'year', 'quarter'));
-        
     }
 
     // In your Controller
@@ -109,7 +122,7 @@ class MitraTeladanController extends Controller
                 'team_id'       => $validatedData['team_id'],
                 'year'          => (int)$validatedData['year'],         // Ensure year is an integer
                 'quarter'       => (int)$validatedData['quarter'],      // Ensure quarter is an integer
-                'avg_rating'    => (float)$validatedData['rating'],     // Ensure rating is a float
+                'avg_rating_1'    => (float)$validatedData['rating'],     // Ensure rating is a float
                 'surveys_count' => (int)$validatedData['survey_count'], // Ensure survey_count is an integer
             ]);
 

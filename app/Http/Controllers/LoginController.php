@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Session;
+// use Session;
+use Illuminate\Support\Facades\Session;
+// use Symfony\Component\HttpFoundation\Session\Session;
 
 class LoginController extends Controller
 {
@@ -19,55 +22,45 @@ class LoginController extends Controller
     }
 
     public function actionlogin(Request $request)
-{
-    $credentials = [
-        'email' => $request->input('email'),
-        'password' => $request->input('password'),
-    ];
+    {
+        $credentials = [
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+        ];
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
 
-        $mitra = DB::table('mitras')->where('email', $user->email)->first();
-        $employee = DB::table('employees')->where('email', $user->email)->first();
+            $mitra = DB::table('mitras')->where('email', $user->email)->first();
+            $employee = Employee::where('user_id', $user->id)->first();
 
-        // Simpan data ke dalam session berdasarkan role
-        if ($user->role_id == '4' && $mitra) {
-            Session::put('user_data', $mitra);
-        } elseif ($user->role_id != '4' && $employee) {
-            // Ambil team name berdasarkan team_id dari tabel employees
-            $team = DB::table('teams')->where('id', $employee->team_id)->first();
+            // dd($employee);
 
-            // Convert $employee (object) menjadi array
-            $employeeData = (array) $employee;
+            // Simpan data ke dalam session berdasarkan role
+            if ($user->role_id == '4' && $mitra) {
+                Session::put('user_data', $mitra);
+            } elseif ($user->role_id != '4' && $employee) {
+                Session::put('user_data', $employee);
+                
+                // Ambil team name berdasarkan team_id dari tabel employees
+                // $team = DB::table('teams')->where('id', $employee->team_id)->first();
 
-            // Tambahkan team_name ke dalam array
-            $employeeData['team_name'] = $team ? $team->name : null;
+                // // Convert $employee (object) menjadi array
+                // $employeeData = (array) $employee;
 
-            // Simpan data ke dalam session
-            Session::put('user_data', (object)$employeeData);
+                // // Tambahkan team_name ke dalam array
+                // $employeeData['team_name'] = $team ? $team->name : null;
+
+                // // Simpan data ke dalam session
+                // Session::put('user_data', (object)$employeeData);
             }
 
-        return redirect('/dashboard');
-    } else {
-        Session::flash('error', 'Email atau Password Salah');
-        return redirect('/');
+            return redirect('/dashboard');
+        } else {
+            Session::flash('error', 'Email atau Password Salah');
+            return redirect('/');
+        }
     }
-}
-
-
-        // $data = [
-        //     'email' => $request->input('email'),
-        //     'password' => $request->input('password'),
-        // ];
-
-        // if (Auth::Attempt($data)) {
-        //     return redirect('/dashboard');
-        // }else{
-        //     Session::flash('error', 'Email atau Password Salah');
-        //     return redirect('/');
-        // }
-    // }
 
     public function actionlogout()
     {

@@ -16,14 +16,11 @@ return new class extends Migration
             $table->string('name', 200);
             $table->string('nip', 200);
             $table->string('jenis_kelamin', 200);
-            $table->string('email', 200)->unique();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
             $table->date('tanggal_lahir');
             $table->unsignedBigInteger('team_id')->nullable();
-            $table->string('peran', 200)->nullable();
             $table->timestamps();
-
-            $table->foreign('email')->references('email')->on('users')->onDelete('cascade');
-            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
         });
     }
 

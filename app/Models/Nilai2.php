@@ -12,10 +12,8 @@ class Nilai2 extends Model
     protected $table = 'nilai2';
 
     protected $fillable = [
-        'transaction_id',
-        'mitra_id',
-        'team_id',
-        'penilai_id',
+        'mitra_teladan_id',
+        'team_penilai_id',
         'aspek1',
         'aspek2',
         'aspek3',
@@ -27,9 +25,8 @@ class Nilai2 extends Model
         'aspek9',
         'aspek10',
         'rerata',
-        'tahun',
-        'periode',
-        'is_sudah_dinilai'
+        'year',
+        'quarter',
     ];
 
     public function mitra()

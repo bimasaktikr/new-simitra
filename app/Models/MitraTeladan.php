@@ -14,12 +14,18 @@ class MitraTeladan extends Model
         'team_id',
         'year',
         'quarter',
-        'avg_rating',
+        'avg_rating_1',
+        'avg_rating_2',
         'surveys_count',
     ];
 
     public function mitra()
     {
         return $this->belongsTo(Mitra::class, 'mitra_id', 'id_sobat');
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 }

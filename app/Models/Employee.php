@@ -15,15 +15,14 @@ class Employee extends Model
         'name',
         'nip',
         'jenis_kelamin',
-        'email',
+        'user_id',
         'tanggal_lahir',
         'team_id',
-        'peran',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'email');
+        return $this->belongsTo(User::class);
     }
 
     public function team()

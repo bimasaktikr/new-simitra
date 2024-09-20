@@ -20,6 +20,7 @@ class Mitra extends Model
         'pendidikan',
         'jenis_kelamin',
         'tanggal_lahir',
+        'photo',
     ];
 
     public function transactions()

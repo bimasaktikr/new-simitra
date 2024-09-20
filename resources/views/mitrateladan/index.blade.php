@@ -48,6 +48,65 @@
             </div>
 
             
+            <div class="flex justify-between mb-6 space-x-4">
+                @for ($teamId = 1; $teamId <= 5; $teamId++)
+                    @php
+                        // Find the team by 'team_id' from the grouped data
+                        $team = collect($groupedByTeam)->firstWhere('team_id', $teamId);
+                    @endphp
+                    <div class="w-1/5 p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        @if ($team && array_key_exists('status', $team) && $team['status'] === 'final')
+                            <!-- Display Image Based on mitra_id -->
+                            <div class="flex flex-col items-center pb-10">
+                                <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/docs/images/people/profile-picture-3.jpg" alt="Bonnie image"/>
+                                <h5 class="mt-4 mb-2 text-xl font-semibold text-center text-gray-900 dark:text-white">
+                                    {{ $team['mitra']['name'] ?? 'Unknown' }}
+                                </h5>
+                                <p class="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                                    Rating Tahap 1 : {{ $team['avg_rating_1'] }} | Surveys: {{ $team['surveys_count'] }}
+                                </p>
+                                <p class="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                                    Rating Tahap 2 : {{ $team['nilai_2'] }}
+                                </p>
+                                <div class="flex items-center justify-center mb-2">
+                                    @for ( $team_penilai = 0  ;  $team_penilai < 6 ;  $team_penilai++ )
+                                        @if ( $team['team_done']->contains($team_penilai + 1) )
+                                            <p class="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                ✔️ Team {{ $team_penilai + 1 }}
+                                            </p>
+                                        @else
+                                            <p class="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                ❌ Team {{ $team_penilai + 1 }}
+                                            </p>
+                                        @endif
+                                    @endfor
+                                    
+                                </div>
+                                
+                                <div class="flex mt-4 md:mt-6">
+                                    <a href="{{ route('penilaian2.create', ['mitra_teladan_id' => $team['id']]) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        Nilai Tahap 2
+                                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                       
+                        @else
+                            <!-- Placeholder for missing team -->
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Team ID: {{ $teamId }}</h5>
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                                No data available for this team.
+                            </p>
+                        @endif
+                    </div>
+                @endfor
+            </div>
+            
+            
+
+            
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-200">
@@ -76,7 +135,7 @@
                             
                             <!-- Check if 'average_rerata' exists and format it, else use 'avg_rating' -->
                             <td class="px-6 py-4">
-                                {{ isset($mitra['average_rerata']) ? number_format((float)$mitra['average_rerata'], 2) : number_format((float)$mitra['avg_rating'], 2) }}
+                                {{ isset($mitra['average_rerata']) ? number_format((float)$mitra['average_rerata'], 2) : number_format((float)$mitra['avg_rating_1'], 2) }}
                             </td>
                             
                             <!-- Check if 'distinct_survey_count' exists, else use 'surveys_count' -->
@@ -98,7 +157,7 @@
                                                @endif"
                                         data-mitra-id="{{ $mitra['mitra_id'] ?? $mitra['id'] }}"
                                         data-mitra-name="{{ $mitra['mitra_name'] ?? ($mitra['mitra']['name'] ?? 'Unknown') }}"
-                                        data-mitra-rating="{{ isset($mitra['average_rerata']) ? number_format((float)$mitra['average_rerata'], 2) : number_format((float)$mitra['avg_rating'], 2) }}"
+                                        data-mitra-rating="{{ isset($mitra['average_rerata']) ? number_format((float)$mitra['average_rerata'], 2) : number_format((float)$mitra['avg_rating_1'], 2) }}"
                                         data-mitra-surveys="{{ $mitra['distinct_survey_count'] ?? $mitra['surveys_count'] }}"
                                         data-mitra-team="{{ $mitra['team_id'] }}"
                                         @if(isset($mitra['status'])) disabled @endif>
