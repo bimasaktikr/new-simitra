@@ -50,7 +50,7 @@ class Mitra extends Model
         );
     }
 
-    public function mitrateladan()
+    public function mitraTeladan()
     {
         return $this->hasMany(MitraTeladan::class, 'mitra_id', 'id_sobat');
     }

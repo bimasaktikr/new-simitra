@@ -10,11 +10,9 @@
         <p class="pb-2 text-gray-900 dark:text-gray-100">Tahun  {{ $mitra_teladan->year }} & Triwulan {{ $mitra_teladan->quarter }}</p>
     </div>
 
-    <form action="{{ route('penilaian2.update', $nilai_2->id) }}" method="POST">
+    <form action="{{ route('penilaian2.store') }}" method="POST">
         @csrf
-        @method('PUT')
-        
-        <input type="hidden" name="nilai_2_id" value="{{ $nilai_2->id }}">
+        <input type="hidden" name="mitra_teladan_id" value="{{ $mitra_teladan->id }}">
         
         <div class="p-6 bg-gray-100 rounded-md shadow-md dark:bg-gray-800">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
@@ -34,9 +32,7 @@
                             <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">{{ $var->variabel }}</td>
                             @for($i = 1; $i <= 5; $i++)
                                 <td class="px-6 py-4 text-center">
-                                    <input type="radio" name="aspek{{$key + 1}}" value="{{ $i }}" 
-                                    {{ old("aspek" . ($key + 1), $nilai_2->{'aspek' . ($key + 1)} == $i ? 'checked' : '') }}
-                                    class="text-blue-600 form-radio dark:text-blue-400 required">
+                                    <input type="radio" name="aspek{{$key + 1}}" value="{{ $i }}" class="text-blue-600 form-radio dark:text-blue-400 required">
                                 </td>
                             @endfor
                         </tr>

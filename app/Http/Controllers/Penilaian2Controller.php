@@ -99,35 +99,20 @@ class Penilaian2Controller extends Controller
         Nilai2::create($data);
 
         return redirect(route('mitrateladan.index'))->with('success', 'Data saved successfully!');
-        // // dd($data);
-        // // Log data before saving
-        // Log::info('Saving data', ['data' => $data]);
-
-        // // Call the service to save the data
-        // if ($this->nilai2Service->saveNilai2($data)) {
-        //     Log::info('Data saved successfully');
-        //     return redirect()->route('mitrateladan.index')->with('success', 'Data saved successfully!');
-        // }
-
-        // Log::error('Failed to save data');
-        // // Handle failure
-        // return redirect()->back()->withErrors(['message' => 'Failed to save data.']);
     }
 
-    public function edit($transaction_id)
-    {
-        $transaction = Transaction::select('transactions.*', 'nilai1.aspek1 as aspek1', 'nilai1.aspek2 as aspek2', 'nilai1.aspek3 as aspek3')
-                    ->join('nilai1', 'nilai1.transaction_id', '=', 'transactions.id')
-                    ->where('transactions.id', $transaction_id)
-                    ->first();
+    public function edit($mitra_teladan_id)
+    {   
+        $mitra_teladan = MitraTeladan::where('id', $mitra_teladan_id)->first();
 
-        $mitra = Mitra::where('id_sobat', $transaction->mitra_id)->first();
+        $nilai_2 = Nilai2::where('mitra_teladan_id', $mitra_teladan_id)
+                            ->where('team_penilai_id', Auth::user()->employee->team_id)
+                            ->first();
 
-        $survey = Survey::where('id', $transaction->survey_id)->first();
-
+        $penilaian2 = VariabelPenilaian::where('tahap', '2')->get();
         session(['previous_url' => url()->previous()]);
 
-        return view('penilaian1.edit', compact('transaction', 'mitra', 'survey'));
+        return view('penilaian2.edit', compact('nilai_2', 'penilaian2', 'mitra_teladan'));
     }
 
     public function update(Request $request, $transaction_id)

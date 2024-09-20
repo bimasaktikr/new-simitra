@@ -28,4 +28,9 @@ class MitraTeladan extends Model
     {
         return $this->belongsTo(Team::class, 'team_id', 'id');
     }
+
+    public function nilai2()
+    {
+        return $this->hasMany(Nilai2::class, 'mitra_teladan_id', 'id');
+    }
 }

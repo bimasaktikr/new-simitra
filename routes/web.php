@@ -73,8 +73,8 @@ Route::put('/penilaian1/{transaction_id}', [Penilaian1Controller::class, 'update
 
 Route::get('/penilaian2/{mitra_teladan_id}/create', [Penilaian2Controller::class, 'create'])->name('penilaian2.create')->middleware('auth');
 Route::post('/penilaian2', [Penilaian2Controller::class, 'store'])->name('penilaian2.store')->middleware('auth');
-Route::get('/penilaian2/{mitra}/edit', [Penilaian2Controller::class, 'edit'])->name('penilaian2.edit');
-Route::put('/penilaian2/{mitra}', [Penilaian2Controller::class, 'update'])->name('penilaian2.update');
+Route::get('/penilaian2/{mitra_teladan_id}/edit', [Penilaian2Controller::class, 'edit'])->name('penilaian2.edit');
+Route::put('/penilaian2/{mitra_teladan_id}', [Penilaian2Controller::class, 'update'])->name('penilaian2.update');
 
 Route::get('/mitrateladan', [MitraTeladanController::class, 'index'])->name('mitrateladan.index')->middleware('auth');
 Route::post('/addmitrateladan', [MitraTeladanController::class, 'storeMitraTeladan'])->name('mitrateladan.add')->middleware('auth');

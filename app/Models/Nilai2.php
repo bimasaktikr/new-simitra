@@ -48,4 +48,9 @@ class Nilai2 extends Model
     {
         return $this->belongsTo(Transaction::class, 'transaction_id');
     }
+
+    public function mitraTeladan()
+    {
+        return $this->belongsTo(MitraTeladan::class, 'mitra_teladan_id', 'id');
+    }
 }
