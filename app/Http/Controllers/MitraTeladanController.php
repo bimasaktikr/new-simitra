@@ -53,16 +53,24 @@ class MitraTeladanController extends Controller
                         ->get()
                         ->toArray();
 
-        // Adding the 'status' attribute to each item
+       
+            
+            // Adding the 'status' attribute to each item
         foreach ($mitrateladan as &$item) {
             $item['status'] = 'final';
-            
+
             $nilai_2_average = $this->nilai2Service->getAverageRating($item['id']); 
             $item['nilai_2'] = $nilai_2_average;
 
+            $nilai_2_final = $this->nilai2Service->getStatus($item['id']);
+            // dd( $nilai_2_final);
+            $item['is_final'] = $nilai_2_final;
+
             $team_done = $this->nilai2Service->getTeamDone($item['id']);
             $item['team_done'] = $team_done;
-
+            
+            $is_all_final = $this->nilai2Service->checkFinal($item['id']);
+            $item['is_all_final'] = $is_all_final;
         }
 
         // dd($mitrateladan);
@@ -80,12 +88,13 @@ class MitraTeladanController extends Controller
             $groupedByTeam = array_merge($groupedByTeam, $result);
         }
 
+        $winnerTeam = $this->mitraService->getWinnerTeam($year, $quarter);
         // dd($groupedByTeam);
 
         $groupedByTeam = array_merge($groupedByTeam, $mitrateladan);
         // dd($groupedByTeam);
 
-        return view('mitrateladan.index', compact('groupedByTeam', 'year', 'quarter'));
+        return view('mitrateladan.index', compact('groupedByTeam', 'year', 'quarter', 'winnerTeam'));
     }
 
     // In your Controller
@@ -140,6 +149,20 @@ class MitraTeladanController extends Controller
                 'error' => $e->getMessage()  // Optional: for debugging purposes, you might want to include the error message
             ], 500);
         }
+    }
+
+    public function setFinal($mitra_teladan_id)
+    {
+        // Use the service to set the final status
+        $mitraTeladan = $this->mitraService->setFinal($mitra_teladan_id);
+
+        // Optionally, add some feedback for the user
+        if ($mitraTeladan->status_phase_2) {
+            
+            return redirect()->back()->with('success', 'Status Phase 2 has been finalized successfully.');
+        }
+
+        return redirect()->back()->with('error', 'Unable to finalize. Some ratings are still not final.');
     }
 
 }

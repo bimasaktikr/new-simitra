@@ -16,6 +16,7 @@ class MitraTeladan extends Model
         'quarter',
         'avg_rating_1',
         'avg_rating_2',
+        'status_phase_2',
         'surveys_count',
     ];
 

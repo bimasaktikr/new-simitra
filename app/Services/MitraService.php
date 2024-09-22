@@ -10,7 +10,15 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class MitraService
-{
+{   
+    protected $nilai2Service;
+
+
+
+    public function __construct(Nilai2Service $nilai2Service)
+    {
+        $this->nilai2Service = $nilai2Service;
+    }
         
     public function getTopMitra($year=null, $quarter=null, $team_id)
     {   
@@ -176,4 +184,50 @@ class MitraService
                 throw new \InvalidArgumentException("Invalid quarter: $quarter");
         }
     }
+
+
+    public function setFinal($id)
+    {
+        // Find the MitraTeladan by its ID
+        $mitraTeladan = MitraTeladan::findOrFail($id);
+    
+        $mitraTeladan->update(['status_phase_2' => true]);
+        
+        // Calculate the average nilai_2 and update avg_rating_2
+        $nilai_2_average = $this->nilai2Service->getAverageRating($id);
+
+        // Update avg_rating_2 in the mitraTeladan record
+        $mitraTeladan->update(['avg_rating_2' => $nilai_2_average]);
+        // dd($mitraTeladan);
+        return $mitraTeladan;
+    }
+
+    public function getStatusPhase2($id)
+    {
+        // Find the MitraTeladan by ID and get the status_phase_2 value
+        $status = MitraTeladan::where('id', $id)->value('status_phase_2');
+
+        // Return true if status_phase_2 is 1 (or true), otherwise false
+        return (bool) $status;
+    }
+
+    public function getWinnerTeam($year, $quarter)
+    {
+        $winnerTeam = MitraTeladan::where('year', $year)
+                                    ->where('quarter', $quarter)
+                                    ->whereNotNull('avg_rating_2')
+                                    ->orderBy('avg_rating_2', 'desc')
+                                    ->first();
+        if($winnerTeam)
+        {
+            return $winnerTeam->team_id;
+        } else{
+            return null;
+        }
+    }
+   
+
+
+
+
 }

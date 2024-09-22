@@ -46,5 +46,30 @@ class Nilai2Service
         return Nilai2::where('mitra_teladan_id', $id)
                         ->pluck('team_penilai_id');
     }
+
+    public function getStatus($id)
+    {
+        // Retrieve is_final status mapped by team_penilai_id
+        return Nilai2::where('mitra_teladan_id', $id)
+            ->pluck('is_final', 'team_penilai_id')
+            ->map(function($isFinal) {
+                return (int) $isFinal; // Ensure the value is returned as an integer (1 or 0)
+            })
+            ->toArray();
+    }
     
+    public function checkFinal($id)
+    {
+        // Find the MitraTeladan by its ID
+        $mitraTeladan = MitraTeladan::findOrFail($id);
+    
+        // Check if all related Nilai2 entries are final
+        $allFinal = $mitraTeladan->nilai2->every(function ($nilai2) {
+            return $nilai2->is_final;
+        });
+    
+        // Return true if all are final, otherwise false
+        return $allFinal;
+    }
+
 }

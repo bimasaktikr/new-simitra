@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('avg_rating_1', 3 ,2)->nullable();
             $table->decimal('avg_rating_2', 3 ,2)->nullable();
             $table->integer('surveys_count');
+            $table->boolean('status_phase_2')->nullable();
             $table->timestamps();
         });
     }

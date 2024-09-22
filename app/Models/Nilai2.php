@@ -25,8 +25,8 @@ class Nilai2 extends Model
         'aspek9',
         'aspek10',
         'rerata',
-        'year',
-        'quarter',
+        'is_final',
+        
     ];
 
     public function mitra()

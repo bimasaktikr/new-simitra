@@ -44,7 +44,7 @@ class Penilaian2Controller extends Controller
         // Log incoming request data
         Log::info('Store method called', ['request_data' => $request->all()]);
 
-        $validated = $request->validate([
+        $request->validate([
             'mitra_teladan_id' => 'required|exists:mitra_teladans,id',
             'aspek1' => 'required|integer|min:1|max:5',
             'aspek2' => 'required|integer|min:1|max:5',
@@ -77,6 +77,7 @@ class Penilaian2Controller extends Controller
             $request->input('aspek8'),
             $request->input('aspek9'),
             $request->input('aspek10'),
+            $request->input('is_final'),
         ])->avg();
 
         $data = [
@@ -93,6 +94,7 @@ class Penilaian2Controller extends Controller
             'aspek8' => $request->input('aspek8'),
             'aspek9' => $request->input('aspek9'),
             'aspek10' => $request->input('aspek10'),
+            'is_final' => $request->input('is_final'),
         ];
 
 
@@ -115,40 +117,66 @@ class Penilaian2Controller extends Controller
         return view('penilaian2.edit', compact('nilai_2', 'penilaian2', 'mitra_teladan'));
     }
 
-    public function update(Request $request, $transaction_id)
-    {
+    public function update(Request $request)
+    {   
+        // dd($request);
+
         $request->validate([
-            'transaction_id' => 'required|exists:transactions,id',
-            'survey_id' => 'required|exists:surveys,id',
-            'kualitas_data' => 'required|integer|min:1|max:5',
-            'ketepatan_waktu' => 'required|integer|min:1|max:5',
-            'pemahaman_pengetahuan_kerja' => 'required|integer|min:1|max:5',
+            'aspek1' => 'required|integer|min:1|max:5',
+            'aspek2' => 'required|integer|min:1|max:5',
+            'aspek3' => 'required|integer|min:1|max:5',
+            'aspek4' => 'required|integer|min:1|max:5',
+            'aspek5' => 'required|integer|min:1|max:5',
+            'aspek6' => 'required|integer|min:1|max:5',
+            'aspek7' => 'required|integer|min:1|max:5',
+            'aspek8' => 'required|integer|min:1|max:5',
+            'aspek9' => 'required|integer|min:1|max:5',
+            'aspek10' => 'required|integer|min:1|max:5',
+            'is_final' => 'required',
         ]);
 
-        $nilai = Nilai1::where('transaction_id', $transaction_id)->firstOrFail();
+        Log::info('Validation passed');
+
         
-        try {
-            DB::beginTransaction();
+        $rerata = collect([
+            $request->input('aspek1'),
+            $request->input('aspek2'),
+            $request->input('aspek3'),
+            $request->input('aspek4'),
+            $request->input('aspek5'),
+            $request->input('aspek6'),
+            $request->input('aspek7'),
+            $request->input('aspek8'),
+            $request->input('aspek9'),
+            $request->input('aspek10'),
+        ])->avg();
 
-            $rerata = ($request->kualitas_data + $request->ketepatan_waktu + $request->pemahaman_pengetahuan_kerja) / 3;
+        $data = [
+            'rerata' => $rerata,
+            'aspek1' => $request->input('aspek1'),
+            'aspek2' => $request->input('aspek2'),
+            'aspek3' => $request->input('aspek3'),
+            'aspek4' => $request->input('aspek4'),
+            'aspek5' => $request->input('aspek5'),
+            'aspek6' => $request->input('aspek6'),
+            'aspek7' => $request->input('aspek7'),
+            'aspek8' => $request->input('aspek8'),
+            'aspek9' => $request->input('aspek9'),
+            'aspek10' => $request->input('aspek10'),
+            'is_final' => $request->input('is_final'),
+        ];
 
-            $nilai -> update([
-                'transaction_id' => $request->transaction_id,
-                'aspek1' => $request->kualitas_data,
-                'aspek2' => $request->ketepatan_waktu,
-                'aspek3' => $request->pemahaman_pengetahuan_kerja,
-                'rerata' => $rerata,
-            ]);
+         // Find the transaction by ID and update it
+        $transaction = Nilai2::find($request->input('nilai_2_id'));
+        // dd($transaction);
 
-            DB::commit();
-            $previousUrl = session('previous_url', route('surveidetail', ['id' => $request->survey_id]));
-            return redirect($previousUrl)->with('success', 'Penilaian berhasil disimpan!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            // Log error
-            Log::error('Error saat melakukan penilaian: ' . $e->getMessage());
-            return back()->with('error', 'Terjadi kesalahan saat melakukan penilaian. Silakan coba lagi.');
+        if ($transaction) {
+            $transaction->update($data);
+            Log::info("Transaction updated successfully.", ['transaction_id' => $transaction->id]);
+    
+            return redirect(route('mitrateladan.index'))->with('success', 'Data saved successfully!');
+        } else {
+            return redirect(route('mitrateladan.index'))->with('error', 'Transaction not found.');
         }
     }
 }

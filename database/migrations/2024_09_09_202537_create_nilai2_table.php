@@ -25,7 +25,8 @@ return new class extends Migration
             $table->integer('aspek8');
             $table->integer('aspek9');
             $table->integer('aspek10');
-            $table->integer('rerata');
+            $table->float('rerata', 3, 2);
+            $table->boolean('is_final');
             $table->timestamps();
         });
     }
