@@ -27,10 +27,9 @@ class PegawaiController extends Controller
     {
         $perPage = $request->input('per_page', 10);
 
-        $employees = Employee::select('employees.*', 'users.status as status')
-                    ->join('users', 'users.email', '=', 'employees.email')
-                    ->where('users.status', '=', 'Aktif')
-                    ->paginate($perPage);
+        $employees = Employee::where('users.status', '=', 'Aktif')
+                                ->with('user')
+                                ->paginate($perPage);
         
         return view('pegawai.index', [
             'user' => $this->user,

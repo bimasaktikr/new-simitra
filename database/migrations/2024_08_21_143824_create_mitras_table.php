@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('pendidikan', 50);
             $table->string('jenis_kelamin', 50);
             $table->date('tanggal_lahir');
+            $table->string('photo')->nullable();
             $table->timestamps();
 
             $table->foreign('email')->references('email')->on('users')->onDelete('cascade');

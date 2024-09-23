@@ -28,4 +28,9 @@ class Team extends Model
     {
         return $this->hasMany(Nilai2::class, 'team_id', 'id');
     }
+
+    public function mitrateladan()
+    {
+        return $this->hasMany(MitraTeladan::class, 'team_id', 'id');
+    }
 }

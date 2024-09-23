@@ -9,8 +9,10 @@ use App\Models\Mitra;
 use App\Models\MitraTeladan;
 use App\Models\Survey;
 use App\Models\Nilai;
+use App\Models\Nilai2;
 use App\Models\Team;
 use App\Services\MitraService;
+use App\Services\Nilai2Service;
 use Carbon\Carbon;
 use Psy\Readline\Hoa\Console;
 
@@ -21,12 +23,15 @@ class MitraTeladanController extends Controller
     protected $user;
     protected $mitra;
     protected $mitraService;
+    protected $nilai2Service;
 
 
-    public function __construct(MitraService $mitraService)
+
+    public function __construct(MitraService $mitraService, Nilai2Service $nilai2Service)
     {
         $this->user = Auth::user();
         $this->mitraService = $mitraService;
+        $this->nilai2Service = $nilai2Service;
     }
 
     public function index(Request $request)
@@ -47,9 +52,25 @@ class MitraTeladanController extends Controller
                         ->with('mitra:id_sobat,name')
                         ->get()
                         ->toArray();
-        // Adding the 'status' attribute to each item
+
+       
+            
+            // Adding the 'status' attribute to each item
         foreach ($mitrateladan as &$item) {
-            $item['status'] = 'final'; // Replace 'some status' with the desired status value
+            $item['status'] = 'final';
+
+            $nilai_2_average = $this->nilai2Service->getAverageRating($item['id']); 
+            $item['nilai_2'] = $nilai_2_average;
+
+            $nilai_2_final = $this->nilai2Service->getStatus($item['id']);
+            // dd( $nilai_2_final);
+            $item['is_final'] = $nilai_2_final;
+
+            $team_done = $this->nilai2Service->getTeamDone($item['id']);
+            $item['team_done'] = $team_done;
+            
+            $is_all_final = $this->nilai2Service->checkFinal($item['id']);
+            $item['is_all_final'] = $is_all_final;
         }
 
         // dd($mitrateladan);
@@ -67,12 +88,13 @@ class MitraTeladanController extends Controller
             $groupedByTeam = array_merge($groupedByTeam, $result);
         }
 
-        $groupedByTeam = array_merge($groupedByTeam, $mitrateladan);
-                        
-
+        $winnerTeam = $this->mitraService->getWinnerTeam($year, $quarter);
         // dd($groupedByTeam);
-        return view('mitrateladan', compact('groupedByTeam', 'year', 'quarter'));
-        
+
+        $groupedByTeam = array_merge($groupedByTeam, $mitrateladan);
+        // dd($groupedByTeam);
+
+        return view('mitrateladan.index', compact('groupedByTeam', 'year', 'quarter', 'winnerTeam'));
     }
 
     // In your Controller
@@ -109,7 +131,7 @@ class MitraTeladanController extends Controller
                 'team_id'       => $validatedData['team_id'],
                 'year'          => (int)$validatedData['year'],         // Ensure year is an integer
                 'quarter'       => (int)$validatedData['quarter'],      // Ensure quarter is an integer
-                'avg_rating'    => (float)$validatedData['rating'],     // Ensure rating is a float
+                'avg_rating_1'    => (float)$validatedData['rating'],     // Ensure rating is a float
                 'surveys_count' => (int)$validatedData['survey_count'], // Ensure survey_count is an integer
             ]);
 
@@ -127,6 +149,20 @@ class MitraTeladanController extends Controller
                 'error' => $e->getMessage()  // Optional: for debugging purposes, you might want to include the error message
             ], 500);
         }
+    }
+
+    public function setFinal($mitra_teladan_id)
+    {
+        // Use the service to set the final status
+        $mitraTeladan = $this->mitraService->setFinal($mitra_teladan_id);
+
+        // Optionally, add some feedback for the user
+        if ($mitraTeladan->status_phase_2) {
+            
+            return redirect()->back()->with('success', 'Status Phase 2 has been finalized successfully.');
+        }
+
+        return redirect()->back()->with('error', 'Unable to finalize. Some ratings are still not final.');
     }
 
 }

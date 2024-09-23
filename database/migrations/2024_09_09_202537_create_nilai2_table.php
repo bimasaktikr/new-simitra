@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('nilai2', function (Blueprint $table) {
             $table->id();
-            $table->integer('mitra_id');
-            $table->integer('team_id');
+            $table->integer('mitra_teladan_id');
             $table->integer('penilai_id');
             $table->integer('aspek1');
             $table->integer('aspek2');
@@ -26,9 +25,8 @@ return new class extends Migration
             $table->integer('aspek8');
             $table->integer('aspek9');
             $table->integer('aspek10');
-            $table->integer('rerata');
-            $table->integer('tahun');
-            $table->string('periode');
+            $table->float('rerata', 3, 2);
+            $table->boolean('is_final');
             $table->timestamps();
         });
     }

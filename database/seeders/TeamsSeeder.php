@@ -38,6 +38,11 @@ class TeamsSeeder extends Seeder
                 'name' => 'Sosial',
                 'code' => 'TE'
             ],
+            [
+                'id' => 6,
+                'name' => 'Umum',
+                'code' => 'UM'
+            ],
         ]);
     }
 }

@@ -2,12 +2,12 @@
 
 @section('content')
 <section class="bg-gray-50 dark:bg-gray-900">
-    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
-        <div class="bg-white border border-gray-200 rounded-lg p-8 md:p-12 mb-8 dark:bg-gray-800 dark:border-gray-700">
-            <h1 class="text-gray-900 dark:text-white text-4xl md:text-4xl font-extrabold mb-2">
+    <div class="max-w-screen-xl px-4 py-8 mx-auto lg:py-16">
+        <div class="p-8 mb-8 bg-white border border-gray-200 rounded-lg md:p-12 dark:bg-gray-800 dark:border-gray-700">
+            <h1 class="mb-2 text-4xl font-extrabold text-gray-900 dark:text-white md:text-4xl">
                 <strong>Selamat Datang, {{ ucfirst($userData->name) }}!</strong>
             </h1>
-            <p class="text-lg font-normal text-gray-500 dark:text-gray-400 mt-4 mb-3">
+            <p class="mt-4 mb-3 text-lg font-normal text-gray-500 dark:text-gray-400">
                 Penyedia Data Berkualitas Untuk Indonesia Maju
             </p>
             <!-- <a href="#" class="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -18,34 +18,34 @@
             </a> -->
         </div>
 
-        <div class="grid grid-cols-1 mb-8 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 gap-6 mb-8 sm:grid-cols-2 md:grid-cols-4">
             <!-- Total Users -->
-            <div class="bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 shadow-lg rounded-lg p-8 flex flex-col justify-center items-center">
-                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Total Pengguna</h2>
+            <div class="flex flex-col items-center justify-center p-8 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
+                <h2 class="mb-2 text-xl font-semibold text-gray-800 dark:text-gray-100">Total Pengguna</h2>
                 <p class="text-4xl font-bold text-blue-600 dark:text-blue-400">{{ $totalUsers }}</p>
             </div>
 
             <!-- Total Mitra -->
-            <div class="bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 shadow-lg rounded-lg p-8 flex flex-col justify-center items-center">
-                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Total Pegawai</h2>
+            <div class="flex flex-col items-center justify-center p-8 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
+                <h2 class="mb-2 text-xl font-semibold text-gray-800 dark:text-gray-100">Total Pegawai</h2>
                 <p class="text-4xl font-bold text-green-600 dark:text-green-400">{{ $totalPegawai }}</p>
             </div>
 
             <!-- Total Pegawai -->
-            <div class="bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 shadow-lg rounded-lg p-8 flex flex-col justify-center items-center">
-                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Total Mitra</h2>
+            <div class="flex flex-col items-center justify-center p-8 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
+                <h2 class="mb-2 text-xl font-semibold text-gray-800 dark:text-gray-100">Total Mitra</h2>
                 <p class="text-4xl font-bold text-yellow-600 dark:text-yellow-400">{{ $totalMitra }}</p>
             </div>
 
             <!-- Total Survei -->
-            <div class="bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 shadow-lg rounded-lg p-8 flex flex-col justify-center items-center">
-                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Total Survei</h2>
+            <div class="flex flex-col items-center justify-center p-8 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
+                <h2 class="mb-2 text-xl font-semibold text-gray-800 dark:text-gray-100">Total Survei</h2>
                 <p class="text-4xl font-bold text-red-600 dark:text-red-400">{{ $totalSurveys }}</p>
             </div>
         </div>
         
-        <div class="bg-gray-100 dark:bg-gray-700 rounded-lg">
-        <ul class="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 border border-gray-100 dark:border-gray-700" id="defaultTab" data-tabs-toggle="#defaultTabContent" role="tablist">
+        <div class="bg-gray-100 rounded-lg dark:bg-gray-700">
+        <ul class="hidden text-sm font-medium text-center text-gray-500 border border-gray-100 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 dark:border-gray-700" id="defaultTab" data-tabs-toggle="#defaultTabContent" role="tablist">
             <li class="w-full focus-within:z-10">
                 <a href="{{ route('dashboard', ['period' => 'all-time']) }}" class="inline-block w-full p-4 {{ $period == 'all-time' ? ' active dark:bg-gray-700 dark:text-white text-gray-900 bg-gray-100 border-r' : 'text-gray-500 dark:text-gray-400 bg-white border-r dark:bg-gray-800' }} border-gray-100 dark:border-gray-700 rounded-s-lg hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:hover:bg-gray-700">Semua</a>
             </li>
@@ -63,14 +63,14 @@
             </li>
         </ul>
         
-        <div class="grid grid-cols-3 gap-4 max-w-full w-full rounded-lg shadow p-4 md:p-6 bg-gray-100 dark:bg-gray-700">
+        <div class="grid w-full max-w-full grid-cols-3 gap-4 p-4 bg-gray-100 rounded-lg shadow md:p-6 dark:bg-gray-700">
         
-    <div id="defaultTabContent" class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-        <div class="flex justify-between items-start w-full">
+    <div id="defaultTabContent" class="w-full max-w-sm p-4 bg-white rounded-lg shadow dark:bg-gray-800 md:p-6">
+        <div class="flex items-start justify-between w-full">
             <div class="flex-col items-center">
             <div class="flex items-center mb-1">
                 <div>
-                    <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1">Proporsi Survei</h5>
+                    <h5 class="pb-1 text-2xl font-bold leading-none text-gray-900 dark:text-white">Proporsi Survei</h5>
                     <p class="text-sm font-normal text-gray-500 dark:text-gray-400">Berdasarkan Fungsi</p>
                 </div>
                 <div data-popover id="chart-info" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
@@ -87,7 +87,7 @@
             </div>
             </div>
         </div>
-        <div class="flex justify-end items-center">
+        <div class="flex items-center justify-end">
             
         </div>
         </div>
@@ -102,11 +102,11 @@
         
         
         <!-- Bagian Bar Chart -->
-            <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6 mr-8">
+            <div class="w-full max-w-sm p-4 mr-8 bg-white rounded-lg shadow dark:bg-gray-800 md:p-6">
                 <div class="flex justify-between pb-4 mb-4">
                     <div class="flex items-center">
                         <div>
-                            <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1">Total Survei</h5>
+                            <h5 class="pb-1 text-2xl font-bold leading-none text-gray-900 dark:text-white">Total Survei</h5>
                             <p class="text-sm font-normal text-gray-500 dark:text-gray-400">Berdasarkan Fungsi</p>
                         </div>
                     </div>
@@ -114,30 +114,30 @@
                 </div>
 
                 <div id="column-chart"></div>
-                <div class="grid grid-cols-1 items-center justify-center">
-                    <div class="flex justify-center items-center pt-5">
+                <div class="grid items-center justify-center grid-cols-1">
+                    <div class="flex items-center justify-center pt-5">
                         
                     </div>
                 </div>
             </div>
 
             <!-- Bagian Progress Bar -->
-            <div class="max-w-sm w-full bg-white rounded-lg shadow p-4 md:p-6 dark:bg-gray-800 dark:text-white">
+            <div class="w-full max-w-sm p-4 bg-white rounded-lg shadow md:p-6 dark:bg-gray-800 dark:text-white">
                 <div class="flex justify-between mb-3">
                     <div class="flex items-center">
-                        <div class="flex justify-center items-center">
+                        <div class="flex items-center justify-center">
                             <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1">Progress Penilaian Mitra</h5>
                             <!-- Circular Progress -->
                             <div class="relative size-40">
-                                <svg class="size-full -rotate-90" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="-rotate-90 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
                                     <!-- Background Circle -->
-                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-200 dark:text-neutral-300" stroke-width="2"></circle>
+                                    <circle cx="18" cy="18" r="16" fill="none" class="text-gray-200 stroke-current dark:text-neutral-300" stroke-width="2"></circle>
                                     <!-- Progress Circle -->
-                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-blue-600 dark:text-blue-500" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="{{ 100 - $overallPercentage }}" stroke-linecap="round"></circle>
+                                    <circle cx="18" cy="18" r="16" fill="none" class="text-blue-600 stroke-current dark:text-blue-500" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="{{ 100 - $overallPercentage }}" stroke-linecap="round"></circle>
                                 </svg>
                                 <!-- Percentage Text -->
-                                <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                                    <span class="text-center text-2xl font-bold text-blue-600 dark:text-blue-500">{{ number_format($overallPercentage, 0) }}%</span>
+                                <div class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 start-1/2">
+                                    <span class="text-2xl font-bold text-center text-blue-600 dark:text-blue-500">{{ number_format($overallPercentage, 0) }}%</span>
                                 </div>
                             </div>
                         </div>
@@ -148,7 +148,7 @@
                 <div class="space-y-4">
                     @foreach ($progressData as $teamId => $data)
                     <div class="flex flex-col space-y-2">
-                        <div class="flex justify-between items-center">
+                        <div class="flex items-center justify-between">
                             <span class="text-base font-medium text-gray-700 dark:text-white">{{ $data['name'] }}</span>
                             <span class="text-sm font-medium text-gray-700 dark:text-white">{{ number_format($data['percentage'], 0) }}%</span>
                         </div>

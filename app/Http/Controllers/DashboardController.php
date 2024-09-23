@@ -8,13 +8,15 @@ use App\Models\Team;
 use App\Models\User;
 use App\Models\Survey;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
         $userData = session('user_data');
-
+        // $userData = Session::get('user_data');
+        // dd($userData);
         $period = $request->input('period', 'all-time');
 
         switch ($period) {

@@ -12,10 +12,8 @@ class Nilai2 extends Model
     protected $table = 'nilai2';
 
     protected $fillable = [
-        'transaction_id',
-        'mitra_id',
-        'team_id',
-        'penilai_id',
+        'mitra_teladan_id',
+        'team_penilai_id',
         'aspek1',
         'aspek2',
         'aspek3',
@@ -27,9 +25,8 @@ class Nilai2 extends Model
         'aspek9',
         'aspek10',
         'rerata',
-        'tahun',
-        'periode',
-        'is_sudah_dinilai'
+        'is_final',
+        
     ];
 
     public function mitra()
@@ -50,5 +47,10 @@ class Nilai2 extends Model
     public function transactions()
     {
         return $this->belongsTo(Transaction::class, 'transaction_id');
+    }
+
+    public function mitraTeladan()
+    {
+        return $this->belongsTo(MitraTeladan::class, 'mitra_teladan_id', 'id');
     }
 }

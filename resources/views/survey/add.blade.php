@@ -1,25 +1,25 @@
 @extends('layout.app')
 
 @section('content')
-<div class="container mx-auto p-4 dark:bg-gray-900 dark:text-gray-200">
-    <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Tambah Survei</h1>
+<div class="container p-4 mx-auto dark:bg-gray-900 dark:text-gray-200">
+    <h1 class="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100">Tambah Survei</h1>
 
-    <form action="{{ route('survei.store') }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+    <form action="{{ route('survei.store') }}" method="POST" enctype="multipart/form-data" class="p-6 bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
         @csrf
 
         <div class="mb-4">
             <label for="nama" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Survei</label>
-            <input type="text" name="nama" id="nama" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <input type="text" name="nama" id="nama" class="block w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
         </div>
 
         <div class="mb-4">
             <label for="kode" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kode Survei</label>
-            <input type="text" name="kode" id="kode" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <input type="text" name="kode" id="kode" class="block w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
         </div>
 
         <div class="mb-4">
             <label for="tim" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tim</label>
-            <select name="tim" id="tim" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <select name="tim" id="tim" class="block w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
             @foreach($teams as $team)
                 <option value="{{ $team->id }}">
                     {{ $team->name }}
@@ -30,17 +30,17 @@
 
         <div class="mb-4">
             <label for="tanggal_mulai" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Mulai</label>
-            <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="block w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
         </div>
 
         <div class="mb-4">
             <label for="tanggal_berakhir" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Berakhir</label>
-            <input type="date" name="tanggal_berakhir" id="tanggal_berakhir" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <input type="date" name="tanggal_berakhir" id="tanggal_berakhir" class="block w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
         </div>
 
         <div class="mb-4">
             <label for="tipe_pembayaran" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Pembayaran</label>
-            <select name="tipe_pembayaran" id="tipe_pembayaran" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <select name="tipe_pembayaran" id="tipe_pembayaran" class="block w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
             @foreach($paymentTypes as $paymentType)
                 <option value="{{ $paymentType->id }}">
                     {{ $paymentType->payment_type }}
@@ -51,13 +51,13 @@
 
         <div class="mb-4">
             <label for="harga" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Harga</label>
-            <input type="number" name="harga" id="harga" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
+            <input type="number" name="harga" id="harga" class="block w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" required>
         </div>
 
-        <div class="mb-4">
+        {{-- <div class="mb-4">
             <label for="file" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Import Mitra (CSV atau XLS)</label>
-            <input type="file" name="file" id="file" class="mt-1 block w-full p-2 border rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-        </div>
+            <input type="file" name="file" id="file" class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500">
+        </div> --}}
 
         <div class="flex justify-between mt-6">
             <button type="button" onclick="window.history.back()" class="px-6 py-2 text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-600">

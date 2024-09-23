@@ -13,6 +13,8 @@ use App\Models\Nilai1;
 use App\Models\PaymentType;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Stmt\Return_;
 
 class SurveyController extends Controller
 {
@@ -277,6 +279,9 @@ public function finalisasiNilai($id)
 
         return redirect()->route('surveidetail', ['id' => $id])->with('success', 'Data berhasil disinkronisasi.');
     }
+
+    
+
 
     public function destroy($id)
     {

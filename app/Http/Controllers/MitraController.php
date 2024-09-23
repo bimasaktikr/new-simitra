@@ -12,6 +12,9 @@ use App\Models\Mitra;
 use App\Models\Survey;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MitraController extends Controller
 {
@@ -170,6 +173,58 @@ class MitraController extends Controller
         $mitra->delete();
 
         return redirect()->route('mitra')->with('success', 'Mitra berhasil dihapus.');
+    }
+
+    public function downloadTemplate()
+    {
+        $filePath = 'public/template/template_mitra.xlsx'; 
+
+        if (Storage::disk('local')->exists($filePath)) {
+            return Storage::disk('local')->download($filePath, 'template_mitra.xlsx');
+        }
+    
+        abort(404, 'Template file not found.');
+    }
+
+    public function uploadMitra(Request $request, $surveyId)
+    {   
+        // dd($request->file);
+        
+        // Ambil survei berdasarkan ID
+        $survey = Survey::findOrFail($surveyId);
+
+        // Cek apakah survei memiliki file
+        if (!$survey->file) {
+            return redirect()->route('surveidetail', ['id' => $surveyId])->with('error', 'Tidak ada file yang diunggah untuk survei ini.');
+        }
+
+        if ($request->hasFile('file')) {
+            // This is for a new file upload (first time)
+            $originalName = $request->file('file')->getClientOriginalName();
+            $extension = $request->file('file')->getClientOriginalExtension();
+            
+            $month = Carbon::parse($survey->start_date)->format('Ym');
+            
+            // Create a unique filename using the month, university name, and the original filename
+            $filename = $month. '_' . Str::slug($survey->name) . '_' . Str::slug(pathinfo($originalName, PATHINFO_FILENAME)) . '.' . $extension;
+            
+            // Store the file in the 'profile_files' directory in the 'public' disk
+            $path = $request->file('file')->storeAs('profile_files', $filename, 'public');
+            
+            // Assign the path to the intern's file attribute
+            $survey->file = $path;
+            $survey->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'File uploaded successfully! ' . $surveyId,
+            ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No file uploaded.',
+                ]);
+            }
     }
 }
 

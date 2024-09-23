@@ -20,6 +20,7 @@ class Mitra extends Model
         'pendidikan',
         'jenis_kelamin',
         'tanggal_lahir',
+        'photo',
     ];
 
     public function transactions()
@@ -49,7 +50,7 @@ class Mitra extends Model
         );
     }
 
-    public function mitrateladan()
+    public function mitraTeladan()
     {
         return $this->hasMany(MitraTeladan::class, 'mitra_id', 'id_sobat');
     }
