@@ -146,10 +146,11 @@
             
                                 @if ($team['team_id'] == $winnerTeam)
                                     <div class="absolute top-0 right-0">
-                                        <div class="w-32 h-8 top-4 -right-8">
+                                        <div class="w-32 h-16 top-4 -right-8">
                                             <div
-                                                class="w-full h-full font-semibold leading-8 text-center text-white transform rotate-45 bg-red-500">
-                                                WINNER</div>
+                                                class="w-full h-full text-center text-white transform rotate-45 bg-red-500 font-sm">
+                                                MITRA TELADAN
+                                            </div>
                                         </div>
                                     </div>
                                 @endif
@@ -227,7 +228,7 @@
                                                 @endif
                                             @else
                                                 bg-gray-500 text-gray-200 cursor-not-allowed
-                                            @endif"
+                                            @endif" 
                                         data-mitra-id="{{ $mitra['mitra_id'] ?? $mitra['id'] }}"
                                         data-mitra-name="{{ $mitra['mitra_name'] ?? ($mitra['mitra']['name'] ?? 'Unknown') }}"
                                         data-mitra-rating="{{ isset($mitra['average_rerata']) ? number_format((float)$mitra['average_rerata'], 2) : number_format((float)$mitra['avg_rating_1'], 2) }}"
@@ -244,6 +245,7 @@
                                         @else
                                             disabled
                                         @endif">
+                                        
                                         @if (Auth::user()->role_id == 1)
                                             @if (isset($mitra['status']))
                                                 Accepted

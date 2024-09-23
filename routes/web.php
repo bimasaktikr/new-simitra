@@ -13,7 +13,9 @@ use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Models\Mitra;
 use App\Models\MitraTeladan;
+use App\Models\Survey;
 
 Route::get('/', [LoginController::class, 'login'])->name('login');
 Route::post('actionlogin', [LoginController::class, 'actionlogin'])->name('actionlogin');
@@ -44,6 +46,8 @@ Route::put('/mitra/edit/{id_sobat}', [MitraController::class, 'update'])->name('
 Route::get('/mitra/{id_sobat}', [MitraController::class, 'show'])->name('mitradetail')->middleware('auth');
 Route::delete('/mitra/{id_sobat}', [MitraController::class, 'destroy'])->name('mitra.destroy');
 Route::get('/mitras/search', [MitraController::class, 'search'])->name('mitra.search');
+Route::get('/download/mitratemplate', [MitraController::class, 'downloadTemplate'])->name('download.mitratemplate');
+Route::post('/upload-mitra/{survey_id}', [MitraController::class, 'uploadMitra'])->name('upload.mitradata');
 
 Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai')->middleware('auth');
 Route::get('/pegawai/add', [PegawaiController::class, 'add'])->name('addpegawai')->middleware('auth');

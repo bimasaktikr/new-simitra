@@ -50,15 +50,19 @@ class Nilai2Factory extends Factory
 
     private function getMitraTeladanIdWithoutNilai2()
     {
-        $mitraTeladanIds = MitraTeladan::whereDoesntHave('nilai2')->pluck('id');
-
-        if ($mitraTeladanIds->isEmpty()) {
-            // If no MitraTeladan records without Nilai2, create a new one
-            $mitraTeladan = MitraTeladan::factory()->create();
-            return $mitraTeladan->id;
-        } else {
-            return $mitraTeladanIds->random();
-        }
+        $mitraTeladanIds = MitraTeladan::whereDoesntHave('nilai2', function($query) {
+            // This will check if any team_penilai_id (1-6) is missing for a MitraTeladan
+            $query->whereBetween('team_penilai_id', [1, 6]);
+        }, '<', 6)->pluck('id');
+        // if ($mitraTeladanIds->isEmpty()) {
+        //     // If no MitraTeladan records without Nilai2, create a new one
+        //     // $mitraTeladan = MitraTeladan::factory()->create();
+        //     return $mitraTeladan->id;
+        // } else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+        //     return $mitraTeladanIds->random();
+        // }
+        // dd($mitraTeladanIds);
+        return $mitraTeladanIds;
     }
 }
 
