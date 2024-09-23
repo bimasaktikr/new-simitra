@@ -1,71 +1,72 @@
-name: Deploy Laravel to cPanel
+name: Deploy to CPanel
 
 on:
   push:
     branches:
-      - master  # Adjust to your main branch
+      - master
 
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout Code
+      # Checkout code
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
-      # 2. Set Up Node.js Environment for Frontend Dependencies
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      # 3. Install Node.js Dependencies and Build Frontend Assets
-      - name: Install dependencies
-        run: npm install && npm run build
-
-      # 4. Set Up PHP for Laravel
+      # Set up PHP
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2' # Adjust to your Laravel PHP version
+          php-version: '8.2' # Change to your desired PHP version
+          extensions: mbstring, xml, zip, curl
 
-      # 5. Install Composer Dependencies (Production Mode)
-      - name: Install Composer dependencies
-        run: composer install --no-dev --prefer-dist --no-progress --no-suggest --optimize-autoloader
+      # Install git-ftp
+      - name: Install git-ftp
+        run: sudo apt-get install -y git-ftp
 
-      # 6. Sync .env file (Make sure you have this in cPanel server)
-      # - name: Upload .env file
-      #   run: |
-      #     echo "${{ secrets.ENV_FILE }}" > .env
-
-      # 7. Run Laravel Artisan Commands (e.g., Migrate, Cache Clear)
-      # - name: Run Laravel artisan commands
-      #   run: |
-      #     php artisan config:cache
-      #     php artisan route:cache
-      #     php artisan view:cache
-
-      # 8. FTP-Deploy-Action for Uploading Files
-      - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          port: 21
-          log-level: verbose
-          timeout: 120000
-          exclude: |
-            node_modules/
-            storage/
-            .git/
-            vendor/
-
-      # 9. Post-deployment actions (e.g., permissions for storage)
-      - name: Set Storage Permissions
+      # Check version tools used
+      - name: Check versions
         run: |
-          chmod -R 775 storage
-          chmod -R 775 bootstrap/cache
+          git --version
+          php --version
+          composer --version
+          node --version
+          npm --version
+
+      # Copy .env.example to .env
+      - name: Copy .env
+        run: cp .env.example .env
+
+      # Remove build folder
+      - name: Clean build folders
+        run: |
+          rm -rf public/build
+          rm -rf bootstrap/ssr
+
+      # Install and build project
+      - name: Install dependencies
+        run: |
+          composer install
+          npm install
+          npm run build
+
+      # Set FTP credentials based on branch
+      - name: Set FTP Credentials
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "FTP_HOST=${{ secrets.FTP_HOST }}" >> $GITHUB_ENV
+            echo "FTP_USERNAME=${{ secrets.FTP_USERNAME }}" >> $GITHUB_ENV
+            echo "FTP_PASSWORD=${{ secrets.FTP_PASSWORD }}" >> $GITHUB_ENV
+          fi
+
+      # Sync files using git-ftp
+      - name: Deploy to FTP
+        run: |
+          if curl --silent --show-error --ftp-ssl -u $FTP_USERNAME:$FTP_PASSWORD -k ftp://$FTP_HOST/website/.git-ftp.log; then
+            echo "file .git-ftp.log found, doing git-ftp push...";
+            git-ftp push -u $FTP_USERNAME -p $FTP_PASSWORD -v $FTP_HOST/website/ --syncroot .;
+          else
+            echo "file .git-ftp.log not found, doing git-ftp init...";
+            git-ftp init -u $FTP_USERNAME -p $FTP_PASSWORD -v $FTP_HOST/website/;
+          fi
