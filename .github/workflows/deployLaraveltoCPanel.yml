@@ -54,11 +54,9 @@ jobs:
       # Set FTP credentials based on branch
       - name: Set FTP Credentials
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "FTP_HOST=${{ secrets.FTP_HOST }}" >> $GITHUB_ENV
+            echo "FTP_HOST=${{ secrets.FTP_SERVER }}" >> $GITHUB_ENV
             echo "FTP_USERNAME=${{ secrets.FTP_USERNAME }}" >> $GITHUB_ENV
             echo "FTP_PASSWORD=${{ secrets.FTP_PASSWORD }}" >> $GITHUB_ENV
-          fi
 
       # Sync files using git-ftp
       - name: Deploy to FTP
