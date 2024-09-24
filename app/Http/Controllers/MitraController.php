@@ -11,10 +11,12 @@ use App\Models\User;
 use App\Models\Mitra;
 use App\Models\Survey;
 use App\Models\Transaction;
+use App\Services\MitraService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MitraController extends Controller
 {
@@ -22,10 +24,13 @@ class MitraController extends Controller
     protected $mitra;
     protected $survey;
     protected $transaction;
+    protected $mitraService;
 
-    public function __construct()
+    public function __construct(MitraService $mitraService)
     {
-        $this->user = Auth::user(); // Mendapatkan data pengguna yang login
+        $this->user = Auth::user();
+        $this->mitraService = $mitraService;
+        // $this->nilai1Service = $nilai1Service; // Mendapatkan data pengguna yang login
     }
 
     public function index(Request $request)
@@ -193,13 +198,9 @@ class MitraController extends Controller
         // Ambil survei berdasarkan ID
         $survey = Survey::findOrFail($surveyId);
 
-        // Cek apakah survei memiliki file
-        if (!$survey->file) {
-            return redirect()->route('surveidetail', ['id' => $surveyId])->with('error', 'Tidak ada file yang diunggah untuk survei ini.');
-        }
-
-        if ($request->hasFile('file')) {
+       if ($request->hasFile('file')) {
             // This is for a new file upload (first time)
+            // dd($request->file);
             $originalName = $request->file('file')->getClientOriginalName();
             $extension = $request->file('file')->getClientOriginalExtension();
             
@@ -209,22 +210,27 @@ class MitraController extends Controller
             $filename = $month. '_' . Str::slug($survey->name) . '_' . Str::slug(pathinfo($originalName, PATHINFO_FILENAME)) . '.' . $extension;
             
             // Store the file in the 'profile_files' directory in the 'public' disk
-            $path = $request->file('file')->storeAs('profile_files', $filename, 'public');
+            $path = $request->file('file')->storeAs('mitra', $filename, 'public');
             
             // Assign the path to the intern's file attribute
             $survey->file = $path;
             $survey->save();
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'File uploaded successfully! ' . $surveyId,
-            ]);
+
+            $filePath = storage_path('app/public/' . $survey->file);
+            $data = Excel::toArray([], $filePath);
+            // dd($data);
+           
+
+            if($this->mitraService->importMitra($data, $survey))
+            {
+                return redirect()->route('surveidetail', ['id' => $surveyId])
+                ->with('success', 'File uploaded successfully!');
             } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No file uploaded.',
-                ]);
+            // Redirect back to the view with error message
+            return redirect()->route('surveidetail', ['id' => $surveyId])
+                        ->with('error', 'No file uploaded.');
             }
+        }
     }
 }
 

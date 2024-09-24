@@ -72,32 +72,58 @@
                                     Status Tahap 2 : {{ ($team['status_phase_2'] == 1) ? "Data Sudah Final" : "Data Belum Di Finalisasi" }}
                                 </p>
                                 <div class="flex justify-between mb-1 space-x-2 text-center">
-                                    @for ( $team_penilai = 0  ;  $team_penilai < 6 ;  $team_penilai++ )
-                                        @if ( $team['team_done']->contains($team_penilai + 1))
-                                            @if ($team['is_final'][$team_penilai + 1] == 1)
-                                                <p class="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                    ✅ Team {{ $team_penilai + 1 }}
-                                                </p>
-                                            @else
-                                                <p class="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                    ✔️ Team {{ $team_penilai + 1 }}
-                                                </p>
-                                            @endif
-                                        @else
-                                            <p class="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                ❌ Team {{ $team_penilai + 1 }}
-                                            </p>
-                                        @endif
-                                    @endfor
+                                    <button id="monevButton-{{ $teamId }}" 
+                                            class="px-4 py-2 text-white bg-blue-500 rounded-md"
+                                            data-monitoring-team-id="{{ $teamId }}" 
+                                            >
+                                        Monitoring
+                                    </button>
                                 </div>
                                 
+                                    @php
+                                        $employee_list = \App\Models\Employee::all();
+                                    @endphp
+                                <div id="modal-{{ $teamId }}" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+                                    <div class="w-full max-w-lg bg-white rounded-lg shadow-lg">
+                                        <div class="p-4 border-b ">
+                                            <h2 class="text-lg font-semibold">Employee Monitoring</h2>
+                                            <button type="button" class="close-modal" onclick="document.getElementById('modal-{{ $teamId }}').classList.add('hidden')">X</button>
+                                        </div>
+                                        <div class="p-4 overflow-y-auto max-h-64">
+                                            <table class="w-full">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="px-4 py-2 border">Employee Name</th>
+                                                        <th class="px-4 py-2 border">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($employee_list as $employee)
+                                                        <tr>
+                                                            <td class="px-4 py-2 border">{{ $employee->name }}</td>
+                                                            <td class="px-4 py-2 border">
+                                                                @if ($team['employee_done']->contains($employee->id))
+                                                                    <span class="text-green-500">✅ Done</span>
+                                                                @else
+                                                                    <span class="text-red-500">❌ Not Done</span>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                
                                 <div class="flex flex-col mt-2 space-y-2 md:mt-6">
-                                @if (isset($team['is_final'][auth()->user()->employee->team_id]) && $team['is_final'][auth()->user()->employee->team_id] == 1)
+                                @if (isset($team['is_final'][auth()->user()->employee->id]) && $team['is_final'][auth()->user()->employee->id] == 1)
                                     <a class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg cursor-not-allowed disabled hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                                         Nilai Sudah Final
                                     </a>
                                 @else
-                                    @if ($team['team_done']->contains(Auth::user()->employee->team_id))
+                                    @if ($team['employee_done']->contains(Auth::user()->employee->id))
                                         <a href="{{ route('penilaian2.edit', ['mitra_teladan_id' => $team['id']]) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-yellow-700 rounded-lg hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">
                                             Edit Nilai
                                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -220,7 +246,7 @@
                                                 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300
                                                 @endif
 
-                                            @elseif(Auth::user()->employee->team_id == $mitra['team_id'])
+                                            @elseif(Auth::user()->employee->team_id == $mitra['team_id'] && Auth::user()->role)
                                                 @if (isset($mitra['status']))
                                                 bg-gray-500 text-gray-200 cursor-not-allowed
                                                 @else
@@ -272,6 +298,9 @@
     
     </div>
 </div>
+
+
+
 @endsection
 
 @section('script')
@@ -279,6 +308,19 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Loop through each team button
+        for (let teamId = 1; teamId <= 5; teamId++) {
+            const monevButton = document.getElementById(`monevButton-${teamId}`);
+            const monevModal = document.getElementById(`modal-${teamId}`);
+
+            if (monevButton) {
+                monevButton.addEventListener('click', function() {
+                    monevModal.classList.remove('hidden'); // Show the modal
+                });
+            }
+        }
+            
+
         // Handle year dropdown item click
         document.querySelectorAll('#dropdownHover .dropdown-item').forEach(item => {
             item.addEventListener('click', function(event) {
@@ -288,6 +330,7 @@
                 document.getElementById('dropdownHoverButton').textContent = `Pilih Tahun (${value})`;
             });
         });
+
 
         // Handle quarter dropdown item click
         document.querySelectorAll('#dropdowntrimesterHover .dropdown-item').forEach(item => {

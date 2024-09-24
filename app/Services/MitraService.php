@@ -4,10 +4,14 @@ namespace App\Services;
 
 use App\Models\Mitra;
 use App\Models\MitraTeladan;
+use App\Models\Nilai1;
 use App\Models\Team;
 use App\Models\Transaction;
+use App\Models\User;
+use DateTime;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class MitraService
 {   
@@ -226,7 +230,72 @@ class MitraService
         }
     }
    
+    public function importMitra($filterData, $survey)
+    {   
+        $dataWithoutHeader = array_slice($filterData[0], 1);
+        // dd($dataWithoutHeader);
+        // dd($dataWithoutHeader);
+        // Iterasi setiap baris dalam file Excel
+        foreach ($dataWithoutHeader as $row) {
+            $dateObject = DateTime::createFromFormat('d/m/Y', $row[5]);
+            $formattedDate = $dateObject->format('Y-m-d');
+            
+            $id_mitra = $row[0];
+            $name = $row[1];
+            $jenis_kelamin = $row[2];
+            $email = $row[3];
+            $pendidikan = $row[4];
+            $tanggal_lahir = $formattedDate;
+            $aspek1 = is_numeric($row[6]) ? (float)$row[6] : 0;
+            $aspek2 = is_numeric($row[7]) ? (float)$row[7] : 0;
+            $aspek3 = is_numeric($row[8]) ? (float)$row[8] : 0;
+            $rerata = ($aspek1 + $aspek2 + $aspek3) / 3;
 
+            // dd($row);
+
+            $user = User::firstOrCreate(
+            [
+                'email' => $email,
+            ],
+            [
+                'password' => bcrypt('malangkota3573'), 
+                'role_id' => 5,
+                'status' => 'Aktif',
+            ]);
+
+            $mitra = Mitra::firstOrCreate(
+                [
+                    'id_sobat' => $id_mitra
+                ], 
+                [
+                    'name' => $name,
+                    'email' => $email,
+                    'user_id' => $user->id,
+                    'jenis_kelamin' => $jenis_kelamin, 
+                    'pendidikan' => $pendidikan,
+                    'tanggal_lahir' => $tanggal_lahir
+            ]);
+
+            // Tambahkan transaksi
+            $transaction = Transaction::create([
+                'survey_id' => $survey->id,
+                'mitra_id' => $mitra->id_sobat,
+                'payment' => $survey->payment,
+                'target' => $target ?? 1,
+            ]);
+
+           Nilai1::create([
+                'transaction_id'    => $transaction->id,
+                'aspek1'            => $aspek1,
+                'aspek2'            => $aspek2,
+                'aspek3'            => $aspek3,
+                'rerata'            => $rerata, // Assign each transaction its own Nilai1
+            ]);
+            
+        }
+
+        return true;
+    }
 
 
 

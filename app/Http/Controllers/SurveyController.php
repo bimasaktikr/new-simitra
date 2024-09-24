@@ -23,9 +23,11 @@ class SurveyController extends Controller
     protected $team;
     protected $paymentType;
 
+
     public function __construct()
     {
-        $this->user = Auth::user(); // Mendapatkan data pengguna yang login
+        $this->user = Auth::user();
+        // Mendapatkan data pengguna yang login
     }
 
     public function index(Request $request)

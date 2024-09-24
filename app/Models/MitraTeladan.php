@@ -23,8 +23,6 @@ class MitraTeladan extends Model
     public function mitra()
     {
         return $this->belongsTo(Mitra::class, 'mitra_id', 'id_sobat');
-<<<<<<< HEAD
-=======
     }
 
     public function team()
@@ -35,6 +33,5 @@ class MitraTeladan extends Model
     public function nilai2()
     {
         return $this->hasMany(Nilai2::class, 'mitra_teladan_id', 'id');
->>>>>>> dev
     }
 }

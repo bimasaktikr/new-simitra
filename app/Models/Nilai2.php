@@ -13,7 +13,7 @@ class Nilai2 extends Model
 
     protected $fillable = [
         'mitra_teladan_id',
-        'team_penilai_id',
+        'employee_id',
         'aspek1',
         'aspek2',
         'aspek3',
@@ -34,14 +34,9 @@ class Nilai2 extends Model
         return $this->belongsTo(Mitra::class, 'mitra_id');
     }
 
-    public function team()
+    public function employee()
     {
-        return $this->belongsTo(Team::class, 'team_id');
-    }
-
-    public function penilai()
-    {
-        return $this->belongsTo(Employee::class, 'penilai_id');
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 
     public function transactions()
