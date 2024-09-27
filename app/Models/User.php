@@ -48,12 +48,12 @@ class User extends Authenticatable
 
     public function role()
     {
-        return $this->belongsTo(Role::class, 'email');
+        return $this->belongsTo(Role::class, 'id');
     }
     
     public function mitra()
     {
-        return $this->hasOne(Mitra::class, 'email');
+        return $this->hasOne(Mitra::class, 'id');
     }
 
     public function employee()

@@ -66,8 +66,8 @@ class MitraTeladanController extends Controller
             // dd( $nilai_2_final);
             $item['is_final'] = $nilai_2_final;
 
-            $team_done = $this->nilai2Service->getTeamDone($item['id']);
-            $item['team_done'] = $team_done;
+            $employee_done = $this->nilai2Service->getEmployeeDone($item['id']);
+            $item['employee_done'] = $employee_done;
             
             $is_all_final = $this->nilai2Service->checkFinal($item['id']);
             $item['is_all_final'] = $is_all_final;
@@ -89,7 +89,6 @@ class MitraTeladanController extends Controller
         }
 
         $winnerTeam = $this->mitraService->getWinnerTeam($year, $quarter);
-        // dd($groupedByTeam);
 
         $groupedByTeam = array_merge($groupedByTeam, $mitrateladan);
         // dd($groupedByTeam);

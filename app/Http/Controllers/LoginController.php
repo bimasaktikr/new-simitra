@@ -41,7 +41,8 @@ class LoginController extends Controller
                 Session::put('user_data', $mitra);
             } elseif ($user->role_id != '4' && $employee) {
                 Session::put('user_data', $employee);
-                
+            } else {
+                Session::put('user_data', $employee);
                 // Ambil team name berdasarkan team_id dari tabel employees
                 // $team = DB::table('teams')->where('id', $employee->team_id)->first();
 

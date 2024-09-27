@@ -63,7 +63,7 @@ class Penilaian2Controller extends Controller
         Log::info('Validation passed');
 
         // Add 'team_penilai_id' from the logged-in user's team_id
-        $teamPenilaiId = Auth::user()->employee->team_id;
+        $temployeeId = Auth::user()->employee->id;
         // dd($teamPenilaiId);
         // Calculate 'rerata' (average) for aspek1 to aspek10
         $rerata = collect([
@@ -82,7 +82,7 @@ class Penilaian2Controller extends Controller
 
         $data = [
             'mitra_teladan_id' => $request->input('mitra_teladan_id'),
-            'team_penilai_id' => $teamPenilaiId,
+            'employee_id' => $temployeeId,
             'rerata' => $rerata,
             'aspek1' => $request->input('aspek1'),
             'aspek2' => $request->input('aspek2'),

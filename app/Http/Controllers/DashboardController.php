@@ -14,6 +14,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        // dd($request);
         $userData = session('user_data');
         // $userData = Session::get('user_data');
         // dd($userData);

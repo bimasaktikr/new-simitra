@@ -86,11 +86,7 @@
         <div class="flex space-x-4">
           <form action="{{ route('survei.finalisasi', $survey->id) }}" method="POST">
               @csrf
-<<<<<<< HEAD
-              @if($belumDinilai || !$survey->is_synced)
-=======
               @if($belumDinilai)
->>>>>>> dev
                 <button class="px-4 py-2 ml-2 text-white bg-gray-400 border border-transparent rounded-lg shadow-sm cursor-not-allowed" disabled>Finalisasi Nilai</button>
               @else
                 <button type="submit" class="inline-flex items-center px-4 py-2 text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-800">
@@ -139,17 +135,17 @@
                             @if ($survey->is_sudah_dinilai == 0)
                                 @if (!$nilai)
                                     {{-- Tombol Nilai aktif jika survei sudah berakhir dan mitra belum dinilai --}}
-                                    <button onclick="window.location='{{ route('penilaian.create', ['transaction_id' => $transaction->id]) }}'" class="px-3 py-1 ml-2 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-500">
+                                    <button onclick="window.location='{{ route('penilaian1.create', ['transaction_id' => $transaction->id]) }}'" class="px-3 py-1 ml-2 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-500">
                                         Nilai
                                     </button>
                                 @else
                                     {{-- Tampilkan nilai dan tombol edit jika survei sudah berakhir dan mitra sudah dinilai --}}
                                     <span>{{ $nilai->rerata }}</span>
-                                    <button onclick="window.location='{{ route('penilaian.edit', ['transaction_id' => $transaction->id]) }}'" class="px-3 py-1 ml-2 text-white bg-yellow-500 rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-500">
+                                    <button onclick="window.location='{{ route('penilaian1.edit', ['transaction_id' => $transaction->id]) }}'" class="px-3 py-1 ml-2 text-white bg-yellow-500 rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-500">
                                         Edit
                                     </button>
                                 @endif
-                            @else
+                            @else 
                                 {{-- Hanya tampilkan nilai jika survei sudah dinilai (is_sudah_dinilai == 1) --}}
                                 @if ($nilai)
                                     <span>{{ $nilai->rerata }}</span>
@@ -186,9 +182,8 @@
       Back
     </button>
   </div>
-</div>
 
-<!-- The Modal -->
+  <!-- The Modal -->
 <!-- assume your modal element has an ID of "myModal" -->
 <div id="uploadModal" class="fixed top-0 left-0 flex items-center justify-center hidden w-full h-full">
   <div class="max-w-md p-4 bg-white rounded shadow-md modal-content">
@@ -215,28 +210,26 @@
     <!-- your modal content here -->
   </div>
 </div>
-
+</div>
 @endsection
 
 @section('script')
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-  const uploadButton = document.getElementById('uploadMitraButton');
-  const surveyId = "{{ $survey['id']}}";
-  const csrfToken = '{{ csrf_token() }}';
-  const modal = document.getElementById('uploadModal');
+    document.addEventListener('DOMContentLoaded', function() {
+    const uploadButton = document.getElementById('uploadMitraButton');
+    const surveyId = "{{ $survey['id']}}";
+    const csrfToken = '{{ csrf_token() }}';
+    const modal = document.getElementById('uploadModal');
 
-  if (uploadButton) 
-  {
-    uploadButton.addEventListener('click', function() {
-      console.log('Upload button clicked!');
-      modal.classList.remove('hidden'); // Show the modal
-    });
-  } else {
-    console.error('Upload button not found');
-  }
-
+    if (uploadButton) 
+    {
+      uploadButton.addEventListener('click', function() {
+        console.log('Upload button clicked!');
+        modal.classList.remove('hidden'); // Show the modal
+      });
+    } else {
+      console.error('Upload button not found');
+    }
 });
 </script>
-  
 @endsection

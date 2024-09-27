@@ -41,17 +41,17 @@ class Nilai2Service
                         ->avg('rerata');
     }
 
-    public function getTeamDone($id)
+    public function getEmployeeDone($id)
     {
         return Nilai2::where('mitra_teladan_id', $id)
-                        ->pluck('team_penilai_id');
+                        ->pluck('employee_id');
     }
 
     public function getStatus($id)
     {
         // Retrieve is_final status mapped by team_penilai_id
-        return Nilai2::where('mitra_teladan_id', $id)
-            ->pluck('is_final', 'team_penilai_id')
+        return Nilai2::where('employee_id', $id)
+            ->pluck('is_final', 'employee_id')
             ->map(function($isFinal) {
                 return (int) $isFinal; // Ensure the value is returned as an integer (1 or 0)
             })

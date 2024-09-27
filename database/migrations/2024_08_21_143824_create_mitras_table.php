@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('mitras', function (Blueprint $table) {
             $table->id('id_sobat');
             $table->string('name', 200);
+            $table->foreignId('user_id')->constrained();
             $table->string('email', 200)->unique();
             $table->string('pendidikan', 50);
             $table->string('jenis_kelamin', 50);
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->timestamps();
 
-            $table->foreign('email')->references('email')->on('users')->onDelete('cascade');
+            
         });
     }
 

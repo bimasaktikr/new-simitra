@@ -16,8 +16,12 @@ class RolesSeeder extends Seeder
             ['id' => 1, 
             'role' => 'Admin',],
             ['id' => 2, 
-            'role' => 'Ketua Tim',],
+            'role' => 'Kepala BPS',],
             ['id' => 3, 
+            'role' => 'Ketua Tim',],
+            ['id' => 4, 
+            'role' => 'Pegawai',],
+            ['id' => 5, 
             'role' => 'Mitra',],
         ]);
     }

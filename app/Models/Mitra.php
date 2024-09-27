@@ -16,6 +16,7 @@ class Mitra extends Model
     protected $fillable = [
         'id_sobat',
         'name',
+        'user_id',
         'email',
         'pendidikan',
         'jenis_kelamin',
@@ -30,7 +31,7 @@ class Mitra extends Model
     
     public function user()
     {
-        return $this->belongsTo(User::class, 'email');
+        return $this->belongsTo(User::class, 'id');
     }
 
     public function nilai2()
