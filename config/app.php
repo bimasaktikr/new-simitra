@@ -95,9 +95,11 @@ return [
     |
     */
 
+    'key' => env('APP_KEY', 'ENV_NOT_FOUND'),
     'cipher' => 'AES-256-CBC',
 
-    'key' => env('APP_KEY'),
+    // 'key' => env('APP_KEY'),
+
 
     'previous_keys' => [
         array_filter(
